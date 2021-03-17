@@ -1,4 +1,4 @@
-# ixoraa
+# ixoraa vue
 
 ## Project setup
 ```
