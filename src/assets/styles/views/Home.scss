@@ -1,0 +1,12 @@
+.home {
+    @include landing;
+    h1 {
+        margin-bottom: 0;
+    }
+    img {
+        width: 100px;
+    }
+    ul {
+        text-align: left;
+    }
+}
