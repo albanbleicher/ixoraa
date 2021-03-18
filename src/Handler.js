@@ -6,8 +6,11 @@ class Handler {
         this.io = require('socket.io')(http, {
                 cors: {
                   origin: "localhost:8080",
-                  methods: ["GET", "POST"]
-        });
+                  methods: ["GET", "POST"],
+                  allowedHeaders: ["controllr-header", "game-header"],
+                  credentials: true
+        }
+    });
     }
     init() {
         this.io.on(EVENTS.USER_CONNECT, (socket) => {
