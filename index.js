@@ -1,11 +1,16 @@
-const app = require('express')();
-const http = require('http').Server(app);
+const express =  require('express')
 const Handler = require('./src/Handler').default
-const port = process.env.PORT || 3000
-app.use(express.static(__dirname + '/public'))
 
 
-http.listen(port, () => {
-  const Socket = new Handler(http)
-  Socket.init()
-});
+const PORT = process.env.PORT || 3000;
+const INDEX = '/public/index.html';
+
+const server = express()
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .listen(PORT, () => 
+  {
+    const Socket = new Handler(http)
+    Socket.init()
+  });
+
+
