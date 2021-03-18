@@ -9,7 +9,7 @@ const server = express()
   .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
   .listen(PORT, () => 
   {
-    const Socket = new Handler(http)
+    const Socket = new Handler(server)
     Socket.init()
   });
 
