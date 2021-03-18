@@ -39,19 +39,19 @@ export default {
       const timeline = gsap.timeline()
       switch(direction) {
         case 'up': 
-        this.positions.y-=10;
+        this.positions.y-=30;
          timeline.to(shape, {y:this.positions.y})
         break;
         case 'down': 
-        this.positions.y+=10;
+        this.positions.y+=30;
          timeline.to(shape, {y:this.positions.y})
         break;
         case 'left': 
-           this.positions.x-=10;
+           this.positions.x-=30;
          timeline.to(shape, {x:this.positions.x})
         break;
         case 'right': 
-            this.positions.x+=10;
+            this.positions.x+=30;
          timeline.to(shape, {x:this.positions.x})
         break;
       }
