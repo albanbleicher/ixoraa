@@ -23,7 +23,7 @@ export default {
     handleMove(direction) {
       switch(direction) {
         case 'up': 
-          this.io.emit('move up')
+         console.log('moove up')
         break;
         case 'down': 
           this.io.emit('move down')
