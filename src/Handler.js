@@ -5,10 +5,8 @@ class Handler {
     constructor(http) {
         this.io = require('socket.io')(http, {
                 cors: {
-                  origin: "localhost:8080",
+                  origin: "http://localhost:8080",
                   methods: ["GET", "POST"],
-                  allowedHeaders: ["controllr-header", "game-header"],
-                  credentials: true
         }
     });
     }
