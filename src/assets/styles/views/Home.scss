@@ -1,0 +1,9 @@
+.controller {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .aside {
+        height: 100%;
+        display: flex;
+    }
+}
