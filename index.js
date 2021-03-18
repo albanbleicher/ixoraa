@@ -2,9 +2,7 @@ const app = require('express')();
 const http = require('http').Server(app);
 const Handler = require('./src/Handler').default
 const port = process.env.PORT || 3000
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+app.use(express.static(__dirname + '/public'))
 
 
 http.listen(port, () => {
