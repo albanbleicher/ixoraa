@@ -2,9 +2,7 @@
     "name": "ixoraa-api",
     "version": "0.0.1",
     "description": "ixoraa websocket api",
-    "scripts": {
-        "start": "npm install && node index.js"
-    },
+    "main": "index.js",
     "dependencies": {
         "express": "^4.17.1",
         "socket.io": "^4.0.0"

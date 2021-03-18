@@ -6,7 +6,6 @@ app.use(express.static(__dirname + '/public'))
 
 
 http.listen(port, () => {
-  console.log('listening on *:3000');
   const Socket = new Handler(http)
   Socket.init()
 });
