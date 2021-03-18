@@ -1,11 +1,6 @@
 <template>
-  <div class="controller">
-      <button @click='handleMove("up")'>up</button>
-      <div class="aside">
-        <button @click='handleMove("left")'>left</button>
-      <button @click='handleMove("right")'>right</button>
-      </div>
-      <button @click='handleMove("down")'>down</button>
+  <div class="game">
+    <div class="shape"></div>
   </div>
 </template>
 <script>
@@ -18,6 +13,11 @@ export default {
   },
   created() {
     this.io  = io('https://ixoraa-api.herokuapp.com/');
+  },
+  mounted() {
+    this.io.on('move up', () => {
+      this.handleMove('up')
+    })
   },
   methods:{
     handleMove(direction) {
