@@ -5,7 +5,7 @@ class Handler {
     constructor(http) {
         this.io = require('socket.io')(http, {
                 cors: {
-                  origin: "http://localhost:8080",
+                  origin: ['http://localhost:8080', "https://play.ixoraa.albchr.dev", "https://game.ixoraa.albchr.dev"],
                   methods: ["GET", "POST"],
         }
     });
