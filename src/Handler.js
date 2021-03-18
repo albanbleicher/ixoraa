@@ -18,6 +18,9 @@ class Handler {
     }
     listen(socket) {
         socket.on(MOVEMENTS.UP, () => movements.up(this.io))
+        socket.on(MOVEMENTS.DOWN, () => movements.down(this.io))
+        socket.on(MOVEMENTS.LEFT, () => movements.left(this.io))
+        socket.on(MOVEMENTS.RIGHT, () => movements.right(this.io))
 
     }
 }
