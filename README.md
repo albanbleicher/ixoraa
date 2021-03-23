@@ -1,26 +1,50 @@
-# 🌱 Sprout
-a vue boilerplate with cool organised assets,  vuex, vue-router and more ✨
+# THREE.js TEMPLATE
 
-## Project setup
-```
-yarn install // or npm i
-```
+## Requirements & Setup
+You need to have **node.js** installed. 
 
-### Compiles and hot-reloads for development
-```
-yarn serve // or npm run serve
-```
+Start with `npm run init`
 
-### Compiles and minifies for production
-```
-yarn build // or npm run build
-```
+This command will init a git repository on your machine, install dependencies and remove useless files and directories for your project.
+After that, this command won't be available anymore.
 
-### Lints and fixes files
-```
-yarn lint // or npm run lint
+## Development
+Run the local webpack-dev-server with hotreload and autocompile on:
+- local: [http://localhost:8080/](http://localhost:8080/)
+- network: http://your-local-ip:8080/
+
+```sh
+$ npm run dev
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Debug
+Go to your-url/#debug
 
+## Alias
+- **@**: `src/`
+- **@style**: `src/style/`
+- **@fonts**: `src/fonts/`
+- **@models**: `src/models/`
+- **@sounds**: `src/sounds/`
+- **@shaders**: `src/shaders/`
+- **@textures**: `src/textures/`
+- **@js**: `src/js/`
+- **@tools**: `src/js/Tools/`
+- **@world**: `src/js/World/`
+
+## Features
+- eslint
+- prettier
+- babel
+- stylus
+- dat.GUI
+- automatic models / textures / sounds / fonts.json import
+
+## Deployment
+Build the current application (default output in `dist/`).
+```sh
+$ npm run build
+```
+
+## Template link
+[https://github.com/Lissandre/three_template](https://github.com/Lissandre/three_template)
