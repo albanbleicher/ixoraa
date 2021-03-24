@@ -1,4 +1,4 @@
-import { AxesHelper, Object3D } from 'three'
+import { AxesHelper, Color, Mesh, MeshBasicMaterial, MeshNormalMaterial, MeshStandardMaterial, Object3D, SphereGeometry } from 'three'
 
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
@@ -28,7 +28,7 @@ export default class World {
   init() {
     this.setAmbientLight()
     this.setPointLight()
-    this.setTotem()
+    this.setPlanet()
     //this.setSuzanne()
   }
   setLoader() {
@@ -77,11 +77,13 @@ export default class World {
     })
     this.container.add(this.suzanne.container)
   }
-  setTotem() {
-    this.totem = new Totem({
-      time: this.time,
-      assets: this.assets,
+  setPlanet() {
+    const geometry = new SphereGeometry(100,100,100)
+    const material = new MeshStandardMaterial({
+      color: new Color('red'),
+      roughness: 0.4
     })
-    this.container.add(this.totem.container)
+    const planet = new Mesh(geometry, material)
+    this.container.add(planet)
   }
 }

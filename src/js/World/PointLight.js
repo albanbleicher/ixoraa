@@ -45,20 +45,20 @@ export default class PointLightSource {
     this.debugFolder
       .add(this.light.position, 'x')
       .step(0.1)
-      .min(-5)
-      .max(5)
+      .min(-1000)
+      .max(1000)
       .name('Position X')
     this.debugFolder
       .add(this.light.position, 'y')
       .step(0.1)
-      .min(-5)
-      .max(5)
+      .min(-1000)
+      .max(1000)
       .name('Position Y')
     this.debugFolder
       .add(this.light.position, 'z')
       .step(0.1)
-      .min(-5)
-      .max(5)
+      .min(-1000)
+      .max(1000)
       .name('Position Z')
   }
 }
