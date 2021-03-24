@@ -3,6 +3,7 @@ import { AxesHelper, Color, Mesh, MeshBasicMaterial, MeshNormalMaterial, MeshSta
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
 import Ciel from './Ciel'
+import Grass from './Grass'
 
 //import Suzanne from './Suzanne'
 
@@ -77,6 +78,14 @@ export default class World {
       debug:this.debug,
     })
     this.container.add(this.ciel.container)
+  }
+  setGrass() {
+    this.ciel = new Grass({
+      time: this.time,
+      assets: this.assets,
+      debug:this.debug,
+    })
+    this.container.add(this.grass.container)
   }
   setPlanet() {
     const geometry = new SphereGeometry(100,100,100)
