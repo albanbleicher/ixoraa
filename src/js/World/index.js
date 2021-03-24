@@ -2,7 +2,7 @@ import { AxesHelper, Color, Mesh, MeshBasicMaterial, MeshNormalMaterial, MeshSta
 
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
-import Totem from './Totem'
+import Ciel from './Ciel'
 
 //import Suzanne from './Suzanne'
 
@@ -29,7 +29,7 @@ export default class World {
     this.setAmbientLight()
     this.setPointLight()
     this.setPlanet()
-    //this.setSuzanne()
+    this.setCiel()
   }
   setLoader() {
     this.loadDiv = document.querySelector('.loadScreen')
@@ -70,17 +70,18 @@ export default class World {
     })
     this.container.add(this.light.container)
   }
-  setSuzanne() {
-    this.suzanne = new Suzanne({
+  setCiel() {
+    this.ciel = new Ciel({
       time: this.time,
       assets: this.assets,
+      debug:this.debug,
     })
-    this.container.add(this.suzanne.container)
+    this.container.add(this.ciel.container)
   }
   setPlanet() {
     const geometry = new SphereGeometry(100,100,100)
     const material = new MeshStandardMaterial({
-      color: new Color('red'),
+      color: new Color('grey'),
       roughness: 0.4
     })
     const planet = new Mesh(geometry, material)

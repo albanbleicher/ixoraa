@@ -10,9 +10,9 @@ export default class PointLightSource {
     this.container.name = 'Point Light'
     this.params = {
       color: 0xffffff,
-      positionX: 0,
-      positionY: 2,
-      positionZ: 5,
+      positionX: -741,
+      positionY: 115,
+      positionZ: 303,
     }
 
     this.createPointLight()

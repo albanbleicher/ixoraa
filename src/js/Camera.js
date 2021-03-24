@@ -1,4 +1,4 @@
-import { Object3D, PerspectiveCamera } from 'three'
+import { Object3D, PerspectiveCamera, Vector3 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 export default class Camera {
@@ -13,8 +13,9 @@ export default class Camera {
     this.container.name = 'Camera'
 
     this.setCamera()
-    this.setPosition()
     this.setOrbitControls()
+    this.setPosition()
+
   }
   setCamera() {
     // Create camera
@@ -36,8 +37,8 @@ export default class Camera {
   setPosition() {
     // Set camera position
     this.camera.position.x = 0
-    this.camera.position.y = 1
-    this.camera.position.z = 15
+    this.camera.position.y = 110
+    this.camera.position.z = 20
   }
   setOrbitControls() {
     // Set orbit control
@@ -48,13 +49,17 @@ export default class Camera {
     this.orbitControls.enabled = false
     this.orbitControls.enableKeys = true
     this.orbitControls.zoomSpeed = 1
-
+    console.log(this.orbitControls)
     if (this.debug) {
       this.debugFolder = this.debug.addFolder('Camera')
       this.debugFolder.open()
       this.debugFolder
         .add(this.orbitControls, 'enabled')
         .name('Enable Orbit Control')
+
+      this.debugFolder.add(this.camera.position, 'x').min(-1000).max(1000).step(0.1)
+      this.debugFolder.add(this.camera.position, 'y').min(-1000).max(1000).step(0.1)
+      this.debugFolder.add(this.camera.position, 'z').min(-1000).max(1000).step(0.1)
     }
   }
 }
