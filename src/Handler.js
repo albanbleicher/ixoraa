@@ -1,6 +1,10 @@
 const { EVENTS } = require('./const.events')
 const { MOVEMENTS } = require('./const.events')
+const { MUSICTIME } = require('./const.events')
 const movements = require('./Movements').default
+const musictime = require('./MusicTime').default
+
+
 class Handler {
     constructor(http) {
         this.io = require('socket.io')(http, {
@@ -17,10 +21,12 @@ class Handler {
         })
     }
     listen(socket) {
+        console.log(socket, this.io)
         socket.on(MOVEMENTS.UP, () => movements.up(this.io))
         socket.on(MOVEMENTS.DOWN, () => movements.down(this.io))
         socket.on(MOVEMENTS.LEFT, () => movements.left(this.io))
-        socket.on(MOVEMENTS.RIGHT, () => movements.right(this.io))
+        socket.on(MOVEMENTS.RIGHT, () => musictime.begin(this.io))
+        socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))
 
     }
 }

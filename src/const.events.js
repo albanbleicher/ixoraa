@@ -9,3 +9,8 @@ exports.MOVEMENTS = {
     LEFT: 'move left',
     RIGHT: 'move right'
 }
+
+exports.MUSICTIME = {
+    BEGIN: 'musictime begin',
+    TAP: 'tap'
+}

@@ -3,11 +3,11 @@
     "version": "0.0.1",
     "description": "ixoraa websocket api",
     "engines": {
-        "node": "12.17.x"
-      },
-      "scripts": {
+        "node": ">= 12.17.x <=14.16.x"
+    },
+    "scripts": {
         "start": "node index.js"
-      },      
+    },
     "dependencies": {
         "express": "^4.17.1",
         "socket.io": "^4.0.0"
