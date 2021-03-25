@@ -24,7 +24,6 @@ export default {
   created() {
     localStorage.debug = '*';
     this.io = io("https://ixoraa-api.herokuapp.com/");
-    this.io.on('musictime begin', (data) => this.handleMusicTimeBegin(data))
     console.log(this.io);
   },
   methods: {
@@ -48,7 +47,8 @@ export default {
       console.log('client music time begin', data)
     },
     handleMusic(e){
-      console.log(e)
+      this.io.emit('musictime begin');
+      //this.io.on('musictime begin', (data) => this.handleMusicTimeBegin(data))
     }
   },
 };
