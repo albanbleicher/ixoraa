@@ -34,7 +34,6 @@ export default class PointLightSource {
   setDebug() {
     // Color debug
     this.debugFolder = this.debug.addFolder('Point Light')
-    this.debugFolder.open()
     this.debugFolder
       .addColor(this.params, 'color')
       .name('Color')

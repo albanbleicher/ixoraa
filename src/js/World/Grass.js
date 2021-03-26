@@ -1,3 +1,4 @@
+import { Object3D } from 'three'
 export default class Grass {
   constructor(options) {
     // Options
@@ -12,6 +13,7 @@ export default class Grass {
     this.createGrass()
   }
   createGrass() {
-    
+    console.log(this.assets.models.grass.scene)
+    this.container.add(this.assets.models.grass.scene)
   }
 }

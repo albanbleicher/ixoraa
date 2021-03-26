@@ -4,6 +4,7 @@ import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
 import Ciel from './Ciel'
 import Grass from './Grass'
+import Planet from './Planet'
 
 //import Suzanne from './Suzanne'
 
@@ -14,6 +15,7 @@ export default class World {
     this.debug = options.debug
     this.assets = options.assets
 
+    this.camera = options.camera
     // Set up
     this.container = new Object3D()
     this.container.name = 'World'
@@ -21,7 +23,6 @@ export default class World {
     if (this.debug) {
       this.container.add(new AxesHelper(5))
       this.debugFolder = this.debug.addFolder('World')
-      this.debugFolder.open()
     }
 
     this.setLoader()
@@ -31,6 +32,7 @@ export default class World {
     this.setPointLight()
     this.setPlanet()
     this.setCiel()
+    this.setGrass()
   }
   setLoader() {
     this.loadDiv = document.querySelector('.loadScreen')
@@ -80,7 +82,7 @@ export default class World {
     this.container.add(this.ciel.container)
   }
   setGrass() {
-    this.ciel = new Grass({
+    this.grass = new Grass({
       time: this.time,
       assets: this.assets,
       debug:this.debug,
@@ -88,12 +90,12 @@ export default class World {
     this.container.add(this.grass.container)
   }
   setPlanet() {
-    const geometry = new SphereGeometry(100,100,100)
-    const material = new MeshStandardMaterial({
-      color: new Color('grey'),
-      roughness: 0.4
-    })
-    const planet = new Mesh(geometry, material)
-    this.container.add(planet)
+ this.planet = new Planet({
+  time: this.time,
+  assets: this.assets,
+  debug:this.debug,
+  camera:this.camera
+ })
+ this.container.add(this.planet.container)
   }
 }
