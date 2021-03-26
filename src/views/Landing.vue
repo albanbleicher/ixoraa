@@ -13,11 +13,16 @@ export default {
   },
   created() {
     this.io = io("https://ixoraa-api.herokuapp.com/");
+    this.handleChange();
     console.log(this.io);
   },
   methods: {
     handleStart(){
       this.io.emit('start experience');
+    },
+    handleChange(){
+        console.log('listen to equipment changing')
+        this.io.on('equipment', (idRoom) => console.log(idRoom))
     }
   },
 };

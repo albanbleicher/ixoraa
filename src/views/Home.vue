@@ -23,8 +23,13 @@ export default {
   },
   created() {
     localStorage.debug = '*';
-    this.io = io("https://ixoraa-api.herokuapp.com/");
+    this.io = io("http://localhost:8080");
     console.log(this.io);
+  },
+  mounted() {
+    this.io.on('musictime begin', (data) => {
+      this.handleMusicTimeBegin(data)
+    })
   },
   methods: {
     handleMove(direction) {
@@ -48,7 +53,6 @@ export default {
     },
     handleMusic(e){
       this.io.emit('musictime begin');
-      //this.io.on('musictime begin', (data) => this.handleMusicTimeBegin(data))
     }
   },
 };
