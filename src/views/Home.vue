@@ -1,20 +1,6 @@
 <template>
   <div class="game">
     <div ref="shape" class="shape"></div>
-    <label for="idRoom"
-      >Entrez le code inscrit sur votre écran d'ordinateur</label
-    >
-    <h2 v-if="connected">
-      Your phone is connected, the game is about to start
-    </h2>
-    <input
-      type="number"
-      id="idRoom"
-      value=""
-      v-model="idRoom"
-      v-on:keyup="writeCode"
-    />
-    <p>{{ idRoom }}</p>
   </div>
 </template>
 <script>
@@ -23,9 +9,7 @@ import gsap from "gsap";
 export default {
   data() {
     return {
-      idRoom: "",
       io: null,
-      connected: false,
       positions: {
         x: 0,
         y: 0,
@@ -37,12 +21,6 @@ export default {
     console.log(this.io);
   },
   mounted() {
-    this.io.on("equipment", (idRoom) => {
-      console.log("equipment", idRoom);
-    });
-    this.io.on("phoneConnected", () => {
-      this.connected = true;
-    });
     this.io.on("move up", () => {
       this.handleMove("up");
     });
@@ -57,10 +35,26 @@ export default {
     });
   },
   methods: {
-    writeCode() {
-      if (this.idRoom.length === 4) {
-        this.io.emit("mobile connexion", parseInt(this.idRoom, 10));
-        console.log("mobile connexion emitted");
+    handleMove(direction) {
+      const shape = this.$refs["shape"];
+      const timeline = gsap.timeline();
+      switch (direction) {
+        case "up":
+          this.positions.y -= 30;
+          timeline.to(shape, { y: this.positions.y });
+          break;
+        case "down":
+          this.positions.y += 30;
+          timeline.to(shape, { y: this.positions.y });
+          break;
+        case "left":
+          this.positions.x -= 30;
+          timeline.to(shape, { x: this.positions.x });
+          break;
+        case "right":
+          this.positions.x += 30;
+          timeline.to(shape, { x: this.positions.x });
+          break;
       }
     },
   },
