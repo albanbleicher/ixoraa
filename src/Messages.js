@@ -1,10 +1,9 @@
 exports.default = {
-    new(io, message) {
-        console.log('message:', message)
-        io.emit('new message', message)
-    },
     equipment(io, idRoom) {
-        console.log('equipment:', idRoom)
+        console.log('equipment to share', idRoom)
         io.emit('equipment', idRoom)
+    },
+    phoneConnected(io) {
+        io.emit('phoneConnected');
     }
 }

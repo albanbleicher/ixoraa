@@ -1,4 +1,26 @@
-const express =  require('express')
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const Handler = require('./src/Handler').default
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
+http.listen(3000, () => {
+  const Socket = new Handler(http)
+  Socket.init()
+  console.log('listening on *:3000');
+});
+
+/*const express =  require('express')
 const Handler = require('./src/Handler').default
 
 
@@ -20,7 +42,7 @@ const server = express()
   
   
     res.sendFile(INDEX, { root: __dirname })
-    next();
+    //next();
 
   
   })
@@ -28,6 +50,4 @@ const server = express()
   {
     const Socket = new Handler(server)
     Socket.init()
-  });
-
-
+  });*/
