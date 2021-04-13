@@ -18,13 +18,13 @@ import io from "socket.io-client";
 export default {
   data() {
     return {
-      io: null,
+      io: null
     };
   },
   created() {
-    localStorage.debug = '*';
-    this.io = io("http://localhost:8080");
-    console.log(this.io);
+    //localStorage.debug = '*';
+    //this.io = io("http://ixoraa-api.herokuapp.com/");
+    this.io = io("http://localhost:3000");
   },
   mounted() {
     this.io.on('musictime begin', (data) => {
