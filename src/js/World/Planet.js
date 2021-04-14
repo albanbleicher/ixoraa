@@ -33,29 +33,29 @@ export default class Planet {
     })
     const cube = new Mesh(geometry, material)
     cube.position.y = this.radius+2
-    console.log(this)
-    const cubeFolder = this.debug.addFolder('Cube')
-    cubeFolder.open()
-    cubeFolder.add(cube.position, 'x').min(-1000).max(1000).step(0.1).listen()
-    cubeFolder.add(cube.position, 'y').min(-1000).max(1000).step(0.1).listen()
-    cubeFolder.add(cube.position, 'z').min(-1000).max(1000).step(0.1).listen() 
-    this.time.on('tick',() => {
-        
-        cube.position.z=  Math.cos(this.time.current*0.0001)*this.radius
-        cube.position.y=Math.sin(this.time.current*0.0001)*this.radius
+    if(this.debug) {
 
-        if(cube.position.z > 0){
-            this.camera.position.z = cube.position.z+100
-        this.camera.position.y =cube.position.y+100
-        }
-        else {
-            this.camera.position.z = cube.position.z-100
-            this.camera.position.y =cube.position.y-100
-        }
+      const cubeFolder = this.debug.addFolder('Cube')
+      cubeFolder.open()
+      cubeFolder.add(cube.position, 'x').min(-1000).max(1000).step(0.1).listen()
+      cubeFolder.add(cube.position, 'y').min(-1000).max(1000).step(0.1).listen()
+      cubeFolder.add(cube.position, 'z').min(-1000).max(1000).step(0.1).listen() 
+    }
+    cube.add(this.camera)
+    this.camera.position.y=-5
+    this.camera.position.z=-1
+    this.time.on('tick',() => {
+        cube.position.z=  Math.cos(this.time.current*0.001)*this.radius
+        cube.position.y=Math.sin(this.time.current*0.001)*this.radius
         this.camera.lookAt(cube.position)
 
+        // this.camera.position.z = Math.cos(this.time.current*0.001) * (this.radius + 10 )
+        // this.camera.position.y = Math.sin(this.time.current*0.001) * (this.radius + 10 )
+       
+      cube.lookAt(new Vector3(0,0,0))
 
-    })
+
+      })
     this.container.add(cube)
   }
 }
