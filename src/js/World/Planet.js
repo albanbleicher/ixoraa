@@ -23,7 +23,7 @@ export default class Planet {
   initPhysics() {
     /** Physics */
     const world = new CANNON.World()
-    // world.gravity.set(0,-9.82, 0)
+    world.gravity.set(0,-9.82, 0)
     const sphereShape = new CANNON.Sphere(0.5)
     this.sphereBody = new CANNON.Body({
       mass: 0.1,
@@ -65,7 +65,7 @@ export default class Planet {
       case 'ArrowDown':
         console.log('moving down')
         this.humanPos.z++
-        this.sphereBody.position.z--
+        this.sphereBody.position.z++
       break;
     }
   })
