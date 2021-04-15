@@ -13,6 +13,10 @@ export default class Planet {
 
     this.createPlanet()
     this.addCube()
+    this.position = {
+      vert:0,
+      hoz:50,
+    }
   }
   createPlanet() {
     this.radius = 100
@@ -44,11 +48,28 @@ export default class Planet {
     cube.add(this.camera)
     this.camera.position.y = -5
     this.camera.position.z = -1
+    let self = this
+    window.addEventListener('keydown', (e) => {
+      switch(e.code) {
+        case 'ArrowDown': 
+          self.position.vert--
+        break;
+        case 'ArrowUp': 
+        self.position.vert++
+      break;
+      case 'ArrowLeft': 
+      self.position.hoz--
+    break;
+    case 'ArrowRight': 
+    self.position.hoz++
+  break;
+      }
+    })
     this.time.on('tick', () => {
-      cube.position.z = Math.cos(this.time.current * 0.001) * this.radius
-      cube.position.y = Math.sin(this.time.current * 0.001) * this.radius
+      cube.position.z = Math.cos(this.position.vert*0.01) * this.radius
+      cube.position.x = Math.sin(this.position.hoz*0.01) * this.radius
+      cube.position.y = Math.sin(this.position.vert*0.01) * this.radius
       this.camera.lookAt(cube.position)
-      console.log(this.camera.rotation)
       this.camera.rotation.z = Math.PI;
 
       // this.camera.position.z = Math.cos(this.time.current*0.001) * (this.radius + 10 )
