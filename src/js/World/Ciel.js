@@ -20,9 +20,9 @@ export default class Ciel {
     this.sky.material.uniforms[ "sunPosition" ].value.copy( new Vector3(0,300,0) );
     this.effectController = {
       turbidity: 10,
-      rayleigh: 30,
+      rayleigh: 10,
       mieCoefficient: 0.005,
-      mieDirectionalG: 0.7,
+      mieDirectionalG: 0.1,
       inclination: 0.49, // elevation / inclination
       azimuth: 0.25, // Facing front,
     };
@@ -50,23 +50,26 @@ export default class Ciel {
       skyFolder.add( this.effectController, "azimuth", 0, 1, 0.0001 ).onChange( this.updateSun(this.sky) );
     } 
     this.container.add(this.sky)
+    this.time.on('tick', this.updateSun)
   }
-  updateSun() {
-    const uniforms = this.sky.material.uniforms;
-					uniforms[ "turbidity" ].value = this.effectController.turbidity;
-					uniforms[ "rayleigh" ].value = this.effectController.rayleigh;
-					uniforms[ "mieCoefficient" ].value = this.effectController.mieCoefficient;
-					uniforms[ "mieDirectionalG" ].value = this.effectController.mieDirectionalG;
-          const sun = new Vector3(0,0,0)
-					const theta = Math.PI * ( this.effectController.inclination - 0.5 );
-					const phi = 2 * Math.PI * ( this.effectController.azimuth - 0.5 );
+  updateSun(sky) {
+if(sky) {
+  const uniforms = sky.material.uniforms;
+  uniforms[ "turbidity" ].value = this.effectController.turbidity;
+  uniforms[ "rayleigh" ].value = this.effectController.rayleigh;
+  uniforms[ "mieCoefficient" ].value = this.effectController.mieCoefficient;
+  uniforms[ "mieDirectionalG" ].value = this.effectController.mieDirectionalG;
+  const sun = new Vector3(0,0,0)
+  const theta = Math.PI * ( this.effectController.inclination - 0.5 );
+  const phi = 2 * Math.PI * ( this.effectController.azimuth - 0.5 );
 
-					sun.x = Math.cos( phi );
-					sun.y = Math.sin( phi ) * Math.sin( theta );
-					sun.z = Math.sin( phi ) * Math.cos( theta );
+  sun.x = Math.cos( phi );
+  sun.y = Math.sin( phi ) * Math.sin( theta );
+  sun.z = Math.sin( phi ) * Math.cos( theta );
 
-					uniforms[ "sunPosition" ].value.copy( sun );
+  uniforms[ "sunPosition" ].value.copy( sun );
 
-          this.sky.uniforms = uniforms
+  this.sky.uniforms = uniforms
+} 
   }
 }
