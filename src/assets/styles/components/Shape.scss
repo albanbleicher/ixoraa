@@ -8,3 +8,13 @@
     transform-origin: (-50%, -50%);
     background-color: red;
 }
+
+.line {
+    position: absolute;
+    background-color: white;
+    border: 5px solid red;
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    top: -50%;
+}

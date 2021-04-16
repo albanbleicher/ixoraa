@@ -8,7 +8,7 @@
       <input type="number" value="" v-model="idRoom" v-on:keyup="writeCode" />
       <p>{{ idRoom }}</p>
     </div>
-    <router-link v-if="connected" to="/home">Click here to start</router-link>
+    <router-link v-if="connected" to="/musictime">Click here to start</router-link>
   </div>
 </template>
 <script>
@@ -19,6 +19,7 @@ export default {
       idRoom: "",
       io: null,
       connected: false,
+      waveTime: ''
     };
   },
   created() {
@@ -29,7 +30,7 @@ export default {
     this.io.on("equipment", (idRoom) => {
       console.log("equipment", idRoom);
     });
-    this.io.on("phoneConnected", () => {
+    this.io.on("phoneConnected", (test) => {
       this.connected = true;
     });
   },
