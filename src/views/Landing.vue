@@ -2,11 +2,15 @@
   <div class="landing">
     <template v-if="this.idRoom">
       <h1>{{ this.idRoom }}</h1>
-      <h2 v-if='!connected'>Now, let's connect with your phone !</h2>
-      <h2 v-if='connected'>Your phone is connected, the game is about to start</h2>
-       <router-link v-if='connected' to="/home">Click here to start</router-link>
+      <h2 v-if="!connected">Now, let's connect with your phone !</h2>
+      <h2 v-if="connected">
+        Your phone is connected, the game is about to start
+      </h2>
+      <router-link v-if="connected" to="/home">Click here to start</router-link>
     </template>
-    <button class="start" @click="handleStart()" v-if="!this.idRoom">Start the experience</button>
+    <button class="start" @click="handleStart()" v-if="!this.idRoom">
+      Start the experience
+    </button>
   </div>
 </template>
 <script>
@@ -16,12 +20,11 @@ export default {
     return {
       io: null,
       idRoom: "",
-      connected: false
+      connected: false,
     };
   },
   created() {
     this.io = io("http://localhost:3000");
-    //this.handleChange();
     console.log(this.io);
   },
   mounted() {
@@ -36,9 +39,6 @@ export default {
   methods: {
     handleStart() {
       this.io.emit("start experience");
-    },
-    handleChange() {
-      console.log("listen to equipment changing");
     },
   },
 };
