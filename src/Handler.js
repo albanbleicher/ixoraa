@@ -23,23 +23,17 @@ class Handler {
         this.rooms = [];
         this.io.on(EVENTS.USER_CONNECT, (socket) => {
             socket.on('start experience', () => {
+                
                 // Créer la room dans le tableau
                 this.currentRoom = Math.floor(1000 + Math.random() * 9000);
-                console.log(typeof this.currentRoom);
                 this.rooms.push(this.currentRoom);
-                console.log(typeof this.rooms[0])
+
                 // Créer un nouvel utilisateur et lier la room
-                console.log('new user logged in')
                 socket.join(this.currentRoom);
-                console.log(socket.rooms);
                 messages.equipment(this.io, this.currentRoom);
-                //console.log(anotherSocketId, msg)
-                //socket.to(anotherSocketId).emit("private message", socket.id, msg);
             });
 
             socket.on('mobile connexion', (getIdRoom) => {
-                console.log(getIdRoom, this.rooms, this.rooms.includes(getIdRoom))
-                console.log(typeof getIdRoom, typeof this.rooms[0])
                 if (this.rooms.includes(getIdRoom)) {
                     //this.currentRoom = getIdRoom;
                     console.log('current room is', this.currentRoom)
@@ -62,13 +56,14 @@ class Handler {
         socket.on(MOVEMENTS.RIGHT, () => movements.right(this.io))
         socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))
         socket.on(MUSICTIME.BEGIN, () => {
-            const notes = ['green', 'red', 'blue'];
-            this.melody = [];
-            for(let i=0; i<5; i++){
-                this.melody.push(notes[Math.floor(Math.random() * 3)])
-            }
-            console.log(this.melody);
-            musictime.begin(this.io, this.melody);
+            // old system for colors and buttons
+            //const notes = ['green', 'red', 'blue'];
+            //this.melody = [];
+            //for(let i=0; i<5; i++){
+            //    this.melody.push(notes[Math.floor(Math.random() * 3)])
+            //}
+            this.melody = 3;
+            musictime.begin(this.io, this.currentRoom, this.melody);
         })
     }
 }
