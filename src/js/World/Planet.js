@@ -1,4 +1,4 @@
-import { Object3D, SphereGeometry, MeshStandardMaterial, Color, Mesh, BoxGeometry, Vector3, DoubleSide } from 'three'
+import { Object3D, SphereGeometry, MeshStandardMaterial, Color, Mesh, BoxGeometry, Vector3, DoubleSide, MeshBasicMaterial } from 'three'
 export default class Planet {
   constructor(options) {
     // Options
@@ -15,16 +15,17 @@ export default class Planet {
     this.addCube()
     this.position = {
       vert:0,
-      hoz:50,
+      hoz:15,
     }
   }
   createPlanet() {
     this.radius = 100
     const geometry = new SphereGeometry(this.radius, 100, 100)
     const material = new MeshStandardMaterial({
-      color: new Color('grey'),
-      roughness: 0.4,
-      side: DoubleSide
+      map: this.assets.textures.planet_text,
+      displacementMap: this.assets.textures.planet_disp,
+      normalMap: this.assets.textures.planet_normal,
+      roughnessMap: this.assets.textures.planet_rough,
     })
     const planet = new Mesh(geometry, material)
     this.container.add(planet)
