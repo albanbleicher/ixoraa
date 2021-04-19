@@ -3,8 +3,9 @@ import { AxesHelper, Color, Mesh, MeshBasicMaterial, MeshNormalMaterial, MeshSta
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
 import Ciel from './Ciel'
-import Grass from './Grass'
 import Planet from './Planet'
+import Physics from './Physics'
+import Player from './Player'
 
 //import Suzanne from './Suzanne'
 
@@ -28,11 +29,12 @@ export default class World {
     this.setLoader()
   }
   init() {
+    this.setPhysics()
     this.setAmbientLight()
     this.setPointLight()
     this.setPlanet()
+    this.setPlayer()
     this.setCiel()
-    this.setGrass()
   }
   setLoader() {
     this.loadDiv = document.querySelector('.loadScreen')
@@ -61,6 +63,14 @@ export default class World {
       })
     }
   }
+  setPhysics() {
+    this.physics = new Physics({
+      debug:true,
+      gravity:-9.82,
+      container:this.container,
+      time:this.time
+    })
+  } 
   setAmbientLight() {
     this.ambientlight = new AmbientLightSource({
       debug: this.debugFolder,
@@ -81,21 +91,22 @@ export default class World {
     })
     this.container.add(this.ciel.container)
   }
-  setGrass() {
-    this.grass = new Grass({
-      time: this.time,
-      assets: this.assets,
-      debug:this.debug,
-    })
-    this.container.add(this.grass.container)
-  }
   setPlanet() {
  this.planet = new Planet({
   time: this.time,
   assets: this.assets,
   debug:this.debug,
-  camera:this.camera
+  camera:this.camera,
+  physics:this.physics
  })
  this.container.add(this.planet.container)
+  }
+  setPlayer() {
+    this.player = new Player({
+      physics:this.physics,
+      time:this.time,
+      camera:this.camera
+    }) 
+    this.container.add(this.player.container)
   }
 }
