@@ -26,7 +26,7 @@ import {
       // create new CANNON.World
       this.world = new World()
       // set gravity on y axis because we want things to fall
-      this.world.gravity.set(0,-9.92,0)
+      this.world.gravity.set(0,this.gravity,0)
       // if debug is wished, enable it
       if (this.debug) this.setDebugger()
       // set world ticking speed to enable physics animations

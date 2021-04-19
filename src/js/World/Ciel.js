@@ -1,11 +1,15 @@
-import { Object3D, Color, Vector3 } from 'three'
+import { Object3D, Color, Vector3,UnsignedByteType, PMREMGenerator } from 'three'
 import { Sky } from 'three/examples/jsm/objects/Sky.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { RoughnessMipmapper } from 'three/examples/jsm/utils/RoughnessMipmapper.js';
 export default class Ciel {
-  constructor(options) {
-    // Options
-    this.time = options.time
-    this.assets = options.assets
-    this.debug = options.debug
+  constructor(params) {
+    // params
+    this.time = params.time
+    this.assets = params.assets
+    this.debug = params.debug
+    this.renderer = params.renderer
+    this.scene = params.scene
 
     // Set up
     this.container = new Object3D()
@@ -14,6 +18,7 @@ export default class Ciel {
 
 
     this.createCiel()
+    // this.createSpace()
   }
   createCiel() {
     this.sky.scale.setScalar( 100000 );
@@ -71,5 +76,25 @@ if(sky) {
 
   this.sky.uniforms = uniforms
 } 
+  }
+  createSpace() {
+      const pmremGenerator = new PMREMGenerator( this.renderer );
+          pmremGenerator.compileEquirectangularShader();
+
+        const envMap = pmremGenerator.fromEquirectangular( this.assets.textures.space ).texture;
+  
+        this.scene.background = envMap;
+        this.scene.environment = envMap;
+  
+        this.assets.textures.space.dispose();
+        pmremGenerator.dispose();
+  
+  
+        // use of RoughnessMipmapper is optional
+        const roughnessMipmapper = new RoughnessMipmapper( this.renderer );
+  
+          roughnessMipmapper.dispose();
+  
+  
   }
 }

@@ -7,14 +7,13 @@ import Planet from './Planet'
 import Physics from './Physics'
 import Player from './Player'
 
-//import Suzanne from './Suzanne'
-
 export default class World {
   constructor(options) {
     // Set options
     this.time = options.time
     this.debug = options.debug
     this.assets = options.assets
+    this.renderer = options.renderer
 
     this.camera = options.camera
     // Set up
@@ -22,7 +21,7 @@ export default class World {
     this.container.name = 'World'
 
     if (this.debug) {
-      this.container.add(new AxesHelper(5))
+      this.container.add(new AxesHelper(150))
       this.debugFolder = this.debug.addFolder('World')
     }
 
@@ -88,6 +87,8 @@ export default class World {
       time: this.time,
       assets: this.assets,
       debug:this.debug,
+      renderer:this.renderer,
+      scene:this.container
     })
     this.container.add(this.ciel.container)
   }

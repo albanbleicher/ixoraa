@@ -49,5 +49,24 @@ export default class Player {
             this.physics.animate(this.container.name)
         })
 
+        window.addEventListener('keydown', (e) => this.move(e))
     }
+    move(e) {
+        const key = e.code;
+        const object = this.physics.objects.find(item => item.name === this.container.name)
+        switch(key) {
+            case 'ArrowDown': 
+                object.body.position.x-=0.05
+            break;
+            case 'ArrowUp': 
+                object.body.position.x+=0.05
+            break;
+            case 'ArrowLeft': 
+                object.body.position.z-=0.05
+            break;
+            case 'ArrowRight': 
+                object.body.position.z+=0.05
+            break;
+        }
+    } 
 }

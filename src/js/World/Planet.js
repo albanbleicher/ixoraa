@@ -17,7 +17,6 @@ export default class Planet {
     this.createPlanet()
   }
   createPlanet() {
-    this.radius = 50
     const geometry = new SphereGeometry(50,100,100)
     const material = new MeshStandardMaterial({
       color: new Color('red'),
@@ -26,8 +25,10 @@ export default class Planet {
       opacity:0.2,
       transparent:true
     })
+    // retrive planet mesh from the loader
     const mesh = this.assets.models.planet.scene
     this.container.add(mesh)
+    // add this object to the physics world
     this.physics.add({
       name:this.container.name,
       mass:0,
@@ -37,7 +38,7 @@ export default class Planet {
         z:0
       },
       type:'sphere',
-      radius:54.5
+      radius:54.5 // 54.5 because otherwise CANNON Body is to small, need to check why with designer
 
     })
 }
