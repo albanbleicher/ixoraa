@@ -21,7 +21,6 @@ class Handler {
     init() {
         let self = this;
         this.rooms = [];
-        this.melody = 3;
         this.io.on(EVENTS.USER_CONNECT, (socket) => {
             socket.on('start experience', () => {
 
@@ -63,7 +62,10 @@ class Handler {
             //for(let i=0; i<5; i++){
             //    this.melody.push(notes[Math.floor(Math.random() * 3)])
             //}
-            musictime.begin(this.io, this.melody);
+            this.melody = 3;
+            this.lines = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+
+            musictime.begin(this.io, this.melody, this.lines);
         })
         socket.on(MUSICTIME.CORRECT, () => musictime.correct(this.io))
         socket.on(MUSICTIME.WRONG, () => musictime.wrong(this.io))
