@@ -12,7 +12,7 @@
     <div>
       <button class="note" ref="note" @click="playNote()"></button>
     </div>
-    <div>
+    <div style="position: absolute; left: 50px">
       <p
         v-for="(attempt, index) in attempts"
         :key="index"
@@ -35,6 +35,7 @@ export default {
         y: 0,
       },
       lines: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+      completedNotes: [],
       attempts: [],
       waveTime: "",
     };
@@ -54,53 +55,66 @@ export default {
   },
   methods: {
     handleMove() {
+      // Pour chaque ligne, active l'animation d'ondes en décalée
       this.lines.forEach((el) => {
-      const line = this.$refs["line" + el.id];
-      //const line = this.$refs["line"];
-      console.log(this.$refs);
-      const timeline = gsap.timeline();
-      setTimeout(() => {
-        timeline.to(line, {
-          width: 1200,
-          height: 1200,
-          duration: this.waveTime * 4,
-        });
-      }, (this.waveTime / el.id) * 2 * 1000);
+        const line = this.$refs["line" + el.id];
+        console.log(line);
+        const timeline = gsap.timeline();
+        setTimeout(() => {
+          timeline.to(line, {
+            width: 1200,
+            height: 1200,
+            duration: this.waveTime * 4,
+          });
+        }, (this.waveTime / (5 / el.id)) * 2 * 1000);
       });
 
       // 8 is the good value
     },
     playNote() {
-      this.lines.forEach((el) => {
-        const identifier = "line" + el.id;
-        console.log(identifier);
-        const line = this.$refs[identifier];
-        const note = this.$refs["note"];
-        console.log(line);
+      // Pour la ligne courante ligne, vérifie si l'intersection avec le bouton est juste
+      const currentLineId = "line" + (this.completedNotes.length + 1);
+      const line = this.$refs[currentLineId][0];
+      const note = this.$refs["note"];
 
-        line.offsetBottom = line.offsetTop + line.offsetHeight;
-        line.offsetRight = line.offsetLeft + line.offsetWidth;
-        note.offsetBottom = note.offsetTop + note.offsetHeight;
-        note.offsetRight = note.offsetLeft + note.offsetWidth;
+      line.offsetBottom = line.offsetTop + line.offsetHeight;
+      line.offsetRight = line.offsetLeft + line.offsetWidth;
+      note.offsetBottom = note.offsetTop + note.offsetHeight;
+      //note.offsetRight = note.offsetLeft + note.offsetWidth;
 
-        //console.log('line.offsetbottom :' + line.offsetBottom, 'note.offsettop :' + note.offsetTop, 'note.offsetbottom :' + note.offsetBottom, 'line.offsetBottom < note.offsetTop :' + line.offsetBottom < note.offsetTop, 'line.offsetBottom > note.offsetBottom: ', line.offsetBottom > note.offsetBottom)
+      const check = !(
+        (
+          line.offsetBottom < note.offsetTop ||
+          line.offsetBottom > note.offsetBottom
+        )
+        // line.offsetTop > note.offsetBottom ||
+        // line.offsetRight < note.offsetLeft ||
+        // line.offsetLeft > note.offsetRight
+      );
+      console.log(check);
 
-        const check = !(
-          (
-            line.offsetBottom < note.offsetTop ||
-            line.offsetBottom > note.offsetBottom
-          )
-          // line.offsetTop > note.offsetBottom ||
-          // line.offsetRight < note.offsetLeft ||
-          // line.offsetLeft > note.offsetRight
-        );
-        console.log(check);
-        if (check) {
-          this.attempts.push("Correct !");
-        } else {
-          this.attempts.push("False, noob");
-        }
-      });
+      // Si elle est juste, on l'ajoute au tableau des lignes juste, sinon on active le fade out, et recommence le jeu 
+      // Lorsque le jeu est réussi, on en informe le serveur
+      if (check) {
+        this.attempts.push(currentLineId + " is correct !");
+        this.completedNotes.push(currentLineId + " is correct !");
+        if (this.completedNotes.length === this.lines.length)
+          this.io.emit("correct");
+      } else {
+        this.attempts.push("False, noob");
+        this.io.emit("wrong");
+
+        this.lines.forEach((el) => {
+          const line = this.$refs["line" + el.id];
+          const timeline = gsap.timeline();
+          setTimeout(() => {
+            timeline.to(line, {
+              opacity: 0,
+              duration: this.waveTime / 3,
+            });
+          }, (this.waveTime / 10) * 1000);
+        });
+      }
     },
   },
 };
