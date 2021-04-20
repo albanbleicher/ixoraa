@@ -42,6 +42,11 @@ export default {
       this.waveTime = time;
       this.handleMusicTimeBegin();
     });
+    this.io.on("wrong", () => {
+      console.log("wrong");
+      this.waveTime = null;
+      this.restartMusicTime();
+    });
   },
   methods: {
     handleMove(direction) {
@@ -75,6 +80,10 @@ export default {
         duration: this.waveTime,
       });
       console.log("client music time begin", this.waveTime);
+    },
+    restartMusicTime() {
+      console.log("restart");
+      this.$forceUpdate();
     },
     startMusic(e) {
       this.io.emit("musictime begin");
