@@ -21,9 +21,10 @@ class Handler {
     init() {
         let self = this;
         this.rooms = [];
+        this.melody = 3;
         this.io.on(EVENTS.USER_CONNECT, (socket) => {
             socket.on('start experience', () => {
-                
+
                 // Créer la room dans le tableau
                 this.currentRoom = Math.floor(1000 + Math.random() * 9000);
                 this.rooms.push(this.currentRoom);
@@ -62,9 +63,10 @@ class Handler {
             //for(let i=0; i<5; i++){
             //    this.melody.push(notes[Math.floor(Math.random() * 3)])
             //}
-            this.melody = 3;
             musictime.begin(this.io, this.melody);
         })
+        socket.on(MUSICTIME.CORRECT, () => musictime.correct(this.io))
+        socket.on(MUSICTIME.WRONG, () => musictime.wrong(this.io))
     }
 }
 exports.default = Handler;

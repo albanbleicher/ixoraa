@@ -12,5 +12,7 @@ exports.MOVEMENTS = {
 
 exports.MUSICTIME = {
     BEGIN: 'musictime begin',
+    CORRECT: 'correct',
+    WRONG: 'wrong',
     TAP: 'tap'
 }

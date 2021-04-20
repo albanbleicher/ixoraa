@@ -7,6 +7,7 @@ exports.default = {
         console.log('correct')
     },
     wrong(socket) {
+        socket.emit(MUSICTIME.WRONG)
         console.log('wrong')
     },
 }
