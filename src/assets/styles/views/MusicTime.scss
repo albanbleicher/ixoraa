@@ -1,0 +1,29 @@
+.game{
+    height: 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+} 
+.lines{
+    height: 100%;
+    width: 100%;
+}
+.note{
+    background-color: #aeaeea;
+    border-radius: 100px;
+    position: absolute;
+    top: 45%;
+    left: 47.5%;
+    height: 100px;
+    width: 100px;
+}
+
+.correct{
+    background-color: #dcedc1;
+}
+
+.wrong{
+    background-color: #ffc0cb;
+}

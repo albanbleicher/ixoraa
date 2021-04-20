@@ -1,7 +1,25 @@
-.game {
+main{
     height: 100%;
-    width: 100%;
-    position: relative;
+.controller {
+    height: 100%;
+    width: 50%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    .aside {
+        height: 100%;
+        display: flex;
+    }
+
+}
+.musicontroller {
+    display: flex;
+    justify-content: space-evenly;
+
+    .musicbutton{
+        display: flex;
+        width: 100px;
+        height: 100px;
+        border-radius: 100px;
+    }
+}
 }
