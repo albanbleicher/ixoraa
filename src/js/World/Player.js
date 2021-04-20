@@ -27,8 +27,8 @@ export default class Player {
         mesh.add(this.camera.camera)
 
         // place camera
-        this.camera.camera.position.y =10
-        this.camera.camera.position.x = -10
+        this.camera.camera.position.y = 2
+        this.camera.camera.position.x = -2
         mesh.position.setFromSpherical(new Spherical(55,0,0))
 
         // enable physics
