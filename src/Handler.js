@@ -63,7 +63,7 @@ class Handler {
             //    this.melody.push(notes[Math.floor(Math.random() * 3)])
             //}
             this.melody = 3;
-            musictime.begin(this.io, this.currentRoom, this.melody);
+            musictime.begin(this.io, this.melody);
         })
     }
 }
