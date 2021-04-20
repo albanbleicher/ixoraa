@@ -1,7 +1,14 @@
 <template>
   <div class="game">
-    <div ref="shape" class="shape"></div>
-    <div class="musicbutton line" id="line" ref="line"></div>
+    <div class="lines" v-if="this.lines">
+      <span
+        v-for="line in lines"
+        :key="line.id"
+        class="musicbutton line"
+        id="line"
+        :ref="'line' + line.id"
+      ></span>
+    </div>
     <div v-if="!waveTime" class="musicontroller">
       <button @click="startMusic()">Get close to artifact</button>
     </div>
@@ -18,6 +25,7 @@ export default {
         x: 0,
         y: 0,
       },
+      lines: [],
       waveTime: false,
     };
   },
@@ -38,14 +46,26 @@ export default {
     this.io.on("move right", () => {
       this.handleMove("right");
     });
-    this.io.on("musictime begin", (time) => {
-      this.waveTime = time;
+    this.io.on("musictime begin", async (time, lines) => {
+      const result = await this.returnsPromise(time, lines);
       this.handleMusicTimeBegin();
     });
+
     this.io.on("wrong", () => {
+      //On wrong, reset lines with anim and emptying array
       console.log("wrong");
-      this.waveTime = null;
-      this.restartMusicTime();
+      this.lines.forEach((el) => {
+        const timeline = gsap.timeline({
+          onComplete: () => this.restartMusicTime(),
+        });
+        const line = this.$refs["line" + el.id];
+        setTimeout(() => {
+          timeline.to(line, {
+            opacity: 0,
+            duration: this.waveTime / 3,
+          });
+        }, (this.waveTime / 10) * 1000);
+      });
     });
   },
   methods: {
@@ -72,21 +92,34 @@ export default {
       }
     },
     handleMusicTimeBegin() {
-      const element = this.$refs["line"];
-      const timeline = gsap.timeline();
-      timeline.to(element, {
-        width: 1200,
-        height: 1200,
-        duration: this.waveTime,
+      // Pour chaque ligne, active l'animation d'ondes en décalée
+      this.lines.forEach((el) => {
+        const line = this.$refs["line" + el.id];
+        const timeline = gsap.timeline();
+        setTimeout(() => {
+          timeline.to(line, {
+            width: 1200,
+            height: 1200,
+            duration: this.waveTime * 4,
+          });
+        }, (this.waveTime / (5 / el.id)) * 2 * 1000);
       });
       console.log("client music time begin", this.waveTime);
     },
     restartMusicTime() {
       console.log("restart");
-      this.$forceUpdate();
+      this.waveTime = false;
+      this.lines = [];
     },
     startMusic(e) {
       this.io.emit("musictime begin");
+    },
+    returnsPromise(time, lines) {
+      return new Promise((resolve) => {
+        this.waveTime = time;
+        this.lines = lines;
+        resolve();
+      });
     },
   },
 };
