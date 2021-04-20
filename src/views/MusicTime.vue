@@ -1,12 +1,14 @@
 <template>
   <div class="game">
-    <span
-      v-for="line in lines"
-      :key="line.id"
-      class="musicbutton line"
-      id="line"
-      :ref="'line' + line.id"
-    ></span>
+    <div class="lines" v-if="this.lines">
+      <span
+        v-for="line in lines"
+        :key="line.id"
+        class="musicbutton line"
+        id="line"
+        :ref="'line' + line.id"
+      ></span>
+    </div>
     <!--<span class="musicbutton line" id="line" ref="line"></span>-->
 
     <div>
@@ -37,7 +39,8 @@ export default {
       lines: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
       completedNotes: [],
       attempts: [],
-      waveTime: "",
+      lines: [],
+      waveTime: false,
     };
   },
   created() {
@@ -45,11 +48,11 @@ export default {
     console.log(this.io);
   },
   mounted() {
-    this.io.on("phoneConnected", (test) => {
+    this.io.on("phoneConnected", () => {
       this.connected = true;
     });
-    this.io.on("musictime begin", (time) => {
-      this.waveTime = time;
+    this.io.on("musictime begin", async (time, lines) => {
+      const result = await this.returnsPromise(time, lines);
       this.handleMove();
     });
   },
@@ -58,7 +61,6 @@ export default {
       // Pour chaque ligne, active l'animation d'ondes en décalée
       this.lines.forEach((el) => {
         const line = this.$refs["line" + el.id];
-        console.log(line);
         const timeline = gsap.timeline();
         setTimeout(() => {
           timeline.to(line, {
@@ -66,16 +68,16 @@ export default {
             height: 1200,
             duration: this.waveTime * 4,
           });
-        }, (this.waveTime / (5 / el.id)) * 2 * 1000);
+        }, (this.waveTime / (2.5 / el.id)) * 2 * 1000);
       });
-
-      // 8 is the good value
     },
     playNote() {
       // Pour la ligne courante ligne, vérifie si l'intersection avec le bouton est juste
       const currentLineId = "line" + (this.completedNotes.length + 1);
       const line = this.$refs[currentLineId][0];
       const note = this.$refs["note"];
+      console.log(currentLineId);
+      console.log(line);
 
       line.offsetBottom = line.offsetTop + line.offsetHeight;
       line.offsetRight = line.offsetLeft + line.offsetWidth;
@@ -93,7 +95,7 @@ export default {
       );
       console.log(check);
 
-      // Si elle est juste, on l'ajoute au tableau des lignes juste, sinon on active le fade out, et recommence le jeu 
+      // Si elle est juste, on l'ajoute au tableau des lignes juste, sinon on active le fade out, et recommence le jeu
       // Lorsque le jeu est réussi, on en informe le serveur
       if (check) {
         this.attempts.push(currentLineId + " is correct !");
@@ -106,7 +108,9 @@ export default {
 
         this.lines.forEach((el) => {
           const line = this.$refs["line" + el.id];
-          const timeline = gsap.timeline();
+          const timeline = gsap.timeline({
+            onComplete: () => this.restartMusicTime(),
+          });
           setTimeout(() => {
             timeline.to(line, {
               opacity: 0,
@@ -115,6 +119,19 @@ export default {
           }, (this.waveTime / 10) * 1000);
         });
       }
+    },
+    restartMusicTime() {
+      console.log("restart");
+      this.waveTime = false;
+      this.lines = [];
+      this.completedNotes = [];
+    },
+    returnsPromise(time, lines) {
+      return new Promise((resolve) => {
+        this.waveTime = time;
+        this.lines = lines;
+        resolve();
+      });
     },
   },
 };
