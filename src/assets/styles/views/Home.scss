@@ -1,33 +1,17 @@
-main{
+.game {
     height: 100%;
-.controller {
-    height: 100%;
-    width: 50%;
+    width: 100%;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    .aside {
-        height: 100%;
-        display: flex;
-    }
-
+    justify-content: center;
+    overflow: hidden;
 }
-.musicontroller {
-    display: flex;
-    justify-content: space-evenly;
-
-    .musicbutton{
-        display: flex;
-        width: 100px;
-        height: 100px;
-        border-radius: 100px;
-    }
-    .red{
-        position: absolute;
-        background-color: white;
-        border: 5px solid red;
-        height: 100px;
-        width: 100px;
-        border-radius: 1000px;
-    }
-}
+.line {
+    position: absolute;
+    background-color: white;
+    border: 5px solid red;
+    height: 100px;
+    width: 100px;
+    transform-origin: top center;
+    border-radius: 100%;
 }
