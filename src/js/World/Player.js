@@ -1,3 +1,5 @@
+import { Raycaster, Vector2, Vector3 } from "three"
+import { Spherical } from "three"
 import { Mesh,MeshStandardMaterial,SphereGeometry, Object3D } from "three"
 
 
@@ -11,6 +13,7 @@ export default class Player {
         this.container = new Object3D()
         this.container.name = 'Player'
         this.init()
+        this.enableRaycaster()
     }
     init() {
         // Add sphere to simulate player
@@ -26,7 +29,7 @@ export default class Player {
         // place camera
         this.camera.camera.position.y =10
         this.camera.camera.position.x = -10
-        mesh.position.y = 100
+        mesh.position.setFromSpherical(new Spherical(55,0,0))
 
         // enable physics
         this.physics.add({
@@ -36,36 +39,72 @@ export default class Player {
             mass:1,
             position:{
                 x:0,
-                y:100,
+                y:55,
                 z:0
             }
         })
         // add mesh to main container
         this.container.add(mesh)
-
+        // this.camera.camera.lookAt(mesh)
         // animate physics + camera focus at player mesh on each tick
         this.time.on('tick', () => {
             this.camera.camera.lookAt(mesh.position)
             this.physics.animate(this.container.name)
         })
+        console.log(mesh)
 
         window.addEventListener('keydown', (e) => this.move(e))
+    }
+    enableRaycaster() {
+        // const mouse = new Vector2()
+        // window.addEventListener('mousemove', (event) => {            
+        //     var mouse3D = new Vector3(
+        //         ( event.clientX / window.innerWidth ) * 2 - 1,
+        //         - ( event.clientY / window.innerHeight ) * 2 + 1,
+        //         0.5 );
+        
+        //     this.camera.camera.lookAt(mouse3D);
+        // })
     }
     move(e) {
         const key = e.code;
         const object = this.physics.objects.find(item => item.name === this.container.name)
+        const position = this.container.children[0].position
+        let spherical = new Spherical()
+        spherical.setFromVector3(position)
+        if(spherical.phi === 1) {
+            spherical.phi = 0
+        }
+        if(spherical.theta === 1) {
+            spherical.theta = 0
+        }
+        let newPosition = new Vector3()
+        let factor = 0.07
         switch(key) {
+
             case 'ArrowDown': 
-                object.body.position.x-=0.05
+                spherical.phi+=factor
+                newPosition.setFromSpherical(spherical)
+                object.body.position = newPosition
+                console.log(spherical)
             break;
             case 'ArrowUp': 
-                object.body.position.x+=0.05
+            spherical.setFromVector3(position)
+            spherical.phi-=factor
+            newPosition.setFromSpherical(spherical)
+            object.body.position = newPosition
             break;
             case 'ArrowLeft': 
-                object.body.position.z-=0.05
+                spherical.setFromVector3(position)
+                spherical.theta-=factor
+                newPosition.setFromSpherical(spherical)
+                object.body.position = newPosition
             break;
             case 'ArrowRight': 
-                object.body.position.z+=0.05
+                spherical.setFromVector3(position)
+                spherical.theta+=factor
+                newPosition.setFromSpherical(spherical)
+                object.body.position = newPosition
             break;
         }
     } 

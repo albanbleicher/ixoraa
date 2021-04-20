@@ -3,7 +3,8 @@ import {
     Vec3,
     World,
     Sphere,
-    Box
+    Box,
+    RaycastVehicle
   } from "cannon-es"
   import {
     threeToCannon
@@ -19,6 +20,7 @@ import {
 
       this.world = null
       this.objects = []
+      this.vehicle = null
 
       this.init()
     }
@@ -26,7 +28,7 @@ import {
       // create new CANNON.World
       this.world = new World()
       // set gravity on y axis because we want things to fall
-      this.world.gravity.set(0,this.gravity,0)
+      // this.world.gravity.set(0,0,0)
       // if debug is wished, enable it
       if (this.debug) this.setDebugger()
       // set world ticking speed to enable physics animations
@@ -111,6 +113,56 @@ import {
       if (this.debug) this.setDebugger()
 
     }
+    addVehicle(params){
+        /**
+       * Params (Object)
+       * {
+       *  name*:String
+       *  mesh*: Object3D
+       *  type*: String
+       *  radius: Number
+       *  mass*: Number
+       *  position*: Object {x:...,y:...,z...}
+       * }
+       * All properties marked with a * are required
+       */
+      let shape;
+         switch (params.type) {
+          case 'box':
+            shape = threeToCannon(params.mesh, {
+              type: threeToCannon.Type.BOX
+            })
+            break;
+          case 'sphere':
+            shape = threeToCannon(params.mesh, {
+              type: threeToCannon.Type.SPHERE
+            })
+            break;
+          case 'cyllinder':
+            shape = threeToCannon(params.mesh, {
+              type: threeToCannon.Type.CYLINDER
+            })
+            break;
+          case null:
+            shape = threeToCannon(params.mesh)
+            break;
+          default:
+            shape = threeToCannon(params.mesh)
+            break;
+        }
+        let body = new Body({
+          shape:shape,
+          mass:params.mass,
+          position:  new Vec3(params.position.x, params.position.y, params.position.z),
+        })
+        this.vehicle = new RaycastVehicle({
+          chassisBody: body,
+          indexRightAxis: 0,
+          indexUpAxis: 1,
+          indexForwardAxis: 2
+        })
+        this.vehicle.addToWorld(this.world)
+    } 
     animate(name) {
           // searching in global world container
           const container = this.container.children.find(item => item.name === name)
@@ -119,6 +171,9 @@ import {
             const object = this.objects.find(item => item.name=== name)
             // move mesh as the cannon body moves
             container.children[0].position.copy(object.body.position)
+            // const position = container.children[0].position
+            // this.world.gravity.set(-position.x, -position.y,-position.z)
+            // object.body.applyForce(new Vec3(-9.92,-9.82,-9.82), new Vec3(-position.x,-position.y,-position.z))
           }
           else {
             return;
