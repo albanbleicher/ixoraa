@@ -1,4 +1,5 @@
 import { Object3D, PerspectiveCamera, Vector3 } from 'three'
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 export default class Camera {
@@ -25,13 +26,15 @@ export default class Camera {
       0.1,
       1000
     )
-    this.container.add(this.camera)
+    this.controls = new PointerLockControls(this.camera, document.body)
+    this.container.add(this.controls.getObject())
     // Change camera aspect on resize
     this.sizes.on('resize', () => {
       this.camera.aspect =
         this.sizes.viewport.width / this.sizes.viewport.height
       // Call this method because of the above change
       this.camera.updateProjectionMatrix()
+
     })
   }
   setPosition() {

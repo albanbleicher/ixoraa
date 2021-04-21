@@ -17,8 +17,8 @@ export default class Ciel {
     this.sky = new Sky()
 
 
-    // this.createCiel()
-    this.createSpace()
+    this.createCiel()
+    // this.createSpace()
   }
   createCiel() {
     this.sky.scale.setScalar( 100000 );

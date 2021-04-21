@@ -6,6 +6,7 @@ import Ciel from './Ciel'
 import Planet from './Planet'
 import Physics from './Physics'
 import Player from './Player'
+import Fog from './Fog'
 
 export default class World {
   constructor(options) {
@@ -14,6 +15,7 @@ export default class World {
     this.debug = options.debug
     this.assets = options.assets
     this.renderer = options.renderer
+    this.scene = options.scene
 
     this.camera = options.camera
     // Set up
@@ -34,6 +36,10 @@ export default class World {
     this.setPlanet()
     this.setPlayer()
     this.setCiel()
+    this.setFog()
+    window.addEventListener('click', () => {
+      this.camera.controls.lock()
+    })
   }
   setLoader() {
     this.loadDiv = document.querySelector('.loadScreen')
@@ -70,6 +76,13 @@ export default class World {
       time:this.time
     })
   } 
+  setFog() {
+    this.fog = new Fog({
+      camera:this.camera
+    })
+    this.scene.fog = this.fog.fog
+    console.log(this.scene)
+  }
   setAmbientLight() {
     this.ambientlight = new AmbientLightSource({
       debug: this.debugFolder,
@@ -107,7 +120,7 @@ export default class World {
       physics:this.physics,
       time:this.time,
       camera:this.camera,
-      ground:this.planet.container.children[0].children.find(item => item.name === "Sphere_cell012")
+      ground:this.planet.container
     }) 
     this.container.add(this.player.container)
   }

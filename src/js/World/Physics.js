@@ -4,12 +4,14 @@ import {
     World,
     Sphere,
     Box,
-    RaycastVehicle
+    RaycastVehicle,
+    Plane,
   } from "cannon-es"
   import {
     threeToCannon
   } from 'three-to-cannon';
   import cannonDebugger from 'cannon-es-debugger'
+
   
   export default class Physics {
     constructor(params) {
@@ -28,7 +30,7 @@ import {
       // create new CANNON.World
       this.world = new World()
       // set gravity on y axis because we want things to fall
-      // this.world.gravity.set(0,0,0)
+      this.world.gravity.set(0,this.gravity,0)
       // if debug is wished, enable it
       if (this.debug) this.setDebugger()
       // set world ticking speed to enable physics animations
@@ -103,7 +105,8 @@ import {
       const object = {
         name:params.name,
         shape,
-        body
+        body,
+        mesh:params.mesh
       }
       // push it to a class array to retrieve this in other functions
       this.objects.push(object)
@@ -111,6 +114,7 @@ import {
       this.world.addBody(body)
       // if debug is enabled, re-run the function to display the wireframe of the new Body
       if (this.debug) this.setDebugger()
+      return body
 
     }
     addVehicle(params){
@@ -165,19 +169,10 @@ import {
     } 
     animate(name) {
           // searching in global world container
-          const container = this.container.children.find(item => item.name === name)
-          if(container) {
             // searching object in class' array to retrieve object's body
             const object = this.objects.find(item => item.name=== name)
             // move mesh as the cannon body moves
-            container.children[0].position.copy(object.body.position)
-            // const position = container.children[0].position
-            // this.world.gravity.set(-position.x, -position.y,-position.z)
-            // object.body.applyForce(new Vec3(-9.92,-9.82,-9.82), new Vec3(-position.x,-position.y,-position.z))
-          }
-          else {
-            return;
-          }
+            object.mesh.position.copy(object.body.position)
   }
 }
   
