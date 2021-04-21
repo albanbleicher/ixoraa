@@ -36,9 +36,10 @@ export default {
         x: 0,
         y: 0,
       },
-      lines: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
       completedNotes: [],
       attempts: [],
+      levels: 2,
+      currentLevel: 1,
       lines: [],
       waveTime: false,
     };
@@ -54,6 +55,9 @@ export default {
     this.io.on("musictime begin", async (time, lines) => {
       const result = await this.returnsPromise(time, lines);
       this.handleMove();
+    });
+    this.io.on("winned", () => {
+      this.attempts.push('Winned ! Champion');
     });
   },
   methods: {
@@ -100,24 +104,22 @@ export default {
       if (check) {
         this.attempts.push(currentLineId + " is correct !");
         this.completedNotes.push(currentLineId + " is correct !");
-        if (this.completedNotes.length === this.lines.length)
-          this.io.emit("correct");
+        console.log(this.completedNotes.length);
+        console.log(this.lines.length);
+        if (this.completedNotes.length === this.lines.length) {
+          if (this.currentLevel === this.levels) {
+            this.io.emit("winned");
+            console.log("winned");
+          } else {
+            this.currentLevel += 1;
+            this.io.emit("correct");
+          }
+          this.fadeOutOpacity();
+        }
       } else {
         this.attempts.push("False, noob");
         this.io.emit("wrong");
-
-        this.lines.forEach((el) => {
-          const line = this.$refs["line" + el.id];
-          const timeline = gsap.timeline({
-            onComplete: () => this.restartMusicTime(),
-          });
-          setTimeout(() => {
-            timeline.to(line, {
-              opacity: 0,
-              duration: this.waveTime / 3,
-            });
-          }, (this.waveTime / 10) * 1000);
-        });
+        this.fadeOutOpacity();
       }
     },
     restartMusicTime() {
@@ -125,6 +127,20 @@ export default {
       this.waveTime = false;
       this.lines = [];
       this.completedNotes = [];
+    },
+    fadeOutOpacity() {
+      this.lines.forEach((el) => {
+        const line = this.$refs["line" + el.id];
+        const timeline = gsap.timeline({
+          onComplete: () => this.restartMusicTime(),
+        });
+        setTimeout(() => {
+          timeline.to(line, {
+            opacity: 0,
+            duration: this.waveTime / 3,
+          });
+        }, (this.waveTime / 10) * 1000);
+      });
     },
     returnsPromise(time, lines) {
       return new Promise((resolve) => {
