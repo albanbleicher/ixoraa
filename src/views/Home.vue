@@ -50,22 +50,19 @@ export default {
       const result = await this.returnsPromise(time, lines);
       this.handleMusicTimeBegin();
     });
+    this.io.on("winned", () => {
+      console.log("winned");
+      this.fadeOutOpacity("winned");
+    });
+    this.io.on("correct", () => {
+      console.log("correct");
+      this.fadeOutOpacity("correct");
+    });
 
     this.io.on("wrong", () => {
       //On wrong, reset lines with anim and emptying array
       console.log("wrong");
-      this.lines.forEach((el) => {
-        const timeline = gsap.timeline({
-          onComplete: () => this.restartMusicTime(),
-        });
-        const line = this.$refs["line" + el.id];
-        setTimeout(() => {
-          timeline.to(line, {
-            opacity: 0,
-            duration: this.waveTime / 3,
-          });
-        }, (this.waveTime / 10) * 1000);
-      });
+      this.fadeOutOpacity("wrong");
     });
   },
   methods: {
@@ -106,10 +103,29 @@ export default {
       });
       console.log("client music time begin", this.waveTime);
     },
-    restartMusicTime() {
+    restartMusicTime(status) {
       console.log("restart");
-      this.waveTime = false;
+      // Affiche on non le bouton restart, à enlever quand on aura l'event
       this.lines = [];
+      if (status === "correct") {
+        this.waveTime = true;
+      } else {
+        this.waveTime = false;
+      }
+    },
+    fadeOutOpacity(status) {
+      this.lines.forEach((el) => {
+        const line = this.$refs["line" + el.id];
+        const timeline = gsap.timeline({
+          onComplete: () => this.restartMusicTime(status),
+        });
+        setTimeout(() => {
+          timeline.to(line, {
+            opacity: 0,
+            duration: this.waveTime / 3,
+          });
+        }, (this.waveTime / 10) * 1000);
+      });
     },
     startMusic(e) {
       this.io.emit("musictime begin");
