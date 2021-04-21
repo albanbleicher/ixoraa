@@ -48,7 +48,6 @@ export default class Camera {
     this.orbitControls.enabled = true
     this.orbitControls.enableKeys = true
     this.orbitControls.zoomSpeed = 1
-    console.log(this.orbitControls)
     if (this.debug) {
       this.debugFolder = this.debug.addFolder('Camera')
       this.debugFolder.open()

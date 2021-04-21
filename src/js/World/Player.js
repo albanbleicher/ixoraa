@@ -8,7 +8,8 @@ export default class Player {
         this.physics = params.physics
         this.time = params.time
         this.camera = params.camera
-
+        this.ground = params.ground
+        this.player = {}
         // Set up
         this.container = new Object3D()
         this.container.name = 'Player'
@@ -21,38 +22,38 @@ export default class Player {
         const material = new MeshStandardMaterial({
             color:'blue'
         })
-        const mesh = new Mesh(geometry, material)
+        this.player.mesh = new Mesh(geometry, material)
 
         // add camera to mesh for tracking player
-        mesh.add(this.camera.camera)
+        this.player.mesh.add(this.camera.camera)
 
         // place camera
-        this.camera.camera.position.y = 2
+        this.camera.camera.position.y = 10
         this.camera.camera.position.x = -2
-        mesh.position.setFromSpherical(new Spherical(55,0,0))
+        this.camera.camera.position.z = -10
+        this.player.mesh.position.setFromSpherical(new Spherical(55,0,0))
 
         // enable physics
-        this.physics.add({
-            name:this.container.name,
-            mesh:mesh,
-            type:'sphere',
-            mass:1,
-            position:{
-                x:0,
-                y:55,
-                z:0
-            }
-        })
+        // this.physics.add({
+        //     name:this.container.name,
+        //     mesh:this.player.mesh,
+        //     type:'sphere',
+        //     mass:1,
+        //     position:{
+        //         x:0,
+        //         y:55,
+        //         z:0
+        //     }
+        // })
         // add mesh to main container
-        this.container.add(mesh)
-        // this.camera.camera.lookAt(mesh)
+        this.container.add(this.player.mesh)
+        // this.camera.camera.lookAt(this.player.mesh)
         // animate physics + camera focus at player mesh on each tick
         this.time.on('tick', () => {
-            this.camera.camera.lookAt(mesh.position)
-            this.physics.animate(this.container.name)
+            this.camera.camera.lookAt(this.player.mesh.position)
+            // this.physics.animate(this.container.name)
         })
-        console.log(mesh)
-
+        console.log(this.player.mesh)
         window.addEventListener('keydown', (e) => this.move(e))
     }
     enableRaycaster() {
@@ -67,45 +68,57 @@ export default class Player {
         // })
     }
     move(e) {
-        const key = e.code;
-        const object = this.physics.objects.find(item => item.name === this.container.name)
-        const position = this.container.children[0].position
-        let spherical = new Spherical()
-        spherical.setFromVector3(position)
-        if(spherical.phi === 1) {
-            spherical.phi = 0
-        }
-        if(spherical.theta === 1) {
-            spherical.theta = 0
-        }
-        let newPosition = new Vector3()
-        let factor = 0.07
-        switch(key) {
+        const cameraWorldPos = new Vector3()
+        this.camera.camera.getWorldPosition(cameraWorldPos)
+        const cameraWorldDir = new Vector3()
+        this.camera.camera.getWorldDirection(cameraWorldDir)
 
-            case 'ArrowDown': 
-                spherical.phi+=factor
-                newPosition.setFromSpherical(spherical)
-                object.body.position = newPosition
-                console.log(spherical)
-            break;
-            case 'ArrowUp': 
-            spherical.setFromVector3(position)
-            spherical.phi-=factor
-            newPosition.setFromSpherical(spherical)
-            object.body.position = newPosition
-            break;
-            case 'ArrowLeft': 
-                spherical.setFromVector3(position)
-                spherical.theta-=factor
-                newPosition.setFromSpherical(spherical)
-                object.body.position = newPosition
-            break;
-            case 'ArrowRight': 
-                spherical.setFromVector3(position)
-                spherical.theta+=factor
-                newPosition.setFromSpherical(spherical)
-                object.body.position = newPosition
-            break;
-        }
+        console.log('cameraWorldPos', cameraWorldPos)
+        console.log('cameraWorldDir', cameraWorldDir)
+
+        let raycaster = new Raycaster(cameraWorldPos, cameraWorldDir)
+        const intersections = raycaster.intersectObject(this.ground,true)
+        console.log(intersections)
+        this.player.mesh.position.set(intersections[0].point)
+    //     const key = e.code;
+    //     const object = this.physics.objects.find(item => item.name === this.container.name)
+    //     const position = this.container.children[0].position
+    //     let spherical = new Spherical()
+    //     spherical.setFromVector3(position)
+    //     if(spherical.phi === 1) {
+    //         spherical.phi = 0
+    //     }
+    //     if(spherical.theta === 1) {
+    //         spherical.theta = 0
+    //     }
+    //     let newPosition = new Vector3()
+    //     let factor = 0.07
+    //     switch(key) {
+
+    //         case 'ArrowDown': 
+    //             spherical.phi+=factor
+    //             newPosition.setFromSpherical(spherical)
+    //             object.body.position = newPosition
+    //             console.log(spherical)
+    //         break;
+    //         case 'ArrowUp': 
+    //         spherical.setFromVector3(position)
+    //         spherical.phi-=factor
+    //         newPosition.setFromSpherical(spherical)
+    //         object.body.position = newPosition
+    //         break;
+    //         case 'ArrowLeft': 
+    //             spherical.setFromVector3(position)
+    //             spherical.theta-=factor
+    //             newPosition.setFromSpherical(spherical)
+    //             object.body.position = newPosition
+    //         break;
+    //         case 'ArrowRight': 
+    //             spherical.setFromVector3(position)
+    //             spherical.theta+=factor
+    //             newPosition.setFromSpherical(spherical)
+    //             object.body.position = newPosition
+    //         break;
+    //     }
     } 
 }

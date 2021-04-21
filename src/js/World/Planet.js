@@ -29,18 +29,18 @@ export default class Planet {
     const mesh = this.assets.models.planet.scene
     this.container.add(mesh)
     // add this object to the physics world
-    this.physics.add({
-      name:this.container.name,
-      mass:0,
-      position:{
-        x:0,
-        y:0,
-        z:0
-      },
-      type:'sphere',
-      radius:54.5 // 54.5 because otherwise CANNON Body is to small, need to check why with designer
+    // this.physics.add({
+    //   name:this.container.name,
+    //   mass:0,
+    //   position:{
+    //     x:0,
+    //     y:0,
+    //     z:0
+    //   },
+    //   type:'sphere',
+    //   radius:54.5 // 54.5 because otherwise CANNON Body is to small, need to check why with designer
 
-    })
+    // })
 }
 
 }

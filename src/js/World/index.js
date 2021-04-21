@@ -106,7 +106,8 @@ export default class World {
     this.player = new Player({
       physics:this.physics,
       time:this.time,
-      camera:this.camera
+      camera:this.camera,
+      ground:this.planet.container.children[0].children.find(item => item.name === "Sphere_cell012")
     }) 
     this.container.add(this.player.container)
   }
