@@ -14,5 +14,6 @@ exports.MUSICTIME = {
     BEGIN: 'musictime begin',
     CORRECT: 'correct',
     WRONG: 'wrong',
+    WINNED: 'winned',
     TAP: 'tap'
 }
