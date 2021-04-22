@@ -35,17 +35,11 @@ export default class Player {
         })
         this.player.mesh = new Mesh(geometry, material)
 
-        // add camera to mesh for tracking player
-        // this.player.mesh.add(this.camera.controls.getObject())
-
         // place camera
-        this.camera.controls.getObject().position.y = 10
-        // this.camera.controls.getObject().position.x = -2
-        // this.camera.controls.getObject().position.z = -10
-        // this.player.mesh.position.setFromSpherical(new Spherical(55,0,0))
+        this.camera.controls.getObject().position.y = 0
 
-        // enable physics
-        this.physics.add({
+        // enable physics and returning the body from Physics Class
+        this.player.body = this.physics.add({
             name:this.container.name,
             mesh:this.player.mesh,
             type:'sphere',
@@ -147,27 +141,21 @@ export default class Player {
             if ( this.moving.forward || this.moving.backward ) this.velocity.z -= this.direction.z * 400.0 * delta;
             if ( this.moving.left || this.moving.right ) this.velocity.x -= this.direction.x * 400.0 * delta;
 
-            // if ( onObject === true ) {
 
-            //     this.velocity.y = Math.max( 0, this.velocity.y );
-            //     this.moving.jump = true;
+            // this.camera.controls.moveRight( - this.velocity.x * delta );
 
-            // }
+            // this.camera.controls.moveForward( - this.velocity.z * delta );
 
-            this.camera.controls.moveRight( - this.velocity.x * delta );
-
-            this.camera.controls.moveForward( - this.velocity.z * delta );
-
-            // let distanceForward = - this.velocity.z * delta;
-            // let distanceRight = - this.velocity.x * delta
-            // // this.moveForward
-            // vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
-    		// vec.crossVectors( this.player.mesh.up, vec );
-	    	// this.player.mesh.position.addScaledVector( vec, distanceForward );
-            // // this.moveRight
-            // vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
-		    // this.player.mesh.position.addScaledVector( vec, distanceRight );
-
+            let distanceForward = - this.velocity.z * delta;
+            let distanceRight = - this.velocity.x * delta
+            // this.moveForward
+            vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
+    		vec.crossVectors( this.player.mesh.up, vec );
+	    	meshPos.addScaledVector( vec, distanceForward );
+            // this.moveRight
+            vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
+		    meshPos.addScaledVector( vec, distanceRight );
+            this.player.body.position.copy(meshPos)
 
             // this.player.mesh.position.y += ( this.velocity.y * delta ); // new behavior
 
