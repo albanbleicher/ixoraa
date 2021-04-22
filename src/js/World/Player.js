@@ -1,3 +1,4 @@
+import { Vec3 } from "cannon-es"
 import { Raycaster, Vector2, Vector3 } from "three"
 import { Spherical } from "three"
 import { Mesh,MeshStandardMaterial,SphereGeometry, Object3D } from "three"
@@ -36,7 +37,7 @@ export default class Player {
         this.player.mesh = new Mesh(geometry, material)
 
         // place camera
-        this.camera.controls.getObject().position.y = 0
+
 
         // enable physics and returning the body from Physics Class
         this.player.body = this.physics.add({
@@ -46,22 +47,24 @@ export default class Player {
             mass:1,
             position:{
                 x:0,
-                y:55,
+                y:1,
                 z:0
             }
         })
         // add mesh to main container
         this.container.add(this.player.mesh)
         this.player.mesh.add(this.camera.camera)
-        this.camera.camera.z=-10
-        // this.camera.controls.getObject().lookAt(this.player.mesh)
+        this.camera.camera.position.y = 3
+        this.camera.camera.position.z = 10
+        // this.camera.camera.z=-10
+        // this.camera.camera.lookAt(this.player.mesh)
         // animate physics + camera focus at player mesh on each tick
         window.addEventListener('keydown',(e) => this.move(e))
         window.addEventListener('keyup',(e) => this.still(e))
     
         this.raycaster = new Raycaster( new Vector3(), new Vector3( 0, - 1, 0 ), 0, 0 );
         this.time.on('tick', () => {
-            // this.camera.controls.getObject().lookAt(this.player.mesh.position)
+            // this.camera.camera.lookAt(this.player.mesh.position)
             this.physics.animate(this.container.name)
             this.handleMovements()
         })
@@ -88,11 +91,9 @@ export default class Player {
                 this.moving.right = true;
                 break;
             case 'Space':
-                        if ( this.moving.jump === true ) this.velocity.y += 350;
-                        this.moving.jump = false;
+                // this.player.body.applyImpulse(new Vec3(0,10,0))
                         break;
         }
-        console.log(this.player.mesh.position)
 
     }
     still(e) {
@@ -117,59 +118,39 @@ export default class Player {
     }
     handleMovements() {
         let vec = new Vector3()
-        let meshPos = this.player.mesh.position
+        let meshPos = new Vector3().copy(this.player.mesh.position)
         const time = performance.now();
-        if ( this.camera.controls.isLocked === true ) {
-
-            this.raycaster.ray.origin.copy( this.camera.controls.getObject().position );
-            this.raycaster.ray.origin.y -= 0;
-
-            // const intersections = this.raycaster.intersectObject( this.ground.children[0] );
-
-            // const onObject = intersections.length > 0;
-
-            const delta = ( time - this.prevTime ) / 1000;
-            this.velocity.x -= this.velocity.x * 10.0 * delta;
-            this.velocity.z -= this.velocity.z * 10.0 * delta;
-
-            this.velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-
-            this.direction.z = Number( this.moving.forward ) - Number( this.moving.backward );
-            this.direction.x = Number( this.moving.right ) - Number( this.moving.left );
-            this.direction.normalize(); // this ensures consistent movements in all this.directions
-
-            if ( this.moving.forward || this.moving.backward ) this.velocity.z -= this.direction.z * 400.0 * delta;
-            if ( this.moving.left || this.moving.right ) this.velocity.x -= this.direction.x * 400.0 * delta;
-
-
-            // this.camera.controls.moveRight( - this.velocity.x * delta );
-
-            // this.camera.controls.moveForward( - this.velocity.z * delta );
-
-            let distanceForward = - this.velocity.z * delta;
-            let distanceRight = - this.velocity.x * delta
+        // if ( this.camera.controls.isLocked ) {
+ 
             // this.moveForward
-            vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
-    		vec.crossVectors( this.player.mesh.up, vec );
-	    	meshPos.addScaledVector( vec, distanceForward );
-            // this.moveRight
-            vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
-		    meshPos.addScaledVector( vec, distanceRight );
-            this.player.body.position.copy(meshPos)
+            if(this.moving.forward) {
+                vec.setFromMatrixColumn( this.container.matrix, 0 );
+    		vec.crossVectors( this.container.up, vec )
+            meshPos.addScaledVector(vec, 0.5)
+            // this.player.body.applyImpulse(new Vec3(0.5,0.5,0.5), meshPos)
+            } 
+            if(this.moving.backward) {
+                vec.setFromMatrixColumn( this.container.matrix, 0 );
+    		vec.crossVectors( this.container.up, vec )
+            meshPos.addScaledVector(vec, -0.5)
+            // this.player.body.position.copy(meshPos)
+            }
+            if(this.moving.right) {
+                vec.setFromMatrixColumn( this.container.matrix, 0 );
+            meshPos.addScaledVector(vec, 0.4)
+            // this.player.body.position.copy(meshPos)
+            }
+            if(this.moving.left) {
+                vec.setFromMatrixColumn( this.container.matrix, 0 );
+            meshPos.addScaledVector(vec, -0.4)
+            }
+            // this.camera.camera.lookAt(this.player.mesh.position)
 
-            // this.player.mesh.position.y += ( this.velocity.y * delta ); // new behavior
+        // }
+        // this.prevTime = performance.now()
+        this.player.body.position.copy(meshPos)
 
-            // if ( this.player.mesh.position.y < 10 ) {
-
-            //     this.velocity.y = 0;
-            //     this.player.mesh.position.y = 10;
-
-            //     this.moving.jump = true;
-
-            // }
-
-        }
-        this.prevTime = performance.now()
+        // this.player.mesh.position.copy(bodyPos)
 
 
     }

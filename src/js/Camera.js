@@ -26,8 +26,8 @@ export default class Camera {
       0.1,
       1000
     )
-    this.controls = new PointerLockControls(this.camera, document.body)
-    this.container.add(this.controls.getObject())
+    // this.controls = new PointerLockControls(this.camera, document.body)
+    // this.container.add(this.controls.getObject())
     // Change camera aspect on resize
     this.sizes.on('resize', () => {
       this.camera.aspect =

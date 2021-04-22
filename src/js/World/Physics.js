@@ -19,7 +19,7 @@ import {
       this.debug = params.debug // boolean
       this.container = params.container // global container of the template
       this.time = params.time 
-
+      
       this.world = null
       this.objects = []
       this.vehicle = null
@@ -32,6 +32,14 @@ import {
       // set gravity on y axis because we want things to fall
       this.world.gravity.set(0,this.gravity,0)
       // if debug is wished, enable it
+
+       // this.world.solver = new GSSolver()
+      this.world.solver.iterations = 10
+      // this.world.solver.tolerance = 0.1
+      this.world.allowSleep = true
+      this.world.quatNormalizeFast = true
+      this.world.quatNormalizeSkip = 0
+
       if (this.debug) this.setDebugger()
       // set world ticking speed to enable physics animations
       this.time.on('tick',() => {
@@ -173,6 +181,7 @@ import {
             const object = this.objects.find(item => item.name=== name)
             // move mesh as the cannon body moves
             object.mesh.position.copy(object.body.position)
+            // this.container.children.find(item => item.name === name).position.copy(object.body.position)
   }
 }
   
