@@ -5,12 +5,14 @@ import {
     Sphere,
     Box,
     RaycastVehicle,
-    Plane,
+    Heightfield,
+    Trimesh
   } from "cannon-es"
   import {
     threeToCannon
   } from 'three-to-cannon';
   import cannonDebugger from 'cannon-es-debugger'
+import { Vector3 } from "three";
 
   
   export default class Physics {
@@ -81,11 +83,16 @@ import {
                   type: threeToCannon.Type.CYLINDER
                 })
                 break;
+                case 'heightfield':
+                shape = threeToCannon(params.mesh, 
+                  {type: threeToCannon.Type.MESH})
+                break;
               case null:
                 shape = threeToCannon(params.mesh)
                 break;
               default:
-                shape = threeToCannon(params.mesh)
+                shape = threeToCannon(params.mesh, 
+                  {type: threeToCannon.Type.MESH})
                 break;
             }
       }

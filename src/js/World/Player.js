@@ -44,7 +44,7 @@ export default class Player {
             name:this.container.name,
             mesh:this.player.mesh,
             type:'sphere',
-            mass:1,
+            mass:0,
             position:{
                 x:0,
                 y:1,
@@ -149,6 +149,7 @@ export default class Player {
         // }
         // this.prevTime = performance.now()
         this.player.body.position.copy(meshPos)
+        this.camera.camera.lookAt(meshPos.x,meshPos.y, meshPos.z)
 
         // this.player.mesh.position.copy(bodyPos)
 

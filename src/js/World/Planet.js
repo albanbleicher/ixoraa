@@ -17,19 +17,19 @@ export default class Planet {
     this.createPlanet()
   }
   createPlanet() {
-    const geometry = new BoxGeometry(1000,1000,0.1)
-    const material = new MeshBasicMaterial({
-      map:this.assets.textures.space
-    })
+    // const geometry = new BoxGeometry(1000,1000,0.1)
+    // const material = new MeshBasicMaterial({
+    //   map:this.assets.textures.space
+    // })
     // retrive planet mesh from the loader
-    const mesh = new Mesh(geometry,material)
-    mesh.rotateX( - Math.PI / 2);
+    const mesh = this.assets.models.ground.scene.children[0]
+    // mesh.rotateX( - Math.PI / 2);
     this.physics.add({
       name:this.container.name,
       mesh:mesh,
       mass:0,
       position:{x:0,y:0, z:0},
-      type:'box'
+      type:'heightfield'
     })
     const physicObject = this.physics.objects.find(item => item.name === this.container.name)
     physicObject.body.quaternion.setFromAxisAngle(new Vec3(-1, 0, 0), Math.PI * 0.5) 
