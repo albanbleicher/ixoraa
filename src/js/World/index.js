@@ -51,10 +51,9 @@ export default class World {
       this.loadDiv.remove()
     } else {
       this.assets.on('ressourceLoad', () => {
-        this.progress.style.width = this.loadModels.innerHTML = `${
-          Math.floor((this.assets.done / this.assets.total) * 100) +
+        this.progress.style.width = this.loadModels.innerHTML = `${Math.floor((this.assets.done / this.assets.total) * 100) +
           Math.floor((1 / this.assets.total) * this.assets.currentPercent)
-        }%`
+          }%`
       })
 
       this.assets.on('ressourcesReady', () => {
@@ -70,15 +69,15 @@ export default class World {
   }
   setPhysics() {
     this.physics = new Physics({
-      debug:true,
-      gravity:-9.82,
-      container:this.container,
-      time:this.time
+      debug: true,
+      gravity: -9.82,
+      container: this.container,
+      time: this.time
     })
-  } 
+  }
   setFog() {
     this.fog = new Fog({
-      camera:this.camera
+      camera: this.camera
     })
     this.scene.fog = this.fog.fog
     console.log(this.scene)
@@ -99,29 +98,29 @@ export default class World {
     this.ciel = new Ciel({
       time: this.time,
       assets: this.assets,
-      debug:this.debug,
-      renderer:this.renderer,
-      scene:this.container
+      debug: this.debug,
+      renderer: this.renderer,
+      scene: this.container
     })
     this.container.add(this.ciel.container)
   }
   setPlanet() {
- this.planet = new Planet({
-  time: this.time,
-  assets: this.assets,
-  debug:this.debug,
-  camera:this.camera,
-  physics:this.physics
- })
- this.container.add(this.planet.container)
+    this.planet = new Planet({
+      time: this.time,
+      assets: this.assets,
+      debug: this.debug,
+      camera: this.camera,
+      physics: this.physics
+    })
+    this.container.add(this.planet.container)
   }
   setPlayer() {
     this.player = new Player({
-      physics:this.physics,
-      time:this.time,
-      camera:this.camera,
-      ground:this.planet.container
-    }) 
+      physics: this.physics,
+      time: this.time,
+      camera: this.camera,
+      ground: this.planet.container
+    })
     this.container.add(this.player.container)
   }
 }

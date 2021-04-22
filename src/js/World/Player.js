@@ -98,7 +98,7 @@ export default class Player {
                         this.moving.jump = false;
                         break;
         }
-        console.log(this.player.mesh.position)
+        //console.log(this.player.mesh.position)
 
     }
     still(e) {
@@ -143,6 +143,7 @@ export default class Player {
             this.direction.z = Number( this.moving.forward ) - Number( this.moving.backward );
             this.direction.x = Number( this.moving.right ) - Number( this.moving.left );
             this.direction.normalize(); // this ensures consistent movements in all this.directions
+            //console.log(this.direction)
 
             if ( this.moving.forward || this.moving.backward ) this.velocity.z -= this.direction.z * 400.0 * delta;
             if ( this.moving.left || this.moving.right ) this.velocity.x -= this.direction.x * 400.0 * delta;
