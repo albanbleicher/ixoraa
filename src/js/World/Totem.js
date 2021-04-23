@@ -1,4 +1,5 @@
 import { Object3D, Color, SphereGeometry, MeshNormalMaterial, Mesh, MeshBasicMaterial } from 'three'
+import Random from '../Tools/Random'
 import Sound from './Sounds'
 
 export default class Totem {
@@ -16,22 +17,29 @@ export default class Totem {
     this.init()
   }
   init() {
+    // create new totem mesh
     const geometry = new SphereGeometry(10,100,100)
     const material = new MeshNormalMaterial()
     const mesh = new Mesh(geometry,material)
-    this.container.add(mesh)
+    // set position based on pass props
     mesh.position.copy(this.position)
 
+    this.container.add(mesh)
+
+    // add a sound that will be emmited from totem's position
+    this.sounds.add({
+      position:this.position,
+      distance:40
+    })
+
+    // enable floating
     this.float()
-    this.registerSound()
+
   }
   float() {
     this.time.on('tick', () => {
-      this.container.children[0].position.y = this.position.y*2 + Math.cos(this.time.current*0.001)*5
+      this.container.children[0].position.y = this.position.y*2 + Math.cos(this.time.current*0.001)* 6
     })
-  }
-  registerSound() {
-    
   }
 
 }

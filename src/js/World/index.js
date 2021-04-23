@@ -19,6 +19,8 @@ export default class World {
     this.scene = options.scene
 
     this.camera = options.camera
+
+    this.player = null
     // Set up
     this.container = new Object3D()
     this.container.name = 'World'
@@ -32,13 +34,14 @@ export default class World {
   }
   init() {
     this.setPhysics()
+    this.setPlayer()
+
+    this.setSounds()
     this.setAmbientLight()
     this.setPointLight()
     this.setPlanet()
-    this.setPlayer()
     this.setCiel()
     this.setFog()
-    this.setSounds()
   }
   setLoader() {
     this.loadDiv = document.querySelector('.loadScreen')
@@ -120,7 +123,6 @@ export default class World {
       physics:this.physics,
       time:this.time,
       camera:this.camera,
-      ground:this.planet.container,
       debug:this.debug
     }) 
     this.container.add(this.player.container)
@@ -129,7 +131,10 @@ export default class World {
     this.sounds = new Sounds({
       time:this.time,
       player:this.player,
-      debug:this.debug
+      debug:this.debug,
+      camera:this.camera,
+      assets:this.assets
     })
+    this.container.add(this.sounds.container)
   }
 }

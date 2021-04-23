@@ -9,7 +9,6 @@ export default class Player {
         this.physics = params.physics
         this.time = params.time
         this.camera = params.camera
-        this.ground = params.ground
         this.debug = params.debug
         this.player = {}
         this.moving = {
