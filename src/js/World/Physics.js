@@ -84,8 +84,9 @@ import { Vector3 } from "three";
                 })
                 break;
                 case 'heightfield':
-                shape = threeToCannon(params.mesh, 
-                  {type: threeToCannon.Type.MESH})
+                shape = threeToCannon(params.mesh)
+
+                // shape = new Trimesh(params.vertices,[0,1,2])
                 break;
               case null:
                 shape = threeToCannon(params.mesh)

@@ -1,33 +1,37 @@
-import { Object3D, Color } from 'three'
+import { Object3D, Color, SphereGeometry, MeshNormalMaterial, Mesh, MeshBasicMaterial } from 'three'
+import Sound from './Sounds'
 
 export default class Totem {
   constructor(options) {
     // Options
     this.time = options.time
     this.assets = options.assets
+    this.position = options.position
+    this.sounds = options.sounds
 
     // Set up
     this.container = new Object3D()
     this.container.name = 'Totem'
 
-    this.createTotem()
-    this.setMovement()
+    this.init()
   }
-  createTotem() {
-    this.totem = this.assets.models.totem.scene
+  init() {
+    const geometry = new SphereGeometry(10,100,100)
+    const material = new MeshNormalMaterial()
+    const mesh = new Mesh(geometry,material)
+    this.container.add(mesh)
+    mesh.position.copy(this.position)
 
-    // Adding some colors
-    let aura = this.totem.children.find(item => item.userData.name ==='aura')
-    let sun = this.totem.children.find(item => item.userData.name ==='sun')
-    aura.material.color = new Color('orange')
-    aura.material.emissive = new Color('#f5f373')
-    sun.material.emissive= new Color('orange')
-
-    this.container.add(this.totem)
+    this.float()
+    this.registerSound()
   }
-  setMovement() {
+  float() {
     this.time.on('tick', () => {
-      this.totem.rotation.y += 0.005
+      this.container.children[0].position.y = this.position.y*2 + Math.cos(this.time.current*0.001)*5
     })
   }
+  registerSound() {
+    
+  }
+
 }

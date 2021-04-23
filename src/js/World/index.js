@@ -6,6 +6,7 @@ import Ciel from './Ciel'
 import Planet from './Planet'
 import Physics from './Physics'
 import Player from './Player'
+import Sounds from './Sounds'
 import Fog from './Fog'
 
 export default class World {
@@ -37,9 +38,7 @@ export default class World {
     this.setPlayer()
     this.setCiel()
     this.setFog()
-    window.addEventListener('click', () => {
-      this.camera.controls.lock()
-    })
+    this.setSounds()
   }
   setLoader() {
     this.loadDiv = document.querySelector('.loadScreen')
@@ -111,7 +110,8 @@ export default class World {
   assets: this.assets,
   debug:this.debug,
   camera:this.camera,
-  physics:this.physics
+  physics:this.physics,
+  sounds:this.sounds
  })
  this.container.add(this.planet.container)
   }
@@ -120,8 +120,16 @@ export default class World {
       physics:this.physics,
       time:this.time,
       camera:this.camera,
-      ground:this.planet.container
+      ground:this.planet.container,
+      debug:this.debug
     }) 
     this.container.add(this.player.container)
+  }
+  setSounds() {
+    this.sounds = new Sounds({
+      time:this.time,
+      player:this.player,
+      debug:this.debug
+    })
   }
 }

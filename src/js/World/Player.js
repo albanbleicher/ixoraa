@@ -10,6 +10,7 @@ export default class Player {
         this.time = params.time
         this.camera = params.camera
         this.ground = params.ground
+        this.debug = params.debug
         this.player = {}
         this.moving = {
             forward:false,
@@ -44,17 +45,17 @@ export default class Player {
             name:this.container.name,
             mesh:this.player.mesh,
             type:'sphere',
-            mass:0,
+            mass:1,
             position:{
                 x:0,
-                y:1,
+                y:55,
                 z:0
             }
         })
         // add mesh to main container
         this.container.add(this.player.mesh)
         this.player.mesh.add(this.camera.camera)
-        this.camera.camera.position.y = 3
+        this.camera.camera.position.y = 2
         this.camera.camera.position.z = 10
         // this.camera.camera.z=-10
         // this.camera.camera.lookAt(this.player.mesh)
@@ -68,7 +69,13 @@ export default class Player {
             this.physics.animate(this.container.name)
             this.handleMovements()
         })
-
+        if(this.debug) {
+            const folder= this.debug.addFolder('Player')
+            folder.open()
+            folder.add(this.player.mesh.position,'x').listen()
+            folder.add(this.player.mesh.position,'y').listen()
+            folder.add(this.player.mesh.position,'z').listen()
+        }
 
 
     }
