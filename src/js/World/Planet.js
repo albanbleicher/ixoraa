@@ -4,6 +4,7 @@ import { Howl, Howler } from 'howler'
 import mp3sound from '../../sounds/mp3sound.mp3'
 import fart from '../../sounds/fart.mp3'
 import wind from '../../sounds/wind.mp3'
+import snare from '../../sounds/snare.mp3'
 import marimba from '../../sounds/marimba.wav'
 import cannonDebugger from 'cannon-es-debugger'
 export default class Planet {
@@ -117,7 +118,7 @@ export default class Planet {
     });
 
     let sound3 = new PositionalAudio(listener);
-    audioLoader.load(fart, function (buffer) {
+    audioLoader.load(snare, function (buffer) {
       sound3.setBuffer(buffer);
       sound3.setRefDistance(20);
       sound3.setLoop(true);
