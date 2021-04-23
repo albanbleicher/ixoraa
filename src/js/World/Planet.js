@@ -21,9 +21,8 @@ export default class Planet {
     this.container.name = 'Planet'
 
     this.createPlanet()
-    //this.createSoundHowler()
-    this.createSoundThree()
-    //this.createTree()
+    this.createSoundHowler()
+    //this.createSoundThree()
   }
   createPlanet() {
     const geometry = new BoxGeometry(1000, 1000, 0.1)
@@ -78,7 +77,11 @@ export default class Planet {
 
     document.addEventListener('click', () => console.log(sound3.play()))
 
-    sound1.pos(50, 0, 50);
+    const sphere = new SphereGeometry(20, 32, 16);
+    const material = new MeshBasicMaterial({ color: 0xff2200 });
+    var spheremesh = new Mesh(sphere, material);
+    this.container.add(spheremesh);
+
     /*sound1.pannerAttr({
       panningModel: 'HRTF',
       refDistance: 0.8,
@@ -88,8 +91,21 @@ export default class Planet {
     var id1 = sound1.play();
     var id2 = sound2.play();
     var id3 = sound2.play();
+
     this.time.on('tick', () => {
-      console.log(this.camera.position)
+      var distanceTotemPlayerX = this.camera.position.x - spheremesh.position.x
+      var distanceTotemPlayerY = this.camera.position.y - spheremesh.position.y
+      var distanceTotemPlayerZ = this.camera.position.z - spheremesh.position.z
+
+      //console.log(this.camera.position)
+      sound1.pos(distanceTotemPlayerX, distanceTotemPlayerY, distanceTotemPlayerZ);
+      sound2.pos(distanceTotemPlayerX, distanceTotemPlayerY, distanceTotemPlayerZ);
+      sound3.pos(distanceTotemPlayerX, distanceTotemPlayerY, distanceTotemPlayerZ);
+
+      //sound2.pos.x = distanceTotemPlayer;
+      //sound3.pos.x = distanceTotemPlayer;
+      console.log(sound1)
+      console.log(distanceTotemPlayerX)
       //console.log(Math.cos(this.time.current * 0.001))
       //sound1.pos(- Math.cos(this.time.current * 0.001), 0.5, -0.5);
       //sound2.pos(Math.cos(this.time.current * 0.001), 0.5, -0.5);
