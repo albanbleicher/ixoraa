@@ -1,5 +1,5 @@
 import { Vec3 } from "cannon-es"
-import { Raycaster, Vector2, Vector3 } from "three"
+import { Vector2, Vector3 } from "three"
 import { Spherical } from "three"
 import { Mesh,MeshStandardMaterial,SphereGeometry, Object3D } from "three"
 
@@ -27,7 +27,7 @@ export default class Player {
         this.vec = 
         this.init()
     }
-    init() {
+    async init() {
         this.prevTime = performance.now()
         // Add sphere to simulate player
         const geometry = new SphereGeometry(0.5,10,10)
@@ -40,14 +40,14 @@ export default class Player {
 
 
         // enable physics and returning the body from Physics Class
-        this.player.body = this.physics.add({
+        this.player.body = await this.physics.add({
             name:this.container.name,
             mesh:this.player.mesh,
             type:'sphere',
-            mass:1,
+            mass:0,
             position:{
                 x:0,
-                y:55,
+                y:0,
                 z:0
             }
         })
@@ -61,13 +61,9 @@ export default class Player {
         // animate physics + camera focus at player mesh on each tick
         window.addEventListener('keydown',(e) => this.move(e))
         window.addEventListener('keyup',(e) => this.still(e))
-    
-        this.raycaster = new Raycaster( new Vector3(), new Vector3( 0, - 1, 0 ), 0, 0 );
-        this.time.on('tick', () => {
-            // this.camera.camera.lookAt(this.player.mesh.position)
-            this.physics.animate(this.container.name)
-            this.handleMovements()
-        })
+           // this.time.on('tick', () => {
+        //     // this.camera.camera.lookAt(this.player.mesh.position)
+        // })
         if(this.debug) {
             const folder= this.debug.addFolder('Player')
             folder.open()
@@ -75,7 +71,7 @@ export default class Player {
             folder.add(this.player.mesh.position,'y').listen()
             folder.add(this.player.mesh.position,'z').listen()
         }
-
+        this.handleMovements()
 
     }
     move(e) {
@@ -123,41 +119,40 @@ export default class Player {
         }
     }
     handleMovements() {
-        let vec = new Vector3()
-        let meshPos = new Vector3().copy(this.player.mesh.position)
-        const time = performance.now();
-        // if ( this.camera.controls.isLocked ) {
- 
-            // this.moveForward
+
+      this.time.on('tick', () => {
+            let vec = new Vector3()
+            let meshPos = new Vector3().copy(this.player.body.position)
             if(this.moving.forward) {
-                vec.setFromMatrixColumn( this.container.matrix, 0 );
-    		vec.crossVectors( this.container.up, vec )
+                vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
+            vec.crossVectors( this.player.mesh.up, vec )
             meshPos.addScaledVector(vec, 0.5)
-            // this.player.body.applyImpulse(new Vec3(0.5,0.5,0.5), meshPos)
+        this.player.body.position.copy(meshPos)
+    
             } 
             if(this.moving.backward) {
-                vec.setFromMatrixColumn( this.container.matrix, 0 );
-    		vec.crossVectors( this.container.up, vec )
+                vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
+            vec.crossVectors( this.player.mesh.up, vec )
             meshPos.addScaledVector(vec, -0.5)
-            // this.player.body.position.copy(meshPos)
+        this.player.body.position.copy(meshPos)
+    
             }
             if(this.moving.right) {
-                vec.setFromMatrixColumn( this.container.matrix, 0 );
+                vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
             meshPos.addScaledVector(vec, 0.4)
-            // this.player.body.position.copy(meshPos)
+        this.player.body.position.copy(meshPos)
+    
             }
             if(this.moving.left) {
-                vec.setFromMatrixColumn( this.container.matrix, 0 );
+                vec.setFromMatrixColumn( this.player.mesh.matrix, 0 );
             meshPos.addScaledVector(vec, -0.4)
-            }
-            // this.camera.camera.lookAt(this.player.mesh.position)
-
-        // }
-        // this.prevTime = performance.now()
         this.player.body.position.copy(meshPos)
-        this.camera.camera.lookAt(meshPos.x,meshPos.y, meshPos.z)
-
-        // this.player.mesh.position.copy(bodyPos)
+    
+            }
+            this.camera.camera.lookAt(meshPos)
+            this.physics.animate(this.container.name)
+    
+    })
 
 
     }

@@ -12,7 +12,7 @@ import {
     threeToCannon
   } from 'three-to-cannon';
   import cannonDebugger from 'cannon-es-debugger'
-import { Vector3 } from "three";
+import { Vector3, Raycaster } from "three";
 
   
   export default class Physics {
@@ -51,7 +51,7 @@ import { Vector3 } from "three";
     setDebugger() {
       cannonDebugger(this.container, this.world.bodies)
     }
-    add(params) {
+    async add(params) {
       /**
        * Params (Object)
        * {
@@ -84,7 +84,10 @@ import { Vector3 } from "three";
                 })
                 break;
                 case 'heightfield':
-                shape = threeToCannon(params.mesh)
+                  // shape = new Heightfield(params.vertices, {
+                  //   elementSize:1
+                  // })
+                 await this.generateHeightfieldFromMesh(params.mesh,1)
 
                 // shape = new Trimesh(params.vertices,[0,1,2])
                 break;
@@ -191,6 +194,77 @@ import { Vector3 } from "three";
             object.mesh.position.copy(object.body.position)
             // this.container.children.find(item => item.name === name).position.copy(object.body.position)
   }
+   async generateHeightfieldFromMesh(mesh, pointDistance) {
+    // https://threejs.org/docs/index.html#api/en/core/Raycaster
+    const rayCaster = new Raycaster();
+    const rayCasterPosition = new Vector3();
+    const upAxis = new Vector3(0, 1, 0);
+
+    const heightMap = [];
+
+    const geometry = findGeometry(mesh);
+    geometry.computeBoundingBox();
+    const {
+        min: {x: minX, y: minY, z: minZ},
+        max: {x: maxX, z: maxZ},
+    } = geometry.boundingBox;
+
+    const width = maxX - minX;
+    const length = maxZ - minZ;
+
+    const totalX = width / pointDistance + 1;
+    const totalZ = length / pointDistance + 1;
+    const totalSteps = totalX * totalZ;
+    let currentStep = 0;
+
+    for (let x = minX; x <= maxX; x += pointDistance) {
+        const heightDataRow = [];
+        heightMap.push(heightDataRow);
+
+        for (let z = maxZ; z >= minZ; z -= pointDistance) {
+            rayCasterPosition.set(x, minY, z);
+            rayCaster.set(rayCasterPosition, upAxis);
+
+            const y = await calculateMeshSurfaceDistanceByRayCast();
+
+            heightDataRow.push(y);
+        }
+    }
+
+    const terrainShape = new Heightfield(heightMap, {elementSize: pointDistance});
+    // const heightfield = new Body({ mass: 0, shape: terrainShape });
+    // heightfield.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), -Math.PI / 2);
+    // heightfield.position.set(minX, 0, maxZ);
+
+    return terrainShape;
+
+    
+    function calculateMeshSurfaceDistanceByRayCast() {
+        return new Promise((resolve) => {
+            window.setTimeout(() => {
+                currentStep++;
+
+                console.log(`generating height field... ${Math.floor(100 / totalSteps * currentStep)}%`);
+
+                const [result] = rayCaster.intersectObject(mesh, true);
+                if(result) resolve(result.distance);
+                else resolve(0)
+                
+            });
+        });
+    }
+    function findGeometry(mesh) {
+      let geometry;
+
+      mesh.traverse((child) => {
+          if (!geometry && child.type === 'Mesh' && child.geometry) {
+              geometry = child.geometry;
+          }
+      });
+
+      return geometry;
+  }
+}
 }
   
   
