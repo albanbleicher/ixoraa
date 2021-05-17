@@ -9,7 +9,7 @@ import {
     Trimesh
   } from "cannon-es"
   import {
-    threeToCannon
+    threeToCannon, ShapeType
   } from 'three-to-cannon';
   import cannonDebugger from 'cannon-es-debugger'
 import { Vector3, Raycaster } from "three";
@@ -87,7 +87,10 @@ import { Vector3, Raycaster } from "three";
                   // shape = new Heightfield(params.vertices, {
                   //   elementSize:1
                   // })
-                 await this.generateHeightfieldFromMesh(params.mesh,1)
+                  shape = threeToCannon(params.mesh, {
+                    type: threeToCannon.Type.MESH
+                  })
+                //  await this.generateHeightfieldFromMesh(params.mesh,1)
 
                 // shape = new Trimesh(params.vertices,[0,1,2])
                 break;

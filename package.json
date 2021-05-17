@@ -58,6 +58,7 @@
     "cannon-es": "^0.16.0",
     "cannon-es-debugger": "^0.1.1",
     "core-js": "^3.11.0",
-    "three-to-cannon": "^4.0.2"
+    "three-to-cannon": "^3.1.0"
+
   }
 }
