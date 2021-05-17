@@ -26,7 +26,7 @@ export default class Camera {
       0.1,
       1000
     )
-    this.camera.rotation.order = 'YXZ';
+    // this.camera.rotation.order = 'YXZ';
 
     // this.controls = new PointerLockControls(this.camera, document.body)
     // this.container.add(this.controls.getObject())

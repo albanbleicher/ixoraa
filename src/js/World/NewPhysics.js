@@ -1,31 +1,17 @@
-import {
-    Body,
-    Vec3,
-    World,
-    Sphere,
-    Box,
-    RaycastVehicle,
-    Heightfield,
-    Trimesh
-  } from "cannon-es"
-  import {
-    threeToCannon, ShapeType
-  } from 'three-to-cannon';
-  import cannonDebugger from 'cannon-es-debugger'
-import { Vector3, Raycaster, Clock } from "three";
+import { Clock } from "three";
 import { Octree } from "three/examples/jsm/math/Octree";
 
-  
   export default class Physics {
     constructor(params) {
       this.debug = params.debug // boolean
       this.container = params.container // global container of the template
       this.time = params.time 
-      
-      this.world = null
       this.planet = params.planet
       this.player = params.player
-      this.camera = params.camera
+      this.camera = params.camera 
+
+      this.world = new Octree()
+      
 
       this.moving = {
         forward:false,
@@ -34,12 +20,12 @@ import { Octree } from "three/examples/jsm/math/Octree";
         right:false,
         jump:false
     }
+
     this.gravity = params.gravity
 
       this.init()
     }
     init() {
-        this.world = new Octree()
         this.world.fromGraphNode(this.planet.mesh)
         window.addEventListener('keydown',(e) => this.move(e))
         window.addEventListener('keyup',(e) => this.still(e))
@@ -55,7 +41,7 @@ import { Octree } from "three/examples/jsm/math/Octree";
                 
                this.player.mesh.rotation.y -= event.movementX / 500;
                this.player.mesh.rotation.x -= event.movementY / 500;
-
+            console.log('y', this.player.mesh.rotation.y,'x', this.player.mesh.rotation.x)
             }
 
         } );
@@ -129,27 +115,23 @@ import { Octree } from "three/examples/jsm/math/Octree";
         
         if ( this.player.onFloor ) {
             if ( this.moving.forward ) {
-                console.log('forward')
                 this.player.velocity.add( this.getForwardVector().multiplyScalar( speed * delta ) );
 
             }
 
             if ( this.moving.backward ) {
-                console.log('backward')
 
                 this.player.velocity.add( this.getForwardVector().multiplyScalar( - speed * delta ) );
 
             }
 
             if ( this.moving.left ) {
-                console.log('left')
 
                 this.player.velocity.add( this.getSideVector().multiplyScalar( - speed * delta ) );
 
             }
 
             if ( this.moving.right ) {
-                console.log('right')
 
                 this.player.velocity.add( this.getSideVector().multiplyScalar( speed * delta ) );
 
@@ -165,7 +147,6 @@ import { Octree } from "three/examples/jsm/math/Octree";
 
     }
     move(e) {
-        console.log('x',this.player.mesh.position.x,'y',this.player.mesh.position.y,'z',this.player.mesh.position.z)
         switch(e.code) {
             case 'ArrowUp':
             case 'KeyW':

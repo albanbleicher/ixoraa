@@ -1,0 +1,38 @@
+.landing {
+    position: fixed;
+    top:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: color('background');
+    width: 100%;
+    height: 100%;
+	transition: 0.55s opacity ease-out;
+    &::after {
+        position: absolute;
+        top: -100px;
+        right: -200px;
+        background: url('@style/assets/shape.svg');
+        content:'';
+        width: 571px;
+        height: 550px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    &::before {
+        position: absolute;
+        bottom: -100px;
+        left: -80px;
+        background: url('@style/assets/shape-two.svg');
+        content:'';
+        width: 371px;
+        height: 450px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    svg {
+        margin-bottom: 35px;
+    }
+}

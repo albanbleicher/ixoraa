@@ -1,0 +1,30 @@
+button {
+    padding: 15px 30px;
+    background-color: color('secondary');
+    border:2px solid color('secondary');
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    color: color('background');
+    font-size: 20px;
+    min-width: 200px;
+    border-radius: 100px;
+    position: relative;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.5s;
+    outline: 0;
+    &:hover {
+        opacity: 0.8;
+    }
+    &:before {
+        content: " ";
+        position: absolute;
+        z-index: 1;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border-radius: 100px;
+        border: 2px solid color('background');
+      }
+}
