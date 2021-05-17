@@ -4,7 +4,7 @@ import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
 import Ciel from './Ciel'
 import Planet from './Planet'
-import Physics from './Physics'
+import Physics from './NewPhysics'
 import Player from './Player'
 import Sounds from './Sounds'
 import Fog from './Fog'
@@ -33,13 +33,13 @@ export default class World {
     this.setLoader()
   }
   init() {
-    this.setPhysics()
     this.setPlayer()
-
     this.setSounds()
+    this.setPlanet()
+    this.setPhysics()
+
     this.setAmbientLight()
     this.setPointLight()
-    this.setPlanet()
     this.setCiel()
     this.setFog()
   }
@@ -73,9 +73,12 @@ export default class World {
   setPhysics() {
     this.physics = new Physics({
       debug:true,
-      gravity:-9.82,
+      gravity:30,
       container:this.container,
-      time:this.time
+      time:this.time,
+      player:this.player.player,
+      planet:this.planet,
+      camera:this.camera.camera
     })
   } 
   setFog() {
@@ -83,7 +86,6 @@ export default class World {
       camera:this.camera
     })
     this.scene.fog = this.fog.fog
-    console.log(this.scene)
   }
   setAmbientLight() {
     this.ambientlight = new AmbientLightSource({

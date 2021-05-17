@@ -87,10 +87,10 @@ import { Vector3, Raycaster } from "three";
                   // shape = new Heightfield(params.vertices, {
                   //   elementSize:1
                   // })
-                  shape = threeToCannon(params.mesh, {
-                    type: threeToCannon.Type.MESH
-                  })
-                //  await this.generateHeightfieldFromMesh(params.mesh,1)
+                  // shape = threeToCannon(params.mesh, {
+                  //   type: threeToCannon.Type.MESH
+                  // })
+                //  shape = await this.generateHeightfieldFromMesh(params.mesh,1)
 
                 // shape = new Trimesh(params.vertices,[0,1,2])
                 break;

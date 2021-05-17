@@ -22,8 +22,6 @@ export default class App {
     this.setRenderer()
     this.setCamera()
     this.setWorld()
-    console.log(this.camera.camera.position)
-    console.log(this.camera.camera.rotation)
   }
   setRenderer() {
     // Set scene
