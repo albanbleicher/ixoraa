@@ -9,6 +9,7 @@ class Rooms {
         const room = Math.floor(1000 + Math.random() * 9000); // génére un code à 4 chiffres aléatoires
         this.list.push(room)
         this.socket.join(room);
+        console.log('room to join : ', room)
         this.io.emit(ROOMS_EVENTS.CODE, room)
 
     }

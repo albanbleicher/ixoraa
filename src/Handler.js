@@ -25,7 +25,10 @@ class Handler {
         this.lines = [{ id: 1 }, { id: 2 }, {id: 3}]
         this.rooms = null
         this.io.on(EVENTS.USER_CONNECT, (socket) => {
-            if(!this.rooms) self.rooms = new Rooms({socket, io:this.io})
+            console.log('user connect')
+            if(!this.rooms) {
+                this.rooms = new Rooms({socket, io:this.io})
+            }
             self.listen(socket)
         });
 
@@ -34,6 +37,7 @@ class Handler {
         // })
     }
     listen(socket) {
+        const self= this;
         socket.on(MOVEMENTS.UP, () => movements.up(this.io))
         socket.on(MOVEMENTS.DOWN, () => movements.down(this.io))
         socket.on(MOVEMENTS.LEFT, () => movements.left(this.io))
@@ -54,8 +58,8 @@ class Handler {
         socket.on(MUSICTIME.WINNED, () => musictime.winned(this.io))
         
 
-        socket.on(ROOMS_EVENTS.CREATE, () => this.rooms.create() )
-        socket.on(ROOMS_EVENTS.JOIN, (room) => this.rooms.join(room) )
+        socket.on(ROOMS_EVENTS.CREATE, () => self.rooms.create() )
+        socket.on(ROOMS_EVENTS.JOIN, (room) => self.rooms.join(room) )
     }
 }
 exports.default = Handler;
