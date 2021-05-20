@@ -39,8 +39,8 @@ import { Octree } from "three/examples/jsm/math/Octree";
 
             if ( document.pointerLockElement === document.body ) {
                 
-               this.player.container.rotation.y += event.movementX / 500;
-               this.player.container.rotation.x += event.movementY / 500;
+               this.player.mesh.rotation.y += event.movementX / 500;
+               this.player.mesh.rotation.x += event.movementY / 500;
             console.log('y', this.player.mesh.rotation.y,'x', this.player.mesh.rotation.x)
             }
 
