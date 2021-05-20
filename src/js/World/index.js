@@ -1,10 +1,10 @@
-import { AxesHelper, Color, Mesh, MeshBasicMaterial, MeshNormalMaterial, MeshStandardMaterial, Object3D, SphereGeometry } from 'three'
+import { AxesHelper, Object3D } from 'three'
 
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
 import Ciel from './Ciel'
 import Planet from './Planet'
-import Physics from './NewPhysics'
+import Physics from './Physics'
 import Player from './Player'
 import Sounds from './Sounds'
 import Fog from './Fog'
@@ -36,12 +36,14 @@ export default class World {
     this.setPlayer()
     this.setSounds()
     this.setPlanet()
-    this.setPhysics()
+    setTimeout(() => {
+      this.setPhysics()
 
     this.setAmbientLight()
     this.setPointLight()
     this.setCiel()
     this.setFog()
+    },1000)
   }
   setLoader() {
     this.loadDiv = document.querySelector('.loadScreen')
@@ -73,7 +75,7 @@ export default class World {
   setPhysics() {
     this.physics = new Physics({
       debug:true,
-      gravity:30,
+      gravity:9.82,
       container:this.container,
       time:this.time,
       player:this.player.player,

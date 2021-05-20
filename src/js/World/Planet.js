@@ -1,20 +1,9 @@
 import {
   Object3D,
-  SphereGeometry,
   MeshStandardMaterial,
-  Color,
-  Mesh,
   BoxGeometry,
   Vector3,
-  DoubleSide,
-  PlaneGeometry,
-  MathUtils,
-  MeshNormalMaterial,
-  MeshBasicMaterial
 } from 'three'
-import {
-  Vec3
-} from 'cannon-es'
 import Totem from './Totem'
 import Random from '../Tools/Random'
 export default class Planet {
@@ -38,15 +27,14 @@ export default class Planet {
   init() {
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshStandardMaterial({
-      map: this.assets.textures.ground_diff,
-      aoMap:this.assets.textures.ground_ao,
-      // aoMapIntensity:this.assets.textures.ground_rough_ao,
-      // displacementMap:this.assets.textures.ground_disp,
-      // normalMap:this.assets.textures.ground_norm,
-      roughnessMap:this.assets.textures.ground_rough
+      color:'grey',
+      roughness:0.6
     })
+
     this.mesh = this.assets.models.ground.scene
+    // this.map_rework = this.assets.models.ground.scene.children.find(item => item.name ==="GROUND")
     this.mesh.material = material
+    this.mesh.position.y=-40
    this.container.add(this.mesh)
   }
   setTotems(count) {
@@ -54,7 +42,7 @@ export default class Planet {
       const x = Random(-500, 500)
       const z = Random(-500, 500)
       const totem = new Totem({
-        position: new Vector3(x, 10, z),
+        position: new Vector3(x, -40, z),
         time: this.time,
         sounds: this.sounds
       })

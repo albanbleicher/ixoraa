@@ -15,7 +15,7 @@ module.exports = webpackMerge.merge(
     {
       rules: [
         {
-          test: /\.styl$/,
+          test: /\.scss$/,
           use: [
             {
               loader: MiniCssExtractPlugin.loader,
@@ -24,7 +24,7 @@ module.exports = webpackMerge.merge(
               },
             },
             'css-loader',
-            'stylus-loader'
+            'scss-loader'
           ]
         }
       ]

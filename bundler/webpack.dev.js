@@ -50,11 +50,11 @@ module.exports = webpackMerge.merge(
     module: {
       rules: [
         {
-          test: /\.(styl|css)$/,
+          test: /\.(scss|css)$/,
           use: [
             'style-loader',
             'css-loader',
-            'stylus-loader'
+            'sass-loader'
           ]
         }
       ]

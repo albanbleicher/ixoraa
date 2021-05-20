@@ -1,0 +1,15 @@
+@use "sass:map";
+/* Import Montserrat from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700&display=swap');
+
+/* Variables */
+$colors: (
+    'background':#EBF2E9,
+    'primary':#1E8D88,
+    'secondary': #904E8A,
+);
+
+/* Functions */
+@function color($key) {
+    @return map-get($colors, $key);
+  }

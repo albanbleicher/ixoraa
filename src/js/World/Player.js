@@ -23,21 +23,23 @@ export default class Player {
     }
     async init() {
         // Add sphere to simulate player
-        const geometry = new SphereGeometry(0.5,10,10)
+        const geometry = new SphereGeometry(0.05, 10,10)
         const material = new MeshStandardMaterial({
             color:'blue'
         })
+
         this.player.mesh = new Mesh(geometry, material)
+
         this.player.collider = new Capsule( new Vector3( 0, 0.35, 0 ), new Vector3( 0, 0, 0 ), 0.35 );
         this.player.velocity  = new Vector3()
         this.player.direction = new Vector3()
         this.player.onFloor = false
-        this.player.mesh.position.y = 10
+     
         // place camera
         this.container.add(this.player.mesh)
         this.player.mesh.add(this.camera.camera)
-        this.camera.camera.position.y = 2
-        this.camera.camera.position.z = 10
+        this.camera.camera.position.y = 1
+        this.camera.camera.position.z = 1
 
         this.time.on('tick',() => {
             this.camera.camera.lookAt(this.player.mesh.position)
