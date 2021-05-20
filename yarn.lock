@@ -2217,6 +2217,7 @@ end-of-stream@^1.1.0:
   dependencies:
     once "^1.4.0"
 
+<<<<<<< HEAD
 engine.io-client@~5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/engine.io-client/-/engine.io-client-5.1.1.tgz#f5c3aaaef1bdc9443aac6ffde48b3b2fb2dc56fc"
@@ -2239,6 +2240,8 @@ engine.io-parser@~4.0.1:
   dependencies:
     base64-arraybuffer "0.1.4"
 
+=======
+>>>>>>> a58afbe2ac8edc50988c2db4cdce307729359e6e
 enhanced-resolve@^5.8.0:
   version "5.8.2"
   resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.8.2.tgz#15ddc779345cbb73e97c611cd00c01c1e7bf4d8b"

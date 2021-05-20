@@ -61,7 +61,10 @@
     "cannon-es-debugger": "^0.1.1",
     "core-js": "^3.11.0",
     "gsap": "^3.6.1",
+<<<<<<< HEAD
     "socket.io-client": "^4.1.1",
+=======
+>>>>>>> a58afbe2ac8edc50988c2db4cdce307729359e6e
     "three-to-cannon": "^4.0.2"
   }
 }
