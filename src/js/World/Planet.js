@@ -27,13 +27,13 @@ export default class Planet {
   init() {
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshStandardMaterial({
-      color:'grey',
+      color:'#9E3C74',
       roughness:0.6
     })
 
     this.mesh = this.assets.models.ground.scene
-    // this.map_rework = this.assets.models.ground.scene.children.find(item => item.name ==="GROUND")
     this.mesh.material = material
+    this.mesh.children.find(item => item.name ==="map_rework").material = material
     this.mesh.position.y=-10
    this.container.add(this.mesh)
   }

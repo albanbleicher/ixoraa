@@ -75,7 +75,7 @@ export default class World {
   setPhysics() {
     this.physics = new Physics({
       debug:true,
-      gravity:9.82,
+      gravity:30,
       container:this.container,
       time:this.time,
       player:this.player.player,

@@ -7,6 +7,6 @@ export default class Fogg {
         this.init()
     } 
     init() {
-        this.fog = new Fog(new Color('grey'), this.camera.camera.near, this.camera.camera.far-200)
+        this.fog = new Fog(new Color('#752b56'), this.camera.camera.near, this.camera.camera.far-50)
     }
 }
