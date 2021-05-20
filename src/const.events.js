@@ -1,8 +1,16 @@
 exports.EVENTS = {
     USER_CONNECT: 'connection',
     USER_DISCONNECT: 'disconect',
-    NEW_MESSAGE: 'new message'
 }
+
+exports.ROOMS_EVENTS = {
+    CREATE: 'room create',
+    JOIN: 'room join',
+    IS_SYNCED:'room is_synced',
+    ERROR: 'room error',
+    CODE:'room code'
+}
+
 exports.MOVEMENTS = {
     UP: 'move up',
     DOWN: 'move down',
