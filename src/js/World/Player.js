@@ -38,7 +38,7 @@ export default class Player {
         // place camera
         this.container.add(this.player.mesh)
         this.player.mesh.add(this.camera.camera)
-        this.camera.camera.position.y = 1
+        this.camera.camera.position.y = 0
         this.camera.camera.position.z = 1
 
         this.time.on('tick',() => {

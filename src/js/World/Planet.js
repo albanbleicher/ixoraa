@@ -34,7 +34,7 @@ export default class Planet {
     this.mesh = this.assets.models.ground.scene
     // this.map_rework = this.assets.models.ground.scene.children.find(item => item.name ==="GROUND")
     this.mesh.material = material
-    this.mesh.position.y=-40
+    this.mesh.position.y=-10
    this.container.add(this.mesh)
   }
   setTotems(count) {

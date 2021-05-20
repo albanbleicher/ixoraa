@@ -1,3 +1,4 @@
+import { clearConfigCache } from "prettier";
 import { Clock } from "three";
 import { Octree } from "three/examples/jsm/math/Octree";
 
@@ -29,24 +30,10 @@ import { Octree } from "three/examples/jsm/math/Octree";
         this.world.fromGraphNode(this.planet.mesh)
         window.addEventListener('keydown',(e) => this.move(e))
         window.addEventListener('keyup',(e) => this.still(e))
-        document.addEventListener( 'mousedown', () => {
+   
 
-            document.body.requestPointerLock();
-
-        } );
-
-        document.body.addEventListener( 'mousemove', ( event ) => {
-
-            if ( document.pointerLockElement === document.body ) {
-                
-               this.player.mesh.rotation.y += event.movementX / 500;
-               this.player.mesh.rotation.x += event.movementY / 500;
-            console.log('y', this.player.mesh.rotation.y,'x', this.player.mesh.rotation.x)
-            }
-
-        } );
         this.clock = new Clock()
-        // this.player.mesh.position.set(100,10,100)
+        
         this.time.on('tick', () => {
            const delta = Math.min( 0.1, this.clock.getDelta() );
             this.controls(delta)
@@ -127,13 +114,15 @@ import { Octree } from "three/examples/jsm/math/Octree";
 
             if ( this.moving.left ) {
 
-                this.player.velocity.add( this.getSideVector().multiplyScalar( - speed * delta ) );
+                // this.player.velocity.add( this.getSideVector().multiplyScalar( - speed * delta ) );
+               this.player.mesh.rotation.y += 0.01
+
 
             }
 
             if ( this.moving.right ) {
 
-                this.player.velocity.add( this.getSideVector().multiplyScalar( speed * delta ) );
+                this.player.mesh.rotation.y -= 0.01
 
             }
 

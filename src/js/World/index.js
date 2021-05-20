@@ -43,7 +43,7 @@ export default class World {
     this.setPointLight()
     this.setCiel()
     this.setFog()
-    },1000)
+    },100)
   }
   setLoader() {
     this.loadDiv = document.querySelector('.loadScreen')
