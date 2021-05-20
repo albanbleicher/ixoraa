@@ -3,6 +3,7 @@ import {
   MeshStandardMaterial,
   BoxGeometry,
   Vector3,
+  MeshNormalMaterial,
 } from 'three'
 import Totem from './Totem'
 import Random from '../Tools/Random'
@@ -36,6 +37,7 @@ export default class Planet {
     this.mesh.children.find(item => item.name ==="map_rework").material = material
     this.mesh.position.y=-10
    this.container.add(this.mesh)
+   this.setMaterials()
   }
   setTotems(count) {
     for (let i = 0; i < count; i++) {
@@ -48,6 +50,10 @@ export default class Planet {
       })
       this.container.add(totem.container)
     }
+  }
+  setMaterials() {
+    const MONOLITHE = this.mesh.children.find(item => item.name === 'gro_monolithe')
+    MONOLITHE.material = new MeshNormalMaterial()
   }
 
 }

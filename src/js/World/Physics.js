@@ -33,7 +33,7 @@ import { Octree } from "three/examples/jsm/math/Octree";
    
 
         this.clock = new Clock()
-        
+
         this.time.on('tick', () => {
            const delta = Math.min( 0.1, this.clock.getDelta() );
             this.controls(delta)
@@ -43,8 +43,6 @@ import { Octree } from "three/examples/jsm/math/Octree";
     playerCollitions() {
         const result = this.world.capsuleIntersect( this.player.collider );
 				this.player.onFloor = false;
-                console.log(result)
-
 				if ( result ) {
 					this.player.onFloor = result.normal.y > 0;
 

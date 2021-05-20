@@ -1,4 +1,4 @@
-import { AxesHelper, Object3D } from 'three'
+import { AxesHelper, Color, Object3D } from 'three'
 
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
@@ -85,10 +85,13 @@ export default class World {
   } 
   setFog() {
     this.fog = new Fog({
-      camera:this.camera
+      camera:this.camera,
+      color:"#752b56",
+      debug:this.debug,
+      scene:this.scene
     })
     this.scene.fog = this.fog.fog
-    this.scene.background ="#752b56"
+    
   }
   setAmbientLight() {
     this.ambientlight = new AmbientLightSource({

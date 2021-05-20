@@ -29,7 +29,7 @@ export default class Player {
         })
 
         this.player.mesh = new Mesh(geometry, material)
-
+        this.player.mesh.position.x = 100
         this.player.collider = new Capsule( new Vector3( 0, 0.35, 0 ), new Vector3( 0, 0, 0 ), 0.35 );
         this.player.velocity  = new Vector3()
         this.player.direction = new Vector3()

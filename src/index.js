@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // play.addEventListener('click', () => {
-  //   io_client.emit("room create");
-  //   io_client.once("room code", (id) => {
-  //     code.innerText = id;
-  //   });
+    // io_client.emit("room create");
+    // io_client.once("room code", (id) => {
+    //   code.innerText = id;
+    // });
   //   io_client.once('room is_synced', () => {
   //     gsap.to(access, {opacity:0}).then(() => {
   //           gsap.to(access, {display:'none'})
