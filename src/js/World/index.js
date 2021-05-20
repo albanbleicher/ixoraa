@@ -41,7 +41,7 @@ export default class World {
 
     this.setAmbientLight()
     this.setPointLight()
-    this.setCiel()
+    // this.setCiel()
     this.setFog()
     },100)
   }
@@ -88,6 +88,7 @@ export default class World {
       camera:this.camera
     })
     this.scene.fog = this.fog.fog
+    this.scene.background ="#752b56"
   }
   setAmbientLight() {
     this.ambientlight = new AmbientLightSource({

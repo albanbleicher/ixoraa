@@ -24,7 +24,7 @@ export default class Camera {
       75,
       this.sizes.viewport.width / this.sizes.viewport.height,
       0.1,
-      60
+      80
     )
     // this.camera.rotation.order = 'YXZ';
 
