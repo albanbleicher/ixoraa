@@ -1,2 +1,13 @@
-$background: #FAFAFA;
-$primary: #3a9654;
+@use "sass:map";
+
+/* Variables */
+$colors: (
+    'background':#EBF2E9,
+    'primary':#1E8D88,
+    'secondary': #904E8A,
+);
+
+/* Functions */
+@function color($key) {
+    @return map-get($colors, $key);
+  }

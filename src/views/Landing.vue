@@ -1,45 +1,55 @@
 <template>
-  <div class="game">
-    <h1 for="idRoom">Entrez le code inscrit sur votre écran d'ordinateur</h1>
-    <h2 v-if="connected">
-      Your phone is connected, the game is about to start
-    </h2>
-    <div id="idRoom">
-      <input type="number" value="" v-model="idRoom" v-on:keyup="writeCode" />
-      <p>{{ idRoom }}</p>
-    </div>
-    <router-link v-if="connected" to="/musictime">Click here to start</router-link>
+  <div class="landing">
+    <h1>Renseigne ton code pour connecter ton téléphone</h1>
+    <InputCode v-model='code' @change='sync'/>
+    <!-- <span>{{status_message}}</span> -->
   </div>
 </template>
 <script>
 import io from "socket.io-client";
+import InputCode from '../components/InputCode.vue';
 export default {
+  components: { InputCode },
   data() {
     return {
       idRoom: "",
       io: null,
-      connected: false,
-      waveTime: ''
+      status:0,
+      waveTime: '',
+      code:''
     };
   },
   created() {
     this.io = io("http://localhost:3000");
-    console.log(this.io);
+  },
+  computed:{
+    status_message() {
+      let message = ''
+      switch(this.status) {
+        case 0: 
+          message = "Vous n'êtes pas connecté.e !"
+        break;
+        case 1: 
+          message = "Vous êtes connecté.e !"
+        break;
+        case 2: 
+          message = "Une erreur est survenue, veuillez réessayer."
+        break;
+      }
+      return message
+    }
   },
   mounted() {
-    this.io.on("equipment", (idRoom) => {
-      console.log("equipment", idRoom);
+    this.io.on("room is_synced", (test) => {
+      this.status = 1
     });
-    this.io.on("phoneConnected", (test) => {
-      this.connected = true;
+    this.io.on("room error", (test) => {
+      this.status = 2
     });
   },
   methods: {
-    writeCode() {
-      if (this.idRoom.length === 4) {
-        this.io.emit("mobile connexion", parseInt(this.idRoom, 10));
-        console.log("mobile connexion emitted");
-      }
+    sync() {
+        this.io.emit("room join", parseInt(this.code));
     },
   },
 };

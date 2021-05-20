@@ -13,9 +13,9 @@ const routes = [
     component: Landing
   },
   {
-    path: '/home',
-    name: 'Home',
-    component: Home
+    path: '/play',
+    name: 'Controller',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Controller.vue')
   },
   {
     path: '/musictime',
