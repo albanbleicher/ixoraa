@@ -1,69 +1,93 @@
 import { clearConfigCache } from "prettier";
 import { Clock } from "three";
 import { Octree } from "three/examples/jsm/math/Octree";
+import { io } from "socket.io-client"
 
-  export default class Physics {
+export default class Physics {
     constructor(params) {
-      this.debug = params.debug // boolean
-      this.container = params.container // global container of the template
-      this.time = params.time 
-      this.planet = params.planet
-      this.player = params.player
-      this.camera = params.camera 
+        this.debug = params.debug // boolean
+        this.container = params.container // global container of the template
+        this.time = params.time
+        this.planet = params.planet
+        this.player = params.player
+        this.camera = params.camera
 
-      this.world = new Octree()
-      
+        this.world = new Octree()
 
-      this.moving = {
-        forward:false,
-        backward:false,
-        left:false,
-        right:false,
-        jump:false
-    }
 
-    this.gravity = params.gravity
+        this.moving = {
+            forward: false,
+            backward: false,
+            left: false,
+            right: false,
+            jump: false
+        }
+        this.lastCommand = [];
 
-      this.init()
+        this.gravity = params.gravity
+
+        this.io = io("http://localhost:3000");
+        this.init()
     }
     init() {
         this.world.fromGraphNode(this.planet.mesh)
-        window.addEventListener('keydown',(e) => this.move(e))
-        window.addEventListener('keyup',(e) => this.still(e))
-   
+
+        this.io.on('move up', () => {
+            this.move('up')
+            console.log('up');
+        })
+        this.io.on('move right', () => {
+            this.move('right')
+            console.log('right');
+        })
+        this.io.on('move down', () => {
+            this.move('down')
+            console.log('down');
+        })
+        this.io.on('move left', () => {
+            this.move('left')
+            console.log('left');
+        })
+        this.io.on('end', () => {
+            this.still()
+            console.log('end');
+        })
+        //window.addEventListener('keydown', (e) => this.move(e))
+        //window.addEventListener('keyup', (e) => this.still(e))
+
 
         this.clock = new Clock()
-        
+
         this.time.on('tick', () => {
-           const delta = Math.min( 0.1, this.clock.getDelta() );
+            const delta = Math.min(0.1, this.clock.getDelta());
             this.controls(delta)
             this.updatePlayer(delta)
         })
     }
     playerCollitions() {
-        const result = this.world.capsuleIntersect( this.player.collider );
-				this.player.onFloor = false;
-                console.log(result)
+        const result = this.world.capsuleIntersect(this.player.collider);
+        this.player.onFloor = false;
+        //console.log(result)
 
-				if ( result ) {
-					this.player.onFloor = result.normal.y > 0;
+        if (result) {
+            this.player.onFloor = result.normal.y > 0;
 
-					if ( ! this.player.onFloor ) {
+            if (!this.player.onFloor) {
 
-						this.player.velocity.addScaledVector( result.normal, - result.normal.dot( this.player.velocity ) );
+                this.player.velocity.addScaledVector(result.normal, - result.normal.dot(this.player.velocity));
 
-					}
+            }
 
-					this.player.collider.translate( result.normal.multiplyScalar( result.depth ) );
+            this.player.collider.translate(result.normal.multiplyScalar(result.depth));
 
-				}
+        }
     }
     updatePlayer(delta) {
-        if ( this.player.onFloor ) {
+        if (this.player.onFloor) {
 
-            const damping = Math.exp( - 3 * delta ) - 1;
-            
-            this.player.velocity.addScaledVector( this.player.velocity, damping );
+            const damping = Math.exp(- 3 * delta) - 1;
+
+            this.player.velocity.addScaledVector(this.player.velocity, damping);
 
         } else {
 
@@ -71,16 +95,16 @@ import { Octree } from "three/examples/jsm/math/Octree";
 
         }
 
-        const deltaPosition = this.player.velocity.clone().multiplyScalar( delta );
-        this.player.collider.translate( deltaPosition );
+        const deltaPosition = this.player.velocity.clone().multiplyScalar(delta);
+        this.player.collider.translate(deltaPosition);
 
         this.playerCollitions();
 
-        this.player.mesh.position.copy( this.player.collider.end );
+        this.player.mesh.position.copy(this.player.collider.end);
     }
     getForwardVector() {
 
-        this.camera.getWorldDirection( this.player.direction );
+        this.camera.getWorldDirection(this.player.direction);
         this.player.direction.y = 0;
         this.player.direction.normalize();
 
@@ -89,44 +113,44 @@ import { Octree } from "three/examples/jsm/math/Octree";
     }
 
     getSideVector() {
-        this.camera.getWorldDirection( this.player.direction );
+        this.camera.getWorldDirection(this.player.direction);
         this.player.direction.y = 0;
         this.player.direction.normalize();
-        this.player.direction.cross( this.camera.up );
+        this.player.direction.cross(this.camera.up);
 
         return this.player.direction;
 
     }
     controls(delta) {
         const speed = 15;
-        
-        if ( this.player.onFloor ) {
-            if ( this.moving.forward ) {
-                this.player.velocity.add( this.getForwardVector().multiplyScalar( speed * delta ) );
+
+        if (this.player.onFloor) {
+            if (this.moving.forward) {
+                this.player.velocity.add(this.getForwardVector().multiplyScalar(speed * delta));
 
             }
 
-            if ( this.moving.backward ) {
+            if (this.moving.backward) {
 
-                this.player.velocity.add( this.getForwardVector().multiplyScalar( - speed * delta ) );
+                this.player.velocity.add(this.getForwardVector().multiplyScalar(- speed * delta));
 
             }
 
-            if ( this.moving.left ) {
+            if (this.moving.left) {
 
                 // this.player.velocity.add( this.getSideVector().multiplyScalar( - speed * delta ) );
-               this.player.mesh.rotation.y += 0.01
+                this.player.mesh.rotation.y += 0.01
 
 
             }
 
-            if ( this.moving.right ) {
+            if (this.moving.right) {
 
                 this.player.mesh.rotation.y -= 0.01
 
             }
 
-            if ( this.moving.jump ) {
+            if (this.moving.jump) {
 
                 this.player.velocity.y = 15;
 
@@ -136,9 +160,39 @@ import { Octree } from "three/examples/jsm/math/Octree";
 
     }
     move(e) {
-        switch(e.code) {
+        switch (e) {
+            case 'up':
+                this.moving.backward = false;
+                this.moving.forward = true;
+                break;
+            case 'left':
+                this.moving.right = false;
+                this.moving.left = true;
+                break;
+            case 'down':
+                this.moving.forward = false;
+                this.moving.backward = true;
+                break;
+            case 'right':
+                this.moving.left = false;
+                this.moving.right = true;
+                break;
+        }
+
+
+    }
+    still() {
+        this.moving.right = false
+        this.moving.left = false
+        this.moving.backward = false
+        this.moving.forward = false
+    }
+
+    /*move(e) {
+        switch (e.code) {
             case 'ArrowUp':
             case 'KeyW':
+            case 'up':
                 this.moving.forward = true;
                 break;
             case 'ArrowLeft':
@@ -155,12 +209,12 @@ import { Octree } from "three/examples/jsm/math/Octree";
                 break;
             case 'Space':
                 this.moving.jump = true
-                        break;
+                break;
         }
 
     }
     still(e) {
-        switch(e.code) {
+        switch (e.code) {
             case 'ArrowUp':
             case 'KeyW':
                 this.moving.forward = false;
@@ -177,12 +231,10 @@ import { Octree } from "three/examples/jsm/math/Octree";
             case 'KeyD':
                 this.moving.right = false;
                 break;
-                case 'Space':
+            case 'Space':
                 this.moving.jump = false
-                        break;
+                break;
         }
-    }
-
+    }*/
 }
-  
-  
+
