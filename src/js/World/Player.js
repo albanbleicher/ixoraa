@@ -29,8 +29,9 @@ export default class Player {
         })
 
         this.player.mesh = new Mesh(geometry, material)
-
+        console.log(this.player.mesh.position)
         this.player.collider = new Capsule( new Vector3( 0, 0.35, 0 ), new Vector3( 0, 0, 0 ), 0.35 );
+        this.player.collider.translate(new Vector3(10,0,0))
         this.player.velocity  = new Vector3()
         this.player.direction = new Vector3()
         this.player.onFloor = false
@@ -46,7 +47,7 @@ export default class Player {
         })
         if (this.debug) {
             this.debugFolder = this.debug.addFolder('Player')
-            this.debugFolder.open()
+            // this.debugFolder.open()
             this.debugFolder.add(this.player.mesh.position, 'x').min(-1000).max(1000).step(0.1).listen()
             this.debugFolder.add(this.player.mesh.position, 'y').min(-1000).max(1000).step(0.1).listen()
             this.debugFolder.add(this.player.mesh.position, 'z').min(-1000).max(1000).step(0.1).listen()

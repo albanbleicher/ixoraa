@@ -3,9 +3,11 @@ import {
   MeshStandardMaterial,
   BoxGeometry,
   Vector3,
+  MeshNormalMaterial,
 } from 'three'
 import Totem from './Totem'
 import Random from '../Tools/Random'
+import { MeshBasicMaterial } from 'three/build/three.module'
 export default class Planet {
   constructor(params) {
     // params
@@ -27,15 +29,21 @@ export default class Planet {
   init() {
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshStandardMaterial({
-      color:'grey',
+      color:'#9E3C74',
       roughness:0.6
     })
 
     this.mesh = this.assets.models.ground.scene
-    // this.map_rework = this.assets.models.ground.scene.children.find(item => item.name ==="GROUND")
     this.mesh.material = material
+    this.ground = this.mesh.children.find(item => item.name ==="map_rework")
+    this.ground.material = material
     this.mesh.position.y=-10
+    this.mesh.traverse((obj)=> {
+      obj.receiveShadow = true
+      obj.castShadow = true
+    })
    this.container.add(this.mesh)
+   this.setMaterials()
   }
   setTotems(count) {
     for (let i = 0; i < count; i++) {
@@ -48,6 +56,14 @@ export default class Planet {
       })
       this.container.add(totem.container)
     }
+  }
+  setMaterials() {
+    const MONOLITHE = this.mesh.children.find(item => item.name === 'gro_monolithe')
+    const material_monolithe = new MeshStandardMaterial({
+      color:'black',
+      metalness:1
+    })
+    MONOLITHE.material = material_monolithe
   }
 
 }

@@ -24,7 +24,7 @@ export default class Camera {
       75,
       this.sizes.viewport.width / this.sizes.viewport.height,
       0.1,
-      1000
+      80
     )
     // this.camera.rotation.order = 'YXZ';
 
@@ -53,16 +53,16 @@ export default class Camera {
     this.orbitControls.enabled = false
     this.orbitControls.enableKeys = true
     this.orbitControls.zoomSpeed = 1
-    if (this.debug) {
-      this.debugFolder = this.debug.addFolder('Camera')
-      this.debugFolder.open()
-      this.debugFolder
-        .add(this.orbitControls, 'enabled')
-        .name('Enable Orbit Control')
+    // if (this.debug) {
+    //   this.debugFolder = this.debug.addFolder('Camera')
+    //   this.debugFolder.open()
+    //   this.debugFolder
+    //     .add(this.orbitControls, 'enabled')
+    //     .name('Enable Orbit Control')
 
-      this.debugFolder.add(this.camera.position, 'x').min(-1000).max(1000).step(0.1).listen()
-      this.debugFolder.add(this.camera.position, 'y').min(-1000).max(1000).step(0.1).listen()
-      this.debugFolder.add(this.camera.position, 'z').min(-1000).max(1000).step(0.1).listen()
-    }
+    //   this.debugFolder.add(this.camera.position, 'x').min(-1000).max(1000).step(0.1).listen()
+    //   this.debugFolder.add(this.camera.position, 'y').min(-1000).max(1000).step(0.1).listen()
+    //   this.debugFolder.add(this.camera.position, 'z').min(-1000).max(1000).step(0.1).listen()
+    // }
   }
 }

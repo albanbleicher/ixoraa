@@ -67,8 +67,6 @@ export default class Physics {
     playerCollitions() {
         const result = this.world.capsuleIntersect(this.player.collider);
         this.player.onFloor = false;
-        //console.log(result)
-
         if (result) {
             this.player.onFloor = result.normal.y > 0;
 

@@ -24,7 +24,7 @@ module.exports = webpackMerge.merge(
               },
             },
             'css-loader',
-            'scss-loader'
+            'sass-loader'
           ]
         }
       ]
