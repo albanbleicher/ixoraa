@@ -23,7 +23,7 @@ export default class Planet {
     this.container.name = 'Planet'
 
     this.init()
-    this.setTotems(3)
+    // this.setTotems(1)
 
   }
   init() {
@@ -50,7 +50,7 @@ export default class Planet {
       const x = Random(-500, 500)
       const z = Random(-500, 500)
       const totem = new Totem({
-        position: new Vector3(x, -40, z),
+        position: new Vector3(20, 0,20 ),
         time: this.time,
         sounds: this.sounds
       })

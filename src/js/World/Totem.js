@@ -18,7 +18,7 @@ export default class Totem {
   }
   init() {
     // create new totem mesh
-    const geometry = new SphereGeometry(10,100,100)
+    const geometry = new SphereGeometry(1,10,10)
     const material = new MeshNormalMaterial()
     const mesh = new Mesh(geometry,material)
     // set position based on pass props
@@ -38,7 +38,7 @@ export default class Totem {
   }
   float() {
     this.time.on('tick', () => {
-      this.container.children[0].position.y = this.position.y*2 + Math.cos(this.time.current*0.001)* 6
+      this.container.children[0].position.y = this.position.y*2 + Math.cos(this.time.current*0.001)
     })
   }
 

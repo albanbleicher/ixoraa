@@ -52,8 +52,8 @@ export default class Physics {
             this.still()
             console.log('end');
         })
-        //window.addEventListener('keydown', (e) => this.move(e))
-        //window.addEventListener('keyup', (e) => this.still(e))
+        window.addEventListener('keydown', (e) => this.moveKeyboard(e))
+        window.addEventListener('keyup', (e) => this.stillKeyboard(e))
 
 
         this.clock = new Clock()
@@ -186,7 +186,7 @@ export default class Physics {
         this.moving.forward = false
     }
 
-    /*move(e) {
+    moveKeyboard(e) {
         switch (e.code) {
             case 'ArrowUp':
             case 'KeyW':
@@ -211,7 +211,7 @@ export default class Physics {
         }
 
     }
-    still(e) {
+    stillKeyboard(e) {
         switch (e.code) {
             case 'ArrowUp':
             case 'KeyW':
@@ -233,6 +233,6 @@ export default class Physics {
                 this.moving.jump = false
                 break;
         }
-    }*/
+    }
 }
 
