@@ -7,6 +7,7 @@ import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Random from '../Tools/Random'
 import Totem from './Totem'
+import { MeshBasicMaterial, MeshPhysicalMaterial } from 'three/build/three.module'
 export default class Planet {
   constructor(params) {
     // params
@@ -30,7 +31,7 @@ export default class Planet {
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshStandardMaterial({
       color: '#9E3C74',
-      roughness: 0.6,
+      roughness: 0.6
     })
 
     this.mesh = this.assets.models.ground.scene
@@ -64,9 +65,12 @@ export default class Planet {
   }
   setMaterials() {
     const MONOLITHE = this.mesh.children.find(item => item.name === 'gro_monolithe')
-    const material_monolithe = new MeshStandardMaterial({
-      color: 'black',
-      metalness: 1
+    const material_monolithe = new MeshPhongMaterial({
+      //color: 0x5e5e5e,
+      //reflectivity: 1,
+      shininess: 100,
+      emissive: 0x87A85f,
+      roughness: 1,
     })
     MONOLITHE.material = material_monolithe
   }
