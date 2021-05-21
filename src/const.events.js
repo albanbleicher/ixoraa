@@ -6,16 +6,17 @@ exports.EVENTS = {
 exports.ROOMS_EVENTS = {
     CREATE: 'room create',
     JOIN: 'room join',
-    IS_SYNCED:'room is_synced',
+    IS_SYNCED: 'room is_synced',
     ERROR: 'room error',
-    CODE:'room code'
+    CODE: 'room code'
 }
 
 exports.MOVEMENTS = {
     UP: 'move up',
     DOWN: 'move down',
     LEFT: 'move left',
-    RIGHT: 'move right'
+    RIGHT: 'move right',
+    END: 'end'
 }
 
 exports.MUSICTIME = {
