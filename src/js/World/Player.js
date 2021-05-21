@@ -1,5 +1,5 @@
 import { Vec3 } from "cannon-es"
-import { Vector2, Vector3 } from "three"
+import { MeshNormalMaterial, Vector2, Vector3 } from "three"
 import { Spherical } from "three"
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 
@@ -24,9 +24,7 @@ export default class Player {
     async init() {
         // Add sphere to simulate player
         const geometry = new SphereGeometry(0.05, 10,10)
-        const material = new MeshStandardMaterial({
-            color:'blue'
-        })
+        const material = new MeshNormalMaterial()
 
         this.player.mesh = new Mesh(geometry, material)
         console.log(this.player.mesh.position)

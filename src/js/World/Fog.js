@@ -1,4 +1,5 @@
 import { Object3D, Fog, Color } from "three"
+import ColorGUIHelper from '../Tools/ColorGUIHelper'
 
 export default class Fogg {
     constructor(params) {
@@ -15,9 +16,7 @@ export default class Fogg {
     }
     setDebug() {
             const folder = this.debug.__folders.World.addFolder('Brouillard')
-            folder.addColor(this.fog, 'color').name('Couleur').listen().onChange(() => {
-                this.scene.fog = this.fog
-            })
+            folder.addColor(new ColorGUIHelper(this.fog,'color'), 'value').name('Couleur').listen()
             folder.add(this.fog, 'near',0,100,0.1).name('Minimum').listen()
             folder.add(this.fog, 'far', 0,200,0.1).name('Maximum').listen()
     }   

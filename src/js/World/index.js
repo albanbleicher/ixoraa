@@ -8,6 +8,7 @@ import Physics from './Physics'
 import Player from './Player'
 import Sounds from './Sounds'
 import Fog from './Fog'
+import ColorGUIHelper from '../Tools/ColorGUIHelper'
 
 export default class World {
   constructor(options) {
@@ -33,6 +34,15 @@ export default class World {
     this.setLoader()
   }
   init() {
+    if(this.debug) {
+      const color = {
+        value: this.renderer.getClearColor()
+      }
+      const folder = this.debug.__folders.World
+    folder.addColor(new ColorGUIHelper(color,'value'), 'value').name('Couleur de fond').listen().onChange((color) => {
+      this.renderer.setClearColor(color)
+    })
+    }
     this.setPlayer()
     this.setSounds()
     this.setPlanet()
@@ -42,9 +52,9 @@ export default class World {
     this.setAmbientLight()
     this.setPointLight()
     // this.setCiel()
-    this.setGrass()
     this.setFog()
     },100)
+  
   }
   setLoader() {
     this.loadDiv = document.querySelector('.loadScreen')
@@ -127,16 +137,6 @@ export default class World {
  })
  this.container.add(this.planet.container)
   }
- setGrass() {
-   this.grass = new Grass({
-     assets:this.assets,
-     time:this.time,
-     debug:this.debug,
-     ground: this.planet.ground
-   })
-   this.container.add(this.grass.container)
- }
-
   setPlayer() {
     this.player = new Player({
       physics:this.physics,

@@ -1,13 +1,12 @@
 import {
-  Object3D,
-  MeshStandardMaterial,
-  BoxGeometry,
-  Vector3,
-  MeshNormalMaterial,
+  BoxGeometry, MeshStandardMaterial, Object3D, InstancedMesh, Vector3, Matrix4, PlaneBufferGeometry, DoubleSide, Mesh,DynamicDrawUsage, MeshNormalMaterial
 } from 'three'
-import Totem from './Totem'
+import { BoxBufferGeometry, PlaneGeometry } from 'three/build/three.module'
+import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
+
+import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Random from '../Tools/Random'
-import { MeshBasicMaterial } from 'three/build/three.module'
+import Totem from './Totem'
 export default class Planet {
   constructor(params) {
     // params
@@ -23,34 +22,40 @@ export default class Planet {
     this.container.name = 'Planet'
 
     this.init()
+    this.createGrass()
     // this.setTotems(1)
 
   }
   init() {
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshStandardMaterial({
-      color:'#9E3C74',
-      roughness:0.6
+      color: '#9E3C74',
+      roughness: 0.6,
     })
 
     this.mesh = this.assets.models.ground.scene
     this.mesh.material = material
-    this.ground = this.mesh.children.find(item => item.name ==="map_rework")
+    this.ground = this.mesh.children.find(item => item.name === "map_rework")
     this.ground.material = material
-    this.mesh.position.y=-10
-    this.mesh.traverse((obj)=> {
+    this.mesh.traverse((obj) => {
       obj.receiveShadow = true
       obj.castShadow = true
     })
-   this.container.add(this.mesh)
-   this.setMaterials()
+    if (this.debug) {
+      const folder = this.debug.__folders.World.addFolder('Ground')
+      folder.add(material, 'wireframe').name('Afficher le wireframe')
+      folder.addColor(new ColorGUIHelper(material, 'color'), 'value').name('Couleur du sol')
+      folder.add(material, 'roughness', 0, 1, 0.1).name('Roughness')
+    }
+    this.container.add(this.mesh)
+    this.setMaterials()
   }
   setTotems(count) {
     for (let i = 0; i < count; i++) {
       const x = Random(-500, 500)
       const z = Random(-500, 500)
       const totem = new Totem({
-        position: new Vector3(20, 0,20 ),
+        position: new Vector3(20, 0, 20),
         time: this.time,
         sounds: this.sounds
       })
@@ -60,10 +65,51 @@ export default class Planet {
   setMaterials() {
     const MONOLITHE = this.mesh.children.find(item => item.name === 'gro_monolithe')
     const material_monolithe = new MeshStandardMaterial({
-      color:'black',
-      metalness:1
+      color: 'black',
+      metalness: 1
     })
     MONOLITHE.material = material_monolithe
+  }
+  createGrass() {
+    const geometry = new PlaneBufferGeometry(0.5, 0.5, 1, 1)
+    const material = new MeshStandardMaterial({
+      alphaMap: this.assets.textures.grass,
+      transparent: true,
+      color: 'green',
+      side: DoubleSide
+    })
+    const normalMat = new MeshNormalMaterial()
+    const count = 1000000
+    console.log(this.ground);
+    const groundGeometry = this.ground.geometry.toNonIndexed()
+    groundGeometry.scale(0.103,0.103,0.103)
+    groundGeometry.rotateX(Math.PI * 0.5);
+
+    const groundMesh = new Mesh(groundGeometry, normalMat)
+    this.container.add(groundMesh)
+    const dummy = new Object3D()
+    console.log(groundMesh);
+    const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute()
+    const sampleMesh = new InstancedMesh(geometry, material, count);
+
+    const _position = new Vector3()
+    const _normal = new Vector3();
+
+sampler.build()
+
+    for (let i = 0; i < count; i++) {
+
+      sampler.sample(_position, _normal);
+      _normal.add(_position)
+      dummy.position.copy(_position);
+      dummy.lookAt(_normal);
+      dummy.updateMatrix();
+
+      sampleMesh.setMatrixAt(i, dummy.matrix);
+    }
+    sampleMesh.instanceMatrix.needsUpdate = true;
+
+    this.container.add(sampleMesh)
   }
 
 }
