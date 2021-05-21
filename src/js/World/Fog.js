@@ -14,13 +14,11 @@ export default class Fogg {
         if(this.debug) this.setDebug()
     }
     setDebug() {
-        console.log(this.debug);
-            const folder = this.debug.addFolder('Brouillard')
+            const folder = this.debug.__folders.World.addFolder('Brouillard')
             folder.addColor(this.fog, 'color').name('Couleur').listen().onChange(() => {
                 this.scene.fog = this.fog
             })
             folder.add(this.fog, 'near',0,100,0.1).name('Minimum').listen()
             folder.add(this.fog, 'far', 0,200,0.1).name('Maximum').listen()
-            folder.open()
     }   
 }

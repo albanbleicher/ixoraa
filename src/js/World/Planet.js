@@ -7,6 +7,7 @@ import {
 } from 'three'
 import Totem from './Totem'
 import Random from '../Tools/Random'
+import { MeshBasicMaterial } from 'three/build/three.module'
 export default class Planet {
   constructor(params) {
     // params
@@ -34,8 +35,13 @@ export default class Planet {
 
     this.mesh = this.assets.models.ground.scene
     this.mesh.material = material
-    this.mesh.children.find(item => item.name ==="map_rework").material = material
+    this.ground = this.mesh.children.find(item => item.name ==="map_rework")
+    this.ground.material = material
     this.mesh.position.y=-10
+    this.mesh.traverse((obj)=> {
+      obj.receiveShadow = true
+      obj.castShadow = true
+    })
    this.container.add(this.mesh)
    this.setMaterials()
   }
@@ -53,7 +59,11 @@ export default class Planet {
   }
   setMaterials() {
     const MONOLITHE = this.mesh.children.find(item => item.name === 'gro_monolithe')
-    MONOLITHE.material = new MeshNormalMaterial()
+    const material_monolithe = new MeshStandardMaterial({
+      color:'black',
+      metalness:1
+    })
+    MONOLITHE.material = material_monolithe
   }
 
 }

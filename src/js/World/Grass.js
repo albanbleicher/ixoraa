@@ -1,4 +1,6 @@
-import { Object3D } from 'three'
+import { PlaneBufferGeometry } from 'three'
+import { Mesh, Object3D } from 'three'
+import { BoxGeometry, MeshBasicMaterial, MeshStandardMaterial } from 'three/build/three.module'
 export default class Grass {
   constructor(options) {
     // Options
@@ -13,7 +15,16 @@ export default class Grass {
     this.createGrass()
   }
   createGrass() {
-    console.log(this.assets.models.grass.scene)
-    this.container.add(this.assets.models.grass.scene)
+    const geometry = new PlaneBufferGeometry(0.5,0.5,1,1)
+    const material = new MeshStandardMaterial({
+      alphaMap:this.assets.textures.grass,
+      transparent:true,
+      color:'green'
+    })
+    const mesh = new Mesh(geometry, material)
+    mesh.position.x=12
+    mesh.position.y=-9.5
+    this.container.add(mesh)
+
   }
 }

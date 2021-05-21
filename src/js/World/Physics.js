@@ -134,6 +134,8 @@ import { Octree } from "three/examples/jsm/math/Octree";
 
     }
     move(e) {
+        console.log('player',this.player.mesh.position)
+        console.log('collider',this.player.velocity)
         switch(e.code) {
             case 'ArrowUp':
             case 'KeyW':

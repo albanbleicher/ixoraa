@@ -2,7 +2,7 @@ import { AxesHelper, Color, Object3D } from 'three'
 
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
-import Ciel from './Ciel'
+import Grass from './Grass'
 import Planet from './Planet'
 import Physics from './Physics'
 import Player from './Player'
@@ -42,6 +42,7 @@ export default class World {
     this.setAmbientLight()
     this.setPointLight()
     // this.setCiel()
+    this.setGrass()
     this.setFog()
     },100)
   }
@@ -126,6 +127,16 @@ export default class World {
  })
  this.container.add(this.planet.container)
   }
+ setGrass() {
+   this.grass = new Grass({
+     assets:this.assets,
+     time:this.time,
+     debug:this.debug,
+     ground: this.planet.ground
+   })
+   this.container.add(this.grass.container)
+ }
+
   setPlayer() {
     this.player = new Player({
       physics:this.physics,
