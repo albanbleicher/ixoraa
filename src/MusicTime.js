@@ -1,7 +1,11 @@
 const { MUSICTIME } = require('./const.events')
 exports.default = {
-    begin(socket, melody, lines) {
-        socket.emit(MUSICTIME.BEGIN, melody, lines);
+    begin(socket, room, melody, lines) {
+        //socket.emit(MUSICTIME.BEGIN, melody, lines);
+        console.log('musictime begin')
+        console.log(room)
+        socket.to(room).emit(MUSICTIME.BEGIN, melody, lines)
+
     },
     correct(socket, melody, lines) {
         // On dit aux devices que c'est correct, et on attends 5 secondes que l'animation se fasse pour relancer le mini-jeu

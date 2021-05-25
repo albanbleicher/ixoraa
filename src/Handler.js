@@ -24,6 +24,7 @@ class Handler {
         this.melody = 3
         this.lines = [{ id: 1 }, { id: 2 }, { id: 3 }]
         this.rooms = null
+        this.currentRoom = null;
         this.io.on(EVENTS.USER_CONNECT, (socket) => {
             console.log('user connect')
             if (!this.rooms) {
@@ -51,8 +52,8 @@ class Handler {
             //for(let i=0; i<5; i++){
             //    this.melody.push(notes[Math.floor(Math.random() * 3)])
             //}
-
-            musictime.begin(this.io, this.melody, this.lines);
+            console.log('socket musictime begin');
+            self.rooms.begin(this.currentRoom, this.melody, this.lines);
         })
         socket.on(MUSICTIME.CORRECT, () => musictime.correct(this.io, this.melody, this.lines))
         socket.on(MUSICTIME.WRONG, () => musictime.wrong(this.io))
@@ -60,7 +61,7 @@ class Handler {
 
 
         socket.on(ROOMS_EVENTS.CREATE, () => self.rooms.create(), console.log('hmmm'))
-        socket.on(ROOMS_EVENTS.JOIN, (room) => self.rooms.join(room))
+        socket.on(ROOMS_EVENTS.JOIN, (room) => this.currentRoom = self.rooms.join(room))
     }
 }
 exports.default = Handler;

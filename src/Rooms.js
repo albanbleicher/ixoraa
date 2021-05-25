@@ -1,4 +1,6 @@
 const { ROOMS_EVENTS } = require('./const.events')
+const { MUSICTIME } = require('./const.events')
+
 class Rooms {
     constructor(params) {
         this.list = []
@@ -18,12 +20,23 @@ class Rooms {
         if (this.list.includes(room)) {
             this.socket.join(room);
             this.io.emit(ROOMS_EVENTS.IS_SYNCED)
+            console.log('io', this.io)
             this.io.to(room).emit(ROOMS_EVENTS.IS_SYNCED)
+            return room;
         }
         else {
             this.io.emit(ROOMS_EVENTS.ERROR)
         }
     }
+
+    begin(room, melody, lines) {
+        //socket.emit(MUSICTIME.BEGIN, melody, lines);
+        console.log('musictime begin')
+        console.log(room)
+        this.io.to(room).emit(MUSICTIME.BEGIN, melody, lines)
+
+    }
+
     leave() {
 
     }
