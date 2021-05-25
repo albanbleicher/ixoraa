@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import MusicTime from '../views/MusicTime.vue'
 import Landing from "../views/Landing.vue"
 
 Vue.use(VueRouter)
@@ -16,11 +15,6 @@ const routes = [
     path: '/play',
     name: 'Controller',
     component: () => import(/* webpackChunkName: "about" */ '../views/Controller.vue')
-  },
-  {
-    path: '/musictime',
-    name: 'musictime',
-    component: MusicTime
   },
 ]
 

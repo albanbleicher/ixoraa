@@ -1,6 +1,16 @@
-.controller {
+.controller, .joystickController {
     background-color: color('background');
     display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.musicalController {
+    background-color: color('background');
+    display: flex;
+    opacity: 1;
     justify-content: center;
     align-items: center;
     height: 100%;

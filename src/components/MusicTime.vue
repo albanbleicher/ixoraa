@@ -29,6 +29,10 @@
 import io from "socket.io-client";
 import gsap from "gsap";
 export default {
+  props: {
+    timeProp: String,
+    linesProp: String,
+  },
   data() {
     return {
       io: null,
@@ -44,9 +48,12 @@ export default {
       waveTime: false,
     };
   },
-  created() {
+  async created() {
     this.io = io("http://localhost:3000");
     console.log(this.io);
+    const result = await this.returnsPromise(time, lines);
+    console.log(result)
+    this.handleMove();
   },
   mounted() {
     this.io.on("phoneConnected", () => {
@@ -54,10 +61,11 @@ export default {
     });
     this.io.on("musictime begin", async (time, lines) => {
       const result = await this.returnsPromise(time, lines);
+      console.log(result);
       this.handleMove();
     });
     this.io.on("winned", () => {
-      this.attempts.push('Winned ! Champion');
+      this.attempts.push("Winned ! Champion");
     });
   },
   methods: {
