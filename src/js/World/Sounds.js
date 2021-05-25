@@ -1,4 +1,4 @@
-import { AudioListener, Object3D, PositionalAudio } from "three"
+import { AudioListener, Object3D, PositionalAudio, AudioLoader, Audio } from "three"
 
 export default class Sound {
     constructor(params) {
@@ -11,7 +11,7 @@ export default class Sound {
         this.container = new Object3D()
         this.container.name = 'Sound'
 
-        
+
 
         this.sounds = []
         this.listener = null
@@ -27,6 +27,7 @@ export default class Sound {
         this.camera.camera.add(this.listener)
     }
     add(params) {
+        console.log(params)
         // create an empty 3D object to add PositionalAudio
         const emmiter = new Object3D()
         // move this object according to passed position
@@ -46,20 +47,36 @@ export default class Sound {
         this.container.add(emmiter)
         // register sound in class array with position and distance
         this.sounds.push({
-            position:params.position,
+            position: params.position,
             positional,
-            distance:params.distance
+            distance: params.distance
         })
     }
     watch() {
-        if(this.sounds.length && this.player.player.mesh) {
+        if (this.sounds.length && this.player.player.mesh) {
             const playerPos = this.player.player.mesh.position
-            this.sounds.forEach((sound,i) => {
-                if(!sound.positional.isPlaying && playerPos.distanceTo(sound.position) <sound.distance+30) sound.positional.play()
-                if(sound.positional.isPlaying && playerPos.distanceTo(sound.position) > sound.distance+30) sound.positional.stop()
+            this.sounds.forEach((sound, i) => {
+                console.log("sound", sound)
+                console.log("distance", playerPos.distanceTo(sound.position))
+                if (!sound.positional.isPlaying && playerPos.distanceTo(sound.position) < sound.distance + 30 && playerPos.distanceTo(sound.position) > 2) {
+                    console.log('aaahhh'); sound.positional.play()
+                } else if (playerPos.distanceTo(sound.position) > sound.distance + 30 && sound.positional.isPlaying || playerPos.distanceTo(sound.position) < 2) {
+                    sound.positional.stop()
+                } if (!sound.positional.isPlaying && playerPos.distanceTo(sound.position) < 2) console.log('stop taht'); this.activateTotem()
             })
         }
         else return
+    }
+    activateTotem() {
+        const sound = new Audio( this.listener );
+        const audioLoader = new AudioLoader();
+        audioLoader.load('sounds/ActivationTotem.mp3', function (buffer) {
+            console.log('buffer', buffer);
+            sound.setBuffer(buffer);
+            sound.setLoop(false);
+            sound.setVolume(0.5);
+            sound.play();
+        });
     }
 
 }
