@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const code = document.querySelector('.code')
 
 
-  play.addEventListener('click', () => {
+  /*play.addEventListener('click', () => {
     io_client.emit("room create");
     io_client.once("room code", (id) => {
       console.log('test');
@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.to(landing, { opacity: 0 }).then(() => {
       gsap.to(landing, { display: 'none' })
     })
-  })
-
-  /*new App({
-    canvas: document.querySelector('#_canvas'),
   })*/
+
+  new App({
+    canvas: document.querySelector('#_canvas'),
+  })
 })

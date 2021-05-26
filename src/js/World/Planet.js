@@ -1,8 +1,20 @@
 import {
-  BoxGeometry, MeshStandardMaterial, MeshPhongMaterial, Object3D, InstancedMesh, Vector3, Matrix4, PlaneBufferGeometry, DoubleSide, Mesh, DynamicDrawUsage, MeshNormalMaterial
+  BoxGeometry,
+  MeshStandardMaterial,
+  MeshPhongMaterial,
+  Object3D,
+  InstancedMesh,
+  Vector3,
+  TorusGeometry,
+  MeshBasicMaterial,
+  PlaneBufferGeometry,
+  DoubleSide,
+  Mesh,
+  MeshNormalMaterial,
+  CylinderGeometry
 } from 'three'
-import { BoxBufferGeometry, PlaneGeometry } from 'three/build/three.module'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
+import * as dat from 'dat.gui'
 
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Random from '../Tools/Random'
@@ -19,6 +31,7 @@ export default class Planet {
     this.camera = params.camera.camera
     this.player = params.player
     this.sounds = params.sounds
+    this.gui = null
     this.mesh = null
     this.io_client = io("http://localhost:3000");
     this.nearTotem = false
@@ -33,6 +46,8 @@ export default class Planet {
 
   }
   init() {
+    this.gui = new dat.GUI({ width: 450 })
+
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshStandardMaterial({
       color: '#9E3C74',
@@ -135,16 +150,57 @@ export default class Planet {
 
   watchTotem() {
     const playerPos = this.player.player.mesh.position
-      this.time.on('tick', () => {
-        if (!this.nearTotem && playerPos.distanceTo(this.totemForce.position) < 2) {
-          console.log('close');
-          this.io_client.emit("musictime begin")
-          this.nearTotem = true;
-          //this.camera.lookAt(this.totemForce);
-          return;
-        }
+    this.time.on('tick', () => {
+      if (!this.nearTotem && playerPos.distanceTo(this.totemForce.position) < 2) {
+        console.log('close');
+        this.io_client.emit("musictime begin")
+        this.nearTotem = true;
+        this.createTorus(this.totemForce.position, 5)
+        return;
       }
-      )
+    })
   }
+  createTorus(TotemPosition, torusNb) {
+
+    for (let i = 0; i < torusNb; i++) {
+      setTimeout(() => {
+        console.log(TotemPosition)
+        const geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
+        const material = new MeshBasicMaterial({ color: 0xffff00 });
+        const torus = new Mesh(geometry, material);
+
+        torus.lookAt(this.camera.position);
+        this.container.add(torus);
+        torus.lookAt(this.camera.position);
+        torus.position.set(TotemPosition.x, TotemPosition.y + 2, TotemPosition.z);
+        torus.rotation.set(60, 100, 100);
+        torus.material.transparent = true;
+        console.log(geometry);
+        console.log(torus);
+        var scaleFactor = 1;
+        var opacityFactor = 1
+        // La scale grandi, puis l'opacité diminue
+        this.time.on('tick', () => {
+          torus.lookAt(0, 0, 0);
+          //this.camera.lookAt(torus.position);
+          torus.rotation.x = 45
+          if (torus.scale.x < 10) {
+            scaleFactor += 0.1
+            console.log(scaleFactor)
+            torus.scale.set(scaleFactor, scaleFactor, scaleFactor);
+          } else {
+            opacityFactor -= 0.1
+            torus.material.opacity = opacityFactor
+            if (opacityFactor <= 0) {
+              this.container.remove(torus);
+              return;
+            }
+          }
+        })
+      }, i * 4000)
+    }
+    //this.gui.add(geometry.parameters, 'radius').min(0).max(20).step(0.01).name('Radius')
+  }
+
 
 }
