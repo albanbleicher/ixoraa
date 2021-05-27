@@ -1,11 +1,11 @@
 <template>
   <div class="controller">
-    <div class="joystickController" v-if="!this.time">
+    <div class="joystickController">
       <JoystickDisplacement />
     </div>
 
-    <div class="musicalController" v-if="this.time">
-      <MusicTime timeProp="time" linesProp="lines" />
+    <div class="musicalController">
+      <MusicTime />
     </div>
   </div>
 </template>
@@ -22,8 +22,9 @@ export default {
   },
   data() {
     return {
-      time: false,
-      lines: false,
+      nearTotem: false,
+      time: null,
+      lines: null
     };
   },
   created() {
@@ -31,31 +32,45 @@ export default {
     console.log(this.io);
   },
   mounted() {
-    this.io.on("musictime begin", (time, lines) => {
-      console.log(typeof time, typeof lines);
-      this.time = time;
-      this.lines = lines;
-    });
-
     // To replace when server works
     const joystickController = document.querySelector(".joystickController");
     const musicalController = document.querySelector(".musicalController");
+
+    this.io.on("near totem", () => {
+      setTimeout(() => {
+        gsap.to(joystickController, { opacity: 0, display: 'none', duration: 1 });
+          setTimeout(() => {
+            gsap.to(musicalController, { opacity: 1, display: 'flex', duration: 1 });
+          }, 1000);
+      }, 1000);
+    });
+    this.io.on("musictime begin", async (time, lines) => {
+      console.log('it started')
+      const result = await this.returnsPromise(time, lines);
+      console.log(result);
+      console.log("musicTime Begin");
+    });
 
     /*gsap.to(joystickController, { opacity: 0 }).then(() => {
       gsap.to(joystickController, { display: "none" }).then(() => {
           gsap.to(musicalController, { opacity: 1})
       });
     });*/
-
-    setTimeout(() => {
-      gsap.to(joystickController, { opacity: 0, duration: 1 });
-      setTimeout(() => {
-        this.time = 1;
-        setTimeout(() => {
-          gsap.to(joystickController, { opacity: 1, duration: 1 });
-        }, 1000);
-      }, 1000);
-    }, 1000);
+    
   },
+    updated(){
+    console.log('child updated')
+  },
+  methods: {
+    returnsPromise(time, lines) {
+      console.log('return promise', time, lines)
+      return new Promise((resolve) => {
+        this.time = time;
+        this.lines = lines;
+        resolve();
+      });
+    },
+  }
+  
 };
 </script>

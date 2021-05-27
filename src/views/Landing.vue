@@ -22,7 +22,7 @@ export default {
     };
   },
   created() {
-    this.io = io("http://localhost:3000");
+    this.io = io("http://localhost:3000/");
   },
   computed: {
     status_message() {

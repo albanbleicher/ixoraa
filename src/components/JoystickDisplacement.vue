@@ -24,7 +24,7 @@ export default {
   },
   mounted() {
     const self = this;
-    this.io.on("musictime begin", async (time, lines) => {
+    this.io.on("musictime begin", (time, lines) => {
       console.log('musicTime Begin')
     });
     this.static = nipplejs.create({
