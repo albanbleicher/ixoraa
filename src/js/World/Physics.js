@@ -137,14 +137,14 @@ export default class Physics {
             if (this.moving.left) {
 
                 // this.player.velocity.add( this.getSideVector().multiplyScalar( - speed * delta ) );
-                this.player.mesh.rotation.y += 0.01
+                this.player.mesh.rotation.y += 0.05
 
 
             }
 
             if (this.moving.right) {
 
-                this.player.mesh.rotation.y -= 0.01
+                this.player.mesh.rotation.y -= 0.05
 
             }
 

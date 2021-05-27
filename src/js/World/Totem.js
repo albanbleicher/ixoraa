@@ -29,7 +29,9 @@ export default class Totem {
     // add a sound that will be emmited from totem's position
     this.sounds.add({
       position:this.position,
-      distance:40
+      distance:40,
+      sound: this.assets.sounds.totem,
+      loop: true
     })
 
     // enable floating

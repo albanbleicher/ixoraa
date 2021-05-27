@@ -33,8 +33,13 @@ export default class Planet {
     this.sounds = params.sounds
     this.gui = null
     this.mesh = null
+
     this.io_client = io("http://localhost:3000");
     this.nearTotem = false
+    this.timing;
+    this.lines;
+
+    this.torusList = [];
 
     // Set up
     this.container = new Object3D()
@@ -84,7 +89,8 @@ export default class Planet {
       const totem = new Totem({
         position: new Vector3(20, 0, 20),
         time: this.time,
-        sounds: this.sounds
+        sounds: this.sounds,
+        assets: this.assets
       })
       this.container.add(totem.container)
     }
@@ -101,7 +107,8 @@ export default class Planet {
     const totem = new Totem({
       position: MONOLITHE.position,
       time: this.time,
-      sounds: this.sounds
+      sounds: this.sounds,
+      assets: this.assets
     })
     this.container.add(totem.container)
     MONOLITHE.material = material_monolithe
@@ -150,46 +157,64 @@ export default class Planet {
 
   watchTotem() {
     const playerPos = this.player.player.mesh.position
+    this.io_client.on("musictime begin", (timing, lines) => {
+      console.log(typeof timing, typeof lines);
+      this.timing = timing;
+      this.lines = lines;
+      console.log(this.timing)
+      console.log(this.lines)
+      this.createTorus(this.totemForce.position, this.lines)
+    });
+    this.io_client.on("wrong", () => {
+      this.removeTorus()
+    });
     this.time.on('tick', () => {
       if (!this.nearTotem && playerPos.distanceTo(this.totemForce.position) < 2) {
-        console.log('close');
+        console.log('near');
+        this.sounds.add({
+          position: this.totemForce.position,
+          distance: 40,
+          sound: this.assets.sounds.ActivationTotem,
+          loop: false
+        })
+        this.io_client.emit("near totem")
         this.io_client.emit("musictime begin")
         this.nearTotem = true;
-        this.createTorus(this.totemForce.position, 5)
+        //this.player.player.mesh.lookAt(this.totemForce.position);
+
         return;
       }
     })
   }
   createTorus(TotemPosition, torusNb) {
-
-    for (let i = 0; i < torusNb; i++) {
+    console.log('torusNB', torusNb)
+    console.log('started')
+    for (let i = 0; i < torusNb.length; i++) {
       setTimeout(() => {
+        console.log('timeout')
         console.log(TotemPosition)
-        const geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
-        const material = new MeshBasicMaterial({ color: 0xffff00 });
-        const torus = new Mesh(geometry, material);
+        //let geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
+        let geometry = new TorusGeometry(1, 0.1, 16, 100);
+        let material = new MeshBasicMaterial({ color: 0xff0000 });
+        let torus = new Mesh(geometry, material);
 
-        torus.lookAt(this.camera.position);
         this.container.add(torus);
-        torus.lookAt(this.camera.position);
-        torus.position.set(TotemPosition.x, TotemPosition.y + 2, TotemPosition.z);
-        torus.rotation.set(60, 100, 100);
+        this.torusList.push(torus)
+
+        torus.position.set(TotemPosition.x + 2, TotemPosition.y + 2, TotemPosition.z);
         torus.material.transparent = true;
-        console.log(geometry);
-        console.log(torus);
-        var scaleFactor = 1;
-        var opacityFactor = 1
+
+        //this.gui.add(torus.rotation, 'x').min(0).max(360).step(0.1).name('Rotation X')
+        let scaleFactor = 1;
+        let opacityFactor = 1
         // La scale grandi, puis l'opacité diminue
         this.time.on('tick', () => {
-          torus.lookAt(0, 0, 0);
-          //this.camera.lookAt(torus.position);
-          torus.rotation.x = 45
+          torus.lookAt(this.player.player.mesh.position);
           if (torus.scale.x < 10) {
             scaleFactor += 0.1
-            console.log(scaleFactor)
             torus.scale.set(scaleFactor, scaleFactor, scaleFactor);
           } else {
-            opacityFactor -= 0.1
+            opacityFactor -= 0.5
             torus.material.opacity = opacityFactor
             if (opacityFactor <= 0) {
               this.container.remove(torus);
@@ -197,10 +222,23 @@ export default class Planet {
             }
           }
         })
-      }, i * 4000)
+
+      }, (this.timing / (2.5 / torusNb[i].id)) * 2 * 1000)
     }
-    //this.gui.add(geometry.parameters, 'radius').min(0).max(20).step(0.01).name('Radius')
   }
 
+  removeTorus() {
+    let opacitiesFactor = 1;
+    this.time.on('tick', () => {
+      opacitiesFactor -= 0.5
+      this.torusList.forEach(torus => {
+        torus.material.opacity = opacitiesFactor
+        if (opacitiesFactor <= 0) {
+          this.container.remove(torus);
+          return;
+        }
+      });
+    })
 
+  }
 }
