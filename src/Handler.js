@@ -45,6 +45,7 @@ class Handler {
         socket.on(MOVEMENTS.RIGHT, () => movements.right(this.io))
         socket.on(MOVEMENTS.END, () => movements.end(this.io))
         socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))
+        socket.on(MUSICTIME.NEARTOTEM, () => { musictime.nearTotem(this.io);})
         socket.on(MUSICTIME.BEGIN, () => {
             // old system for colors and buttons
             //const notes = ['green', 'red', 'blue'];
@@ -52,8 +53,7 @@ class Handler {
             //for(let i=0; i<5; i++){
             //    this.melody.push(notes[Math.floor(Math.random() * 3)])
             //}
-            console.log('socket musictime begin');
-            self.rooms.begin(this.currentRoom, this.melody, this.lines);
+            musictime.begin(this.io, this.currentRoom, this.melody, this.lines);
         })
         socket.on(MUSICTIME.CORRECT, () => musictime.correct(this.io, this.melody, this.lines))
         socket.on(MUSICTIME.WRONG, () => musictime.wrong(this.io))

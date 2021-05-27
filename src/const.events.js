@@ -20,6 +20,7 @@ exports.MOVEMENTS = {
 }
 
 exports.MUSICTIME = {
+    NEARTOTEM: 'near totem',
     BEGIN: 'musictime begin',
     CORRECT: 'correct',
     WRONG: 'wrong',

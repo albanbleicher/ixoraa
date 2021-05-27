@@ -1,10 +1,16 @@
 const { MUSICTIME } = require('./const.events')
 exports.default = {
+    nearTotem(socket) {
+        console.log('near totem')
+        socket.emit(MUSICTIME.NEARTOTEM)
+
+    },
     begin(socket, room, melody, lines) {
         //socket.emit(MUSICTIME.BEGIN, melody, lines);
         console.log('musictime begin')
         console.log(room)
         socket.to(room).emit(MUSICTIME.BEGIN, melody, lines)
+        socket.emit(MUSICTIME.BEGIN, melody, lines)
 
     },
     correct(socket, melody, lines) {
