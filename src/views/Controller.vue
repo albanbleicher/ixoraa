@@ -41,8 +41,8 @@ export default {
         gsap.to(joystickController, { opacity: 0, display: 'none', duration: 1 });
           setTimeout(() => {
             gsap.to(musicalController, { opacity: 1, display: 'flex', duration: 1 });
-          }, 1000);
-      }, 1000);
+          }, 500);
+      }, 500);
     });
     this.io.on("musictime begin", async (time, lines) => {
       console.log('it started')

@@ -129,9 +129,11 @@ export default {
     },
     restartMusicTime() {
       console.log("restart");
+      console.log(this.lines)
       this.waveTime = false;
       this.lines = [];
       this.completedNotes = [];
+      console.log(this.lines)
     },
     fadeOutOpacity() {
       this.lines.forEach((el) => {
