@@ -62,9 +62,9 @@ export default class Sound {
                 if (!sound.positional.isPlaying && playerPos.distanceTo(sound.position) < sound.distance + 30 && playerPos.distanceTo(sound.position) > 2) {
                     //console.log('aaahhh'); 
                     sound.positional.play()
-                } else if ((playerPos.distanceTo(sound.position) > sound.distance + 30 || playerPos.distanceTo(sound.position) < 2) && sound.positional.isPlaying) {
+                } else if ((playerPos.distanceTo(sound.position) > sound.distance + 30 || playerPos.distanceTo(sound.position) < 5) && sound.positional.isPlaying) {
                     sound.positional.stop()
-                } if (!sound.positional.isPlaying && playerPos.distanceTo(sound.position) < 2) console.log('stop taht'); //this.add(this.totemPosition)
+                } if (!sound.positional.isPlaying && playerPos.distanceTo(sound.position) < 5) console.log('stop taht'); //this.add(this.totemPosition)
             })
         }
         else return
