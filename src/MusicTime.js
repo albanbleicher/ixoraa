@@ -15,11 +15,18 @@ exports.default = {
     },
     correct(socket, melody, lines) {
         // On dit aux devices que c'est correct, et on attends 5 secondes que l'animation se fasse pour relancer le mini-jeu
+        let tour = 0;
+        let nbTourMax = 1;
         console.log('correct')
-        socket.emit(MUSICTIME.CORRECT);
-        setTimeout(() => {
-            socket.emit(MUSICTIME.BEGIN, melody, lines);
-        }, 5000);
+        if (tour === nbTourMax) {
+            socket.emit(MUSICTIME.WINNED)
+        } else {
+            socket.emit(MUSICTIME.CORRECT);
+            tour = tour += 1;
+            setTimeout(() => {
+                socket.emit(MUSICTIME.BEGIN, melody, lines);
+            }, 3000);
+        }
     },
     winned(socket) {
         console.log('winned');
