@@ -38,17 +38,29 @@ export default {
 
     this.io.on("near totem", () => {
       setTimeout(() => {
-        gsap.to(joystickController, { opacity: 0, display: 'none', duration: 1 });
+        gsap.to(joystickController, { opacity: 0, display: 'none', duration: 0.5 });
           setTimeout(() => {
-            gsap.to(musicalController, { opacity: 1, display: 'flex', duration: 1 });
-          }, 500);
-      }, 500);
+            gsap.to(musicalController, { display: 'flex', duration: 0.5 });
+            gsap.to(musicalController, { opacity: 1, duration: 1 });
+          }, 1000);
+      }, 1000);
     });
     this.io.on("musictime begin", async (time, lines) => {
       console.log('it started')
       const result = await this.returnsPromise(time, lines);
       console.log(result);
       console.log("musicTime Begin");
+    });
+
+    this.io.on("winned", () => {
+      console.log('winned')
+      setTimeout(() => {
+        gsap.to(musicalController, { opacity: 0, display: 'none', duration: 0.5 });
+          setTimeout(() => {
+            gsap.to(joystickController, { display: 'flex', duration: 0.5 });
+            gsap.to(joystickController, { opacity: 1, duration: 1 });
+          }, 1000);
+      }, 1000);
     });
 
     /*gsap.to(joystickController, { opacity: 0 }).then(() => {
