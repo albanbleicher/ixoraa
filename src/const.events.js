@@ -27,3 +27,10 @@ exports.MUSICTIME = {
     WINNED: 'winned',
     TAP: 'tap'
 }
+
+exports.OBSTACLES = {
+    STRENGTH: 'strength',
+    WISDOM: 'wisdom',
+    BEAUTY: 'beauty',
+    HOPE: 'hope'
+}

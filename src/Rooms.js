@@ -28,15 +28,6 @@ class Rooms {
             this.io.emit(ROOMS_EVENTS.ERROR)
         }
     }
-
-    begin(room, melody, lines) {
-        //socket.emit(MUSICTIME.BEGIN, melody, lines);
-        console.log('musictime begin')
-        console.log(room)
-        this.io.to(room).emit(MUSICTIME.BEGIN, melody, lines)
-
-    }
-
     leave() {
 
     }

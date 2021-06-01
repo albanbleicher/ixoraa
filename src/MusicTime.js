@@ -9,14 +9,14 @@ exports.default = {
         //socket.emit(MUSICTIME.BEGIN, melody, lines);
         console.log('musictime begin')
         console.log(room)
-        socket.to(room).emit(MUSICTIME.BEGIN, melody, lines)
+        //socket.to(room).emit(MUSICTIME.BEGIN, melody, lines)
         socket.emit(MUSICTIME.BEGIN, melody, lines)
 
     },
     correct(socket, melody, lines) {
         // On dit aux devices que c'est correct, et on attends 5 secondes que l'animation se fasse pour relancer le mini-jeu
         let tour = 0;
-        let nbTourMax = 1;
+        let nbTourMax = 0;
         console.log('correct')
         if (tour === nbTourMax) {
             socket.emit(MUSICTIME.WINNED)

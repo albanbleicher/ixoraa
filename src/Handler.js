@@ -1,9 +1,10 @@
-const { EVENTS } = require('./const.events')
+const { EVENTS, OBSTACLES } = require('./const.events')
 const { MOVEMENTS } = require('./const.events')
 const { MUSICTIME } = require('./const.events')
 const { ROOMS_EVENTS } = require('./const.events')
 const movements = require('./Movements').default
 const musictime = require('./MusicTime').default
+const obstacles = require('./Obstacles').default
 const messages = require('./Messages').default
 const dotenv = require('dotenv');
 const Rooms = require('./Rooms').default
@@ -22,7 +23,8 @@ class Handler {
     init() {
         let self = this
         this.melody = 3
-        this.lines = [{ id: 1 }, { id: 2 }, { id: 3 }]
+        //this.lines = [{ id: 1 }, { id: 2 }, { id: 3 }]
+        this.lines = [{ id: 1 }]
         this.rooms = null
         this.currentRoom = null;
         this.io.on(EVENTS.USER_CONNECT, (socket) => {
@@ -62,6 +64,12 @@ class Handler {
 
         socket.on(ROOMS_EVENTS.CREATE, () => self.rooms.create(), console.log('hmmm'))
         socket.on(ROOMS_EVENTS.JOIN, (room) => this.currentRoom = self.rooms.join(room))
+
+
+        socket.on(OBSTACLES.STRENGTH, () => obstacles.strength(this.io))
+        socket.on(OBSTACLES.WISDOM, () => obstacles.wisdom(this.io))
+        socket.on(OBSTACLES.BEAUTY, () => obstacles.beauty(this.io))
+        socket.on(OBSTACLES.HOPE, () => obstacles.hope(this.io))
     }
 }
 exports.default = Handler;
