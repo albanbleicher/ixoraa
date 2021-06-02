@@ -37,6 +37,7 @@ export default class Physics {
         this.world.fromGraphNode(this.planet.mesh)
 
         this.io.on('strength', () => {
+            console.log('commandReversed')
             this.commandsReversed = true;
             setTimeout(() => {
                 this.commandsReversed = false;
@@ -169,26 +170,48 @@ export default class Physics {
 
     }
     move(e) {
-        switch (e) {
-            case 'up':
-                this.moving.backward = false;
-                this.moving.forward = true;
+        switch (this.commandsReversed) {
+            case true:
+                switch (e) {
+                    case 'up':
+                        this.moving.backward = true;
+                        this.moving.forward = false;
+                        break;
+                    case 'left':
+                        this.moving.right = true;
+                        this.moving.left = false;
+                        break;
+                    case 'down':
+                        this.moving.forward = true;
+                        this.moving.backward = false;
+                        break;
+                    case 'right':
+                        this.moving.left = true;
+                        this.moving.right = false;
+                        break;
+                }
                 break;
-            case 'left':
-                this.moving.right = false;
-                this.moving.left = true;
-                break;
-            case 'down':
-                this.moving.forward = false;
-                this.moving.backward = true;
-                break;
-            case 'right':
-                this.moving.left = false;
-                this.moving.right = true;
+            case false:
+                switch (e) {
+                    case 'up':
+                        this.moving.backward = false;
+                        this.moving.forward = true;
+                        break;
+                    case 'left':
+                        this.moving.right = false;
+                        this.moving.left = true;
+                        break;
+                    case 'down':
+                        this.moving.forward = false;
+                        this.moving.backward = true;
+                        break;
+                    case 'right':
+                        this.moving.left = false;
+                        this.moving.right = true;
+                        break;
+                }
                 break;
         }
-
-
     }
     still() {
         this.moving.right = false
@@ -205,18 +228,25 @@ export default class Physics {
                     case 'KeyW':
                     case 'up':
                         this.moving.backward = true;
+                        this.moving.forward = false;
                         break;
                     case 'ArrowLeft':
                     case 'KeyA':
                         this.moving.right = true;
+                        this.moving.left = false;
+
                         break;
                     case 'ArrowDown':
                     case 'KeyS':
                         this.moving.forward = true;
+                        this.moving.backward = false;
+
                         break;
                     case 'ArrowRight':
                     case 'KeyD':
                         this.moving.left = true;
+                        this.moving.right = false;
+
                         break;
                     case 'Space':
                         this.moving.jump = true
