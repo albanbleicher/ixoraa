@@ -23,7 +23,7 @@ class Handler {
     init() {
         let self = this
         this.melody = 3
-        //this.lines = [{ id: 1 }, { id: 2 }, { id: 3 }]
+        //this.lines = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]
         this.lines = [{ id: 1 }]
         this.rooms = null
         this.currentRoom = null;
