@@ -1,4 +1,4 @@
-import { Object3D, SphereGeometry, MeshNormalMaterial, Mesh, MeshBasicMaterial, Vector3, TextureLoader, TorusGeometry } from 'three'
+import { Object3D, SphereGeometry, MeshNormalMaterial, Mesh, MeshBasicMaterial, Vector3, TextureLoader, TorusGeometry, MeshMatcapMaterial } from 'three'
 
 import io from 'socket.io-client'
 import gsap from 'gsap'
@@ -163,6 +163,8 @@ export default class Totem {
     const textureLoader = new TextureLoader()
     textureLoader.crossOrigin = "Anonymous"
     const textureTorus = textureLoader.load(textureImg)
+
+    const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/BD5345_460F11_732622_EDB7B1-64px.png')
     
     for (let i = 0; i < this.lines.length; i++) {
       
@@ -170,7 +172,8 @@ export default class Totem {
         console.log(i, 'torussed');
         //let geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
         let geometry = new TorusGeometry(1, 0.1, 16, 100);
-        let material = new MeshBasicMaterial({ map: textureTorus });
+        //let material = new MeshBasicMaterial({ map: textureTorus });
+        let material = new MeshMatcapMaterial({ matcap: matCapTexture });
 
         let torus = new Mesh(geometry, material);
         torus.material.needsUpdate = true

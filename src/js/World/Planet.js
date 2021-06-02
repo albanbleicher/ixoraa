@@ -1,11 +1,12 @@
 import {
   BoxGeometry,
   MeshStandardMaterial,
-  MeshPhongMaterial,
+  MeshMatcapMaterial,
   Object3D,
   InstancedMesh,
   Vector3,
   PlaneBufferGeometry,
+  TextureLoader,
   DoubleSide,
   Mesh,
   MeshNormalMaterial,
@@ -126,13 +127,20 @@ export default class Planet {
     const MONOLITHE = this.mesh.children.find(item => item.name === 'gro_monolithe')
     const Sagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
 
-    const material_monolithe = new MeshStandardMaterial({
+    const textureLoader = new TextureLoader()
+    textureLoader.crossOrigin = "Anonymous"
+    const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/1B1B1B_999999_575757_747474-64px.png')
+    
+    let material_monolithe = new MeshMatcapMaterial({ matcap: matCapTexture });
+    /*const material_monolithe = new MeshStandardMaterial({
       color: 0x555555,
       //reflectivity: 1,
       metalness: 0.65,
       //emissive: 0x87A85f,
       roughness: 0.65,
-    })
+    })*/
+
+
     /*const totem = new Totem({
       position: MONOLITHE.position,
       time: this.time,
