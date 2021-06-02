@@ -158,28 +158,27 @@ export default class Totem {
 
   createTorus() {
     console.log('createTorus');
-    const myUrl = 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGlnaHQlMjB0ZXh0dXJlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80'
+    const textureImg = 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGlnaHQlMjB0ZXh0dXJlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80'
 
     const textureLoader = new TextureLoader()
     textureLoader.crossOrigin = "Anonymous"
-    const myTexture = textureLoader.load(myUrl)
-
+    const textureTorus = textureLoader.load(textureImg)
+    
     for (let i = 0; i < this.lines.length; i++) {
-
+      
       setTimeout(() => {
         console.log(i, 'torussed');
         //let geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
         let geometry = new TorusGeometry(1, 0.1, 16, 100);
-        let material = new MeshBasicMaterial({ map: myTexture });
+        let material = new MeshBasicMaterial({ map: textureTorus });
 
         let torus = new Mesh(geometry, material);
         torus.material.needsUpdate = true
 
         console.log('Add torus', torus);
         this.container.add(torus);
-        torus.lookAt(this.player.player.mesh.position);
         this.torusList.push(torus);
-
+        
         torus.position.set(this.position.x, this.position.y + 2, this.position.z);
         torus.material.transparent = true;
 
@@ -194,6 +193,7 @@ export default class Totem {
         // La scale grandi, puis l'opacité diminue
         this.time.on('tick', () => {
           if (torus.scale.x < 10) {
+            torus.lookAt(this.player.player.mesh.position);
 
             scaleFactor += 0.1
             torus.scale.set(scaleFactor, scaleFactor, scaleFactor);
@@ -218,7 +218,7 @@ export default class Totem {
       }, this.timing / (2.5 / this.lines[i].id) * 2 * 1000)
     }
   }
-
+  
   removeTorus() {
     let opacitiesFactor = 1;
     console.log('remove torus because null')
@@ -236,12 +236,17 @@ export default class Totem {
       });
     });
   }
-
+  
   obstacleTotemForce() {
     this.obstacleEmitted = true;
-
+    
+    const textureImg = 'https://png.pngtree.com/thumb_back/fw800/background/20190601/pngtree-black-and-white-shiny-seamless-marble-texture-image-image_118098.jpg'
+  
+    const textureLoader = new TextureLoader()
+    textureLoader.crossOrigin = "Anonymous"
+    const textureTorus = textureLoader.load(textureImg)
     let geometry = new TorusGeometry(1, 0.1, 16, 100, Math.PI / 2);
-    let material = new MeshBasicMaterial({ color: 0xFFFFFF, reflectivity: 1 });
+    let material = new MeshBasicMaterial({ color: 0xFFFFFF, reflectivity: 1, map: textureTorus });
     let chocWave = new Mesh(geometry, material);
 
     //Rotation semble ne pas marcher ?
@@ -263,7 +268,7 @@ export default class Totem {
 
     this.time.on('tick', () => {
       if (chocWave.scale.x < 20) {
-        scaleFactor += 0.01
+        scaleFactor += 5
         chocWave.scale.set(scaleFactor, scaleFactor, scaleFactor);
       } else {
         this.container.remove(chocWave);

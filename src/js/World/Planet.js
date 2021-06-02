@@ -126,12 +126,12 @@ export default class Planet {
     const MONOLITHE = this.mesh.children.find(item => item.name === 'gro_monolithe')
     const Sagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
 
-    const material_monolithe = new MeshPhongMaterial({
-      //color: 0x5e5e5e,
+    const material_monolithe = new MeshStandardMaterial({
+      color: 0x555555,
       //reflectivity: 1,
-      shininess: 100,
-      emissive: 0x87A85f,
-      roughness: 1,
+      metalness: 0.65,
+      //emissive: 0x87A85f,
+      roughness: 0.65,
     })
     /*const totem = new Totem({
       position: MONOLITHE.position,
