@@ -1,7 +1,4 @@
 import {
-<<<<<<< HEAD
-  BoxGeometry, MeshStandardMaterial, Object3D,MeshPhongMaterial, InstancedMesh, Vector3, Matrix4, PlaneBufferGeometry, DoubleSide, Mesh,DynamicDrawUsage, MeshNormalMaterial
-=======
   BoxGeometry,
   MeshStandardMaterial,
   MeshMatcapMaterial,
@@ -13,7 +10,6 @@ import {
   DoubleSide,
   Mesh,
   MeshNormalMaterial,
->>>>>>> 7a187a8ace8f25f74514c88e08b3cefe1d237e1a
 } from 'three'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 import * as dat from 'dat.gui'
@@ -95,10 +91,6 @@ export default class Planet {
     /*this.totemList.forEach(totem => {
       this.watchTotem(totem)
     });*/
-    this.io_client.on("wrong", () => {
-      this.nearTotem = false;
-      console.log('wrong');
-    });
     // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
     this.io_client.on("winned", () => {
       console.log('winned');
@@ -134,7 +126,7 @@ export default class Planet {
     const textureLoader = new TextureLoader()
     textureLoader.crossOrigin = "Anonymous"
     const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/1B1B1B_999999_575757_747474-64px.png')
-    
+
     let material_monolithe = new MeshMatcapMaterial({ matcap: matCapTexture });
     /*const material_monolithe = new MeshStandardMaterial({
       color: 0x555555,
@@ -174,11 +166,7 @@ export default class Planet {
     console.log(this.ground);
     this.ground.updateMatrixWorld()
     const groundGeometry = this.ground.geometry.toNonIndexed()
-<<<<<<< HEAD
-    groundGeometry.scale(0.2,0.2,0.2)
-=======
     groundGeometry.scale(0.103, 0.103, 0.103)
->>>>>>> 7a187a8ace8f25f74514c88e08b3cefe1d237e1a
     groundGeometry.rotateX(Math.PI * 0.5);
 
     const groundMesh = new Mesh(groundGeometry, normalMat)

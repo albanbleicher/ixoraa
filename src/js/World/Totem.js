@@ -74,6 +74,7 @@ export default class Totem {
         this.nearTotem = false;
         this.removeTorus()
         this.watchTotem()
+        //this.createTorus();
         console.log('wrong');
       }
     });
@@ -91,7 +92,7 @@ export default class Totem {
     this.io_client.on("winned", () => {
       console.log('winned');
       this.nearTotem = false;
-      this.watchTotem()
+      this.watchTotem();
       this.endPanningCamera();
       console.log(this.totemList);
       // C'était pas mal avant la refacto, maintenant le meilleur moyen de virer un totem de la liste lorsqu'il est gagné, c'est le désinstancier
@@ -119,6 +120,7 @@ export default class Totem {
       if (this.player) {
         this.playerPos = this.player.player.mesh.position
       }
+
       //On check pour l'obstacle de la force
       if (this.name === "gro_monolithe" && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 10) {
         this.obstacleTotemForce(this.position);
@@ -135,7 +137,7 @@ export default class Totem {
         })
 
         //console.log(this.activatedTotem);
-        if (this.name === this.activatedTotem) {
+        if (this.name === this.activatedTotem || this.nearTotem) {
           this.io_client.emit("near totem")
           this.io_client.emit("musictime begin")
           this.nearTotem = true;
@@ -165,9 +167,9 @@ export default class Totem {
     const textureTorus = textureLoader.load(textureImg)
 
     const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/BD5345_460F11_732622_EDB7B1-64px.png')
-    
+
     for (let i = 0; i < this.lines.length; i++) {
-      
+
       setTimeout(() => {
         console.log(i, 'torussed');
         //let geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
@@ -181,7 +183,7 @@ export default class Totem {
         console.log('Add torus', torus);
         this.container.add(torus);
         this.torusList.push(torus);
-        
+
         torus.position.set(this.position.x, this.position.y + 2, this.position.z);
         torus.material.transparent = true;
 
@@ -221,7 +223,7 @@ export default class Totem {
       }, this.timing / (2.5 / this.lines[i].id) * 2 * 1000)
     }
   }
-  
+
   removeTorus() {
     let opacitiesFactor = 1;
     console.log('remove torus because null')
@@ -239,12 +241,12 @@ export default class Totem {
       });
     });
   }
-  
+
   obstacleTotemForce() {
     this.obstacleEmitted = true;
-    
+
     const textureImg = 'https://png.pngtree.com/thumb_back/fw800/background/20190601/pngtree-black-and-white-shiny-seamless-marble-texture-image-image_118098.jpg'
-  
+
     const textureLoader = new TextureLoader()
     textureLoader.crossOrigin = "Anonymous"
     const textureTorus = textureLoader.load(textureImg)
