@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const code = document.querySelector('.code')
 
 
-  play.addEventListener('click', () => {
+  /*play.addEventListener('click', () => {
     io_client.emit("room create");
     io_client.once("room code", (id) => {
       console.log('test');
@@ -36,11 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.to(landing, { opacity: 0 }).then(() => {
       gsap.to(landing, { display: 'none' })
     })
-  })
-
-  /*new App({
-    canvas: document.querySelector('#_canvas'),
   })*/
+
+  new App({
+    canvas: document.querySelector('#_canvas'),
+  })
 })
 
 
@@ -57,12 +57,12 @@ function musicFadeOut() {
     if (vol > 0) {
       console.log(vol);
       console.log(audio)
-        vol -= 0.02;
-        audio.volume = vol;
-      }
-      else {
-        // Stop the setInterval when 0 is reached
-        clearInterval(fadeout);
-      }
-    }, interval);
+      vol -= 0.02;
+      audio.volume = vol;
+    }
+    else {
+      // Stop the setInterval when 0 is reached
+      clearInterval(fadeout);
+    }
+  }, interval);
 }

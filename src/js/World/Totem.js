@@ -1,4 +1,4 @@
-import { Object3D, SphereGeometry, MeshNormalMaterial, Mesh, MeshBasicMaterial, Vector3, TextureLoader, TorusGeometry, MeshMatcapMaterial } from 'three'
+import { Object3D, SphereGeometry, MeshNormalMaterial, Mesh, MeshBasicMaterial, Vector3, TextureLoader, TorusGeometry, MeshMatcapMaterial, AudioListener, Audio, PositionalAudio } from 'three'
 
 import io from 'socket.io-client'
 import gsap from 'gsap'
@@ -27,7 +27,8 @@ export default class Totem {
     this.torusList = [];
     this.obstacleEmitted = false;
     this.commandsReversed = false;
-    this.activatedTotem;
+    this.activatedTotem = null;
+    this.desactivatedTotem;
     this.playerPos = new Vector3(0, 0, 0);
 
     this.init()
@@ -44,12 +45,34 @@ export default class Totem {
     this.container.add(mesh)
 
     // add a sound that will be emmited from totem's position
-    this.sounds.add({
-      position: this.position,
-      distance: 40,
-      sound: this.assets.sounds.totem,
-      loop: true
-    })
+    /*this.sounds.add({
+        position: this.position,
+        distance: 10,
+        sound: this.assets.sounds.totem,
+        loop: true
+      })*/
+
+    // On pourra faire un map sur un array de totem quand on aura les noms
+    if (this.name === "gro_monolithe") {
+      console.log('launched')
+      this.sounds.add({
+        position: this.position,
+        distance: 10,
+        sound: this.assets.sounds.Drum1,
+        loop: true,
+        name: 'Drum1'
+      })
+    }
+
+    if (this.name === "totem_sagesse") {
+      this.sounds.add({
+        position: this.position,
+        distance: 10,
+        sound: this.assets.sounds.Drum2,
+        loop: true,
+        name: 'Drum2'
+      })
+    }
 
     // enable floating
     this.float()
@@ -99,6 +122,7 @@ export default class Totem {
       if (this.name === this.activatedTotem) {
         console.log(this.activatedTotem);
         this.position = new Vector3(150, 150, 150);
+        this.desactivatedTotem = true;
       }
       /*const indexToRemove = (totem) => totem.name === this.activatedTotem;
       const totemToRemove = this.totemList.findIndex(indexToRemove);
@@ -116,44 +140,48 @@ export default class Totem {
   // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on créer les torus
   watchTotem() {
     this.time.on('tick', () => {
-      // Le player n'est pas présent lors de l'instanciation de la classe, pour l'instant il est add ici
-      if (this.player) {
-        this.playerPos = this.player.player.mesh.position
-      }
-
-      //On check pour l'obstacle de la force
-      if (this.name === "gro_monolithe" && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 10) {
-        this.obstacleTotemForce(this.position);
-      }
-      if (this.name === "gro_monolithe" && !this.nearTotem && this.playerPos.distanceTo(this.position) < 2) {
-        this.activatedTotem = this.name;
-        console.log(this.activatedTotem);
-        console.log('near');
-        this.sounds.add({
-          position: this.position,
-          distance: 40,
-          sound: this.assets.sounds.ActivationTotem,
-          loop: false
-        })
-
-        //console.log(this.activatedTotem);
-        if (this.name === this.activatedTotem || this.nearTotem) {
-          this.io_client.emit("near totem")
-          this.io_client.emit("musictime begin")
-          this.nearTotem = true;
+      if (!this.desactivatedTotem) {
+        // Le player n'est pas présent lors de l'instanciation de la classe, pour l'instant il est add ici
+        if (this.player) {
+          this.playerPos = this.player.player.mesh.position
         }
-        // A remplacer ? En tout cas la fonction watchTotem semble toujours être appelé pour les totems enlevés du tableau
-        /*this.totemList.forEach(totem => {
-          if (totem.name === this.activatedTotem.name) {
-            console.log(this.activatedTotem.name);
+
+        // On check pour l'obstacle de la force
+        if (this.name === "gro_monolithe" && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 10) {
+          this.obstacleTotemForce(this.position);
+        }
+        if (!this.nearTotem && this.activatedTotem === null && this.playerPos.distanceTo(this.position) < 2) {
+          this.activatedTotem = this.name;
+
+          console.log(this.activatedTotem);
+          console.log('near');
+
+          this.sounds.add({
+            position: this.position,
+            distance: 2,
+            sound: this.assets.sounds.ActivationTotem,
+            loop: false,
+            name: 'ActivationTotem'
+          })
+
+          if (this.name === this.activatedTotem || this.nearTotem) {
             this.io_client.emit("near totem")
             this.io_client.emit("musictime begin")
             this.nearTotem = true;
           }
-        })*/
+          // A remplacer ? En tout cas la fonction watchTotem semble toujours être appelé pour les totems enlevés du tableau
+          /*this.totemList.forEach(totem => {
+            if (totem.name === this.activatedTotem.name) {
+              console.log(this.activatedTotem.name);
+              this.io_client.emit("near totem")
+              this.io_client.emit("musictime begin")
+              this.nearTotem = true;
+            }
+          })*/
+          return;
+        }
         return;
       }
-      return;
     })
     return;
   }
@@ -189,7 +217,7 @@ export default class Totem {
 
         //this.gui.add(torus.rotation, 'x').min(0).max(360).step(0.1).name('Rotation X')
         let scaleFactor = 1;
-        let opacityFactor = 1
+        let opacityFactor = 1;
         console.log(opacityFactor, scaleFactor, this.torusList);
 
         /*gsap.to(torus.scale, { x: 10, y: 10, z: 10, duration: 5 }).then(() => {
@@ -203,7 +231,7 @@ export default class Totem {
             scaleFactor += 0.1
             torus.scale.set(scaleFactor, scaleFactor, scaleFactor);
           } else {
-
+            // Merge with remove Torus
             opacityFactor -= 0.1
             torus.material.opacity = opacityFactor
             if (opacityFactor < 0 && this.torusList.length > 0) {
@@ -211,13 +239,8 @@ export default class Totem {
               console.log('remove torus')
               this.torusList.shift();
               this.container.remove(torus);
-              opacityFactor = 1;
-              scaleFactor = 1;
-              return;
             }
-            return;
           }
-          return;
         })
         console.log((this.timing / (2.5 / this.lines[i].id)) * 2 * 1000)
       }, this.timing / (2.5 / this.lines[i].id) * 2 * 1000)
@@ -255,15 +278,16 @@ export default class Totem {
     let chocWave = new Mesh(geometry, material);
 
     //Rotation semble ne pas marcher ?
-    chocWave.rotation.x = 37.7;
-    chocWave.rotation.y = 37.7;
-    chocWave.rotation.z = 0;
+    console.log(chocWave.rotation.y);
+    chocWave.rotateX(Math.PI * 0.5);
+    console.log(chocWave.rotation.y);
+    console.log(Math.PI * 0.5);
     chocWave.position.set(this.position.x, this.position.y + 0.5, this.position.z);
-    chocWave.rotation.order = 'ZXY';
+    //chocWave.rotation.order = 'ZXY';
     this.container.add(chocWave);
 
-    chocWave.lookAt(this.player.player.mesh.position);
-    chocWave.material.needsUpdate = true
+    //chocWave.lookAt(this.player.player.mesh.position);
+    //chocWave.material.needsUpdate = true
 
     /*this.gui.add(chocWave.rotation, 'x').min(0).max(90).step(0.1).name('Rotation X')
     this.gui.add(chocWave.rotation, 'y').min(0).max(80).step(0.1).name('Rotation Y')
@@ -273,7 +297,7 @@ export default class Totem {
 
     this.time.on('tick', () => {
       if (chocWave.scale.x < 20) {
-        scaleFactor += 5
+        scaleFactor += 0.1
         chocWave.scale.set(scaleFactor, scaleFactor, scaleFactor);
       } else {
         this.container.remove(chocWave);
@@ -287,6 +311,7 @@ export default class Totem {
         console.log('touched');
         console.log(this.commandsReversed)
         this.commandsReversed = true;
+        console.log(this.commandsReversed)
         setTimeout(() => {
           console.log(this.commandsReversed)
           this.commandsReversed = false;
