@@ -15,28 +15,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const code = document.querySelector('.code')
 
 
-  // play.addEventListener('click', () => {
-  //   io_client.emit("room create");
-  //   io_client.once("room code", (id) => {
-  //     console.log('test');
-  //     code.innerText = id;
-  //   });
-  //   io_client.once('room is_synced', () => {
-  //     console.log('test')
-  //     gsap.to(access, { opacity: 0 }).then(() => {
-  //       gsap.to(access, { display: 'none' })
-  //     })
+  play.addEventListener('click', () => {
+    io_client.emit("room create");
+    io_client.once("room code", (id) => {
+      console.log('test');
+      code.innerText = id;
+    });
+    io_client.once('room is_synced', () => {
+      console.log('test')
+
+      gsap.to(access, { opacity: 0 }).then(() => {
+        gsap.to(access, { display: 'none' })
+      })
+      musicFadeOut()
       new App({
         canvas: document.querySelector('#_canvas'),
       })
-    // })
+    })
 
-    // gsap.to(landing, { opacity: 0 }).then(() => {
-    //   gsap.to(landing, { display: 'none' })
-    // })
-  // })
+    gsap.to(landing, { opacity: 0 }).then(() => {
+      gsap.to(landing, { display: 'none' })
+    })
+  })
 
   /*new App({
     canvas: document.querySelector('#_canvas'),
   })*/
 })
+
+
+function musicFadeOut() {
+  // Initial volume of 0.20
+  // Make sure it's a multiple of 0.05
+  var vol = 0.20;
+  var interval = 200; // 200ms interval
+
+  var fadeout = setInterval(() => {
+    var audio = document.getElementById("audio_intro");
+    // Reduce volume by 0.05 as long as it is above 0
+    // This works as long as you start with a multiple of 0.05!
+    if (vol > 0) {
+      console.log(vol);
+      console.log(audio)
+        vol -= 0.02;
+        audio.volume = vol;
+      }
+      else {
+        // Stop the setInterval when 0 is reached
+        clearInterval(fadeout);
+      }
+    }, interval);
+}

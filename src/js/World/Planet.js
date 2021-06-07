@@ -1,13 +1,28 @@
 import {
+<<<<<<< HEAD
   BoxGeometry, MeshStandardMaterial, Object3D,MeshPhongMaterial, InstancedMesh, Vector3, Matrix4, PlaneBufferGeometry, DoubleSide, Mesh,DynamicDrawUsage, MeshNormalMaterial
+=======
+  BoxGeometry,
+  MeshStandardMaterial,
+  MeshMatcapMaterial,
+  Object3D,
+  InstancedMesh,
+  Vector3,
+  PlaneBufferGeometry,
+  TextureLoader,
+  DoubleSide,
+  Mesh,
+  MeshNormalMaterial,
+>>>>>>> 7a187a8ace8f25f74514c88e08b3cefe1d237e1a
 } from 'three'
-import { BoxBufferGeometry, PlaneGeometry } from 'three/build/three.module'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
+import * as dat from 'dat.gui'
 
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
-import Random from '../Tools/Random'
 import Totem from './Totem'
-import { MeshBasicMaterial, MeshPhysicalMaterial } from 'three/build/three.module'
+
+import io from 'socket.io-client'
+
 export default class Planet {
   constructor(params) {
     // params
@@ -15,8 +30,16 @@ export default class Planet {
     this.assets = params.assets
     this.debug = params.debug
     this.camera = params.camera.camera
+    this.player = params.player
     this.sounds = params.sounds
+    this.gui = null
     this.mesh = null
+
+    this.io_client = io("http://localhost:3000");
+
+    this.totemList = [];
+    this.commandsReversed = false;
+    this.playerPos = this.player.player.mesh.position;
 
     // Set up
     this.container = new Object3D()
@@ -24,10 +47,12 @@ export default class Planet {
 
     this.init()
     this.createGrass()
-    // this.setTotems(1)
+    this.setTotems()
 
   }
   init() {
+    this.gui = new dat.GUI({ width: 450 })
+
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshStandardMaterial({
       color: '#9E3C74',
@@ -35,6 +60,7 @@ export default class Planet {
     })
 
     this.mesh = this.assets.models.ground.scene
+    console.log(this.mesh);
     this.mesh.material = material
     this.ground = this.mesh.children.find(item => item.name === "map_rework")
     this.ground.material = material
@@ -50,28 +76,89 @@ export default class Planet {
     }
     this.container.add(this.mesh)
     this.setMaterials()
+
+    // Check the Totem distance
+    // Could be done for all totem 
+    // On ajoute chaque totem à une liste, puis on check la position du joueur pour chacun des totems
+    const totemForce = this.mesh.children.find(item => item.name === "gro_monolithe")
+    const totemSagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
+    const totemBeaute = this.mesh.children.find(item => item.name === "gro_portal")
+    const totemEspoir = this.mesh.children.find(item => item.name === "bonbonne")
+    this.totemList.push(totemForce)
+    this.totemList.push(totemSagesse)
+    this.totemList.push(totemBeaute)
+    this.totemList.push(totemEspoir)
+
+    console.log(this.totemList);
+    console.log(this.playerPos)
+
+    /*this.totemList.forEach(totem => {
+      this.watchTotem(totem)
+    });*/
+    this.io_client.on("wrong", () => {
+      this.nearTotem = false;
+      console.log('wrong');
+    });
+    // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
+    this.io_client.on("winned", () => {
+      console.log('winned');
+      /*const indexToRemove = (totem) => totem.name === this.activatedTotem.name;
+      const totemToRemove = this.totemList.findIndex(indexToRemove);
+      this.totemList.splice(totemToRemove, 1)*/
+      //this.totemList = this.totemList.splice(totemToRemove, 1)
+      this.nearTotem = false;
+      console.log(this.totemList)
+    });
+
   }
-  setTotems(count) {
-    for (let i = 0; i < count; i++) {
-      const x = Random(-500, 500)
-      const z = Random(-500, 500)
+  setTotems() {
+    this.totemList.forEach(singleTotem => {
+      console.log(singleTotem.name);
       const totem = new Totem({
-        position: new Vector3(20, 0, 20),
+        player: this.player,
+        position: singleTotem.position,
         time: this.time,
-        sounds: this.sounds
+        sounds: this.sounds,
+        assets: this.assets,
+        camera: this.camera,
+        name: singleTotem.name,
+        totemList: this.totemList
       })
       this.container.add(totem.container)
-    }
+    })
   }
   setMaterials() {
     const MONOLITHE = this.mesh.children.find(item => item.name === 'gro_monolithe')
-    const material_monolithe = new MeshPhongMaterial({
-      //color: 0x5e5e5e,
+    const Sagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
+
+    const textureLoader = new TextureLoader()
+    textureLoader.crossOrigin = "Anonymous"
+    const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/1B1B1B_999999_575757_747474-64px.png')
+    
+    let material_monolithe = new MeshMatcapMaterial({ matcap: matCapTexture });
+    /*const material_monolithe = new MeshStandardMaterial({
+      color: 0x555555,
       //reflectivity: 1,
-      shininess: 100,
-      emissive: 0x87A85f,
-      roughness: 1,
+      metalness: 0.65,
+      //emissive: 0x87A85f,
+      roughness: 0.65,
+    })*/
+
+
+    /*const totem = new Totem({
+      position: MONOLITHE.position,
+      time: this.time,
+      sounds: this.sounds,
+      assets: this.assets
     })
+    const totem2 = new Totem({
+      position: Sagesse.position,
+      time: this.time,
+      sounds: this.sounds,
+      assets: this.assets
+    })
+    this.container.add(totem.container)
+    this.container.add(totem2.container)*/
     MONOLITHE.material = material_monolithe
   }
   createGrass() {
@@ -87,7 +174,11 @@ export default class Planet {
     console.log(this.ground);
     this.ground.updateMatrixWorld()
     const groundGeometry = this.ground.geometry.toNonIndexed()
+<<<<<<< HEAD
     groundGeometry.scale(0.2,0.2,0.2)
+=======
+    groundGeometry.scale(0.103, 0.103, 0.103)
+>>>>>>> 7a187a8ace8f25f74514c88e08b3cefe1d237e1a
     groundGeometry.rotateX(Math.PI * 0.5);
 
     const groundMesh = new Mesh(groundGeometry, normalMat)
@@ -100,7 +191,7 @@ export default class Planet {
     const _position = new Vector3()
     const _normal = new Vector3();
 
-sampler.build()
+    sampler.build()
 
     for (let i = 0; i < count; i++) {
 
@@ -116,5 +207,4 @@ sampler.build()
 
     this.container.add(sampleMesh)
   }
-
 }

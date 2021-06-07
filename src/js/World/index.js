@@ -133,6 +133,7 @@ export default class World {
   debug:this.debug,
   camera:this.camera,
   physics:this.physics,
+  player:this.player,
   sounds:this.sounds
  })
  this.container.add(this.planet.container)

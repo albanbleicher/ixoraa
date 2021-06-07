@@ -3,6 +3,9 @@ import { Clock } from "three";
 import { Octree } from "three/examples/jsm/math/Octree";
 import { io } from "socket.io-client"
 
+import EventEmitter from '../Tools/EventEmitter'
+
+
 export default class Physics {
     constructor(params) {
         this.debug = params.debug // boolean
@@ -14,7 +17,6 @@ export default class Physics {
 
         this.world = new Octree()
 
-
         this.moving = {
             forward: false,
             backward: false,
@@ -22,6 +24,7 @@ export default class Physics {
             right: false,
             jump: false
         }
+        this.commandsReversed = false;
         this.lastCommand = [];
 
         this.gravity = params.gravity
@@ -30,7 +33,16 @@ export default class Physics {
         this.init()
     }
     init() {
+        console.log(this.planet);
         this.world.fromGraphNode(this.planet.mesh)
+
+        this.io.on('strength', () => {
+            console.log('commandReversed')
+            this.commandsReversed = true;
+            setTimeout(() => {
+                this.commandsReversed = false;
+            }, 10000)
+        });
 
         this.io.on('move up', () => {
             this.move('up')
@@ -137,14 +149,14 @@ export default class Physics {
             if (this.moving.left) {
 
                 // this.player.velocity.add( this.getSideVector().multiplyScalar( - speed * delta ) );
-                this.player.mesh.rotation.y += 0.01
+                this.player.mesh.rotation.y += 0.05
 
 
             }
 
             if (this.moving.right) {
 
-                this.player.mesh.rotation.y -= 0.01
+                this.player.mesh.rotation.y -= 0.05
 
             }
 
@@ -158,26 +170,48 @@ export default class Physics {
 
     }
     move(e) {
-        switch (e) {
-            case 'up':
-                this.moving.backward = false;
-                this.moving.forward = true;
+        switch (this.commandsReversed) {
+            case true:
+                switch (e) {
+                    case 'up':
+                        this.moving.backward = true;
+                        this.moving.forward = false;
+                        break;
+                    case 'left':
+                        this.moving.right = true;
+                        this.moving.left = false;
+                        break;
+                    case 'down':
+                        this.moving.forward = true;
+                        this.moving.backward = false;
+                        break;
+                    case 'right':
+                        this.moving.left = true;
+                        this.moving.right = false;
+                        break;
+                }
                 break;
-            case 'left':
-                this.moving.right = false;
-                this.moving.left = true;
-                break;
-            case 'down':
-                this.moving.forward = false;
-                this.moving.backward = true;
-                break;
-            case 'right':
-                this.moving.left = false;
-                this.moving.right = true;
+            case false:
+                switch (e) {
+                    case 'up':
+                        this.moving.backward = false;
+                        this.moving.forward = true;
+                        break;
+                    case 'left':
+                        this.moving.right = false;
+                        this.moving.left = true;
+                        break;
+                    case 'down':
+                        this.moving.forward = false;
+                        this.moving.backward = true;
+                        break;
+                    case 'right':
+                        this.moving.left = false;
+                        this.moving.right = true;
+                        break;
+                }
                 break;
         }
-
-
     }
     still() {
         this.moving.right = false
@@ -187,29 +221,63 @@ export default class Physics {
     }
 
     moveKeyboard(e) {
-        switch (e.code) {
-            case 'ArrowUp':
-            case 'KeyW':
-            case 'up':
-                this.moving.forward = true;
+        switch (this.commandsReversed) {
+            case true:
+                switch (e.code) {
+                    case 'ArrowUp':
+                    case 'KeyW':
+                    case 'up':
+                        this.moving.backward = true;
+                        this.moving.forward = false;
+                        break;
+                    case 'ArrowLeft':
+                    case 'KeyA':
+                        this.moving.right = true;
+                        this.moving.left = false;
+
+                        break;
+                    case 'ArrowDown':
+                    case 'KeyS':
+                        this.moving.forward = true;
+                        this.moving.backward = false;
+
+                        break;
+                    case 'ArrowRight':
+                    case 'KeyD':
+                        this.moving.left = true;
+                        this.moving.right = false;
+
+                        break;
+                    case 'Space':
+                        this.moving.jump = true
+                        break;
+                }
                 break;
-            case 'ArrowLeft':
-            case 'KeyA':
-                this.moving.left = true;
-                break;
-            case 'ArrowDown':
-            case 'KeyS':
-                this.moving.backward = true;
-                break;
-            case 'ArrowRight':
-            case 'KeyD':
-                this.moving.right = true;
-                break;
-            case 'Space':
-                this.moving.jump = true
+            case false:
+                switch (e.code) {
+                    case 'ArrowUp':
+                    case 'KeyW':
+                    case 'up':
+                        this.moving.forward = true;
+                        break;
+                    case 'ArrowLeft':
+                    case 'KeyA':
+                        this.moving.left = true;
+                        break;
+                    case 'ArrowDown':
+                    case 'KeyS':
+                        this.moving.backward = true;
+                        break;
+                    case 'ArrowRight':
+                    case 'KeyD':
+                        this.moving.right = true;
+                        break;
+                    case 'Space':
+                        this.moving.jump = true
+                        break;
+                }
                 break;
         }
-
     }
     stillKeyboard(e) {
         switch (e.code) {

@@ -39,7 +39,7 @@ export default class Player {
         this.player.mesh.add(this.camera.camera)
         this.camera.camera.position.y = 0
         this.camera.camera.position.z = 1
-
+        console.log(this.camera.camera);
         this.time.on('tick',() => {
             this.camera.camera.lookAt(this.player.mesh.position)
         })
