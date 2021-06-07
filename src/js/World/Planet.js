@@ -1,5 +1,5 @@
 import {
-  BoxGeometry, MeshStandardMaterial, Object3D, InstancedMesh, Vector3, Matrix4, PlaneBufferGeometry, DoubleSide, Mesh,DynamicDrawUsage, MeshNormalMaterial
+  BoxGeometry, MeshStandardMaterial, Object3D,MeshPhongMaterial, InstancedMesh, Vector3, Matrix4, PlaneBufferGeometry, DoubleSide, Mesh,DynamicDrawUsage, MeshNormalMaterial
 } from 'three'
 import { BoxBufferGeometry, PlaneGeometry } from 'three/build/three.module'
 import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
@@ -83,10 +83,11 @@ export default class Planet {
       side: DoubleSide
     })
     const normalMat = new MeshNormalMaterial()
-    const count = 1000000
+    const count = 100000
     console.log(this.ground);
+    this.ground.updateMatrixWorld()
     const groundGeometry = this.ground.geometry.toNonIndexed()
-    groundGeometry.scale(0.103,0.103,0.103)
+    groundGeometry.scale(0.2,0.2,0.2)
     groundGeometry.rotateX(Math.PI * 0.5);
 
     const groundMesh = new Mesh(groundGeometry, normalMat)
@@ -106,7 +107,7 @@ sampler.build()
       sampler.sample(_position, _normal);
       _normal.add(_position)
       dummy.position.copy(_position);
-      dummy.lookAt(_normal);
+      // dummy.lookAt(_normal);
       dummy.updateMatrix();
 
       sampleMesh.setMatrixAt(i, dummy.matrix);
