@@ -57,10 +57,34 @@ export default class Totem {
       console.log('launched')
       this.sounds.add({
         position: this.position,
-        distance: 10,
+        distance: 30,
+        sound: this.assets.sounds.Space1,
+        loop: true,
+        name: 'longSpace1'
+      })
+
+      this.sounds.add({
+        position: this.position,
+        distance: 20,
         sound: this.assets.sounds.Drum1,
         loop: true,
         name: 'Drum1'
+      })
+
+      /*this.sounds.add({
+        position: this.position,
+        distance: 10,
+        sound: this.assets.sounds.Flute1,
+        loop: true,
+        name: 'Flute1'
+      })*/
+
+      this.sounds.add({
+        position: this.position,
+        distance: 10,
+        sound: this.assets.sounds.Guitar1,
+        loop: true,
+        name: 'Guitar1'
       })
     }
 
