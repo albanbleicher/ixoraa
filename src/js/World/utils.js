@@ -6,6 +6,7 @@ export const MODELS = {
         beaute:'portal_grand',
     },
     planet:{
-        monolithes:'monolithes_petits'
+        monolithes:'monolithes_petits',
+        arbre:'tronc',
     }
 }

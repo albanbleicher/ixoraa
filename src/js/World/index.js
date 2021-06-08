@@ -26,6 +26,9 @@ export default class World {
     this.container = new Object3D()
     this.container.name = 'World'
 
+    this.BLOOM_LAYER = 1
+    this.SCENE_LAER = 0
+
     if (this.debug) {
       this.container.add(new AxesHelper(150))
       this.debugFolder = this.debug.addFolder('World')

@@ -163,7 +163,7 @@ export default class Planet {
     geometry.computeVertexNormals();
 					geometry.scale( 0.07, 0.07, 0.07 );
     const material = new MeshStandardMaterial({
-      color: 0x15AB86,
+      color: 0x2EDF86,
       side: DoubleSide
     })
     const normalMat = new MeshNormalMaterial()
