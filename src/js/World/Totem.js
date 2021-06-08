@@ -31,7 +31,7 @@ export default class Totem {
     this.playerPos = new Vector3(0, 0, 0);
 
     this.init()
-    this.watchTotem()
+    // this.watchTotem()
   }
   init() {
     // create new totem mesh
@@ -46,7 +46,7 @@ export default class Totem {
     // add a sound that will be emmited from totem's position
     this.sounds.add({
       position: this.position,
-      distance: 40,
+      distance: 0.40,
       sound: this.assets.sounds.totem,
       loop: true
     })
@@ -122,16 +122,16 @@ export default class Totem {
       }
 
       //On check pour l'obstacle de la force
-      if (this.name === "gro_monolithe" && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 10) {
+      if (this.name === "gro_monolithe" && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 1) {
         this.obstacleTotemForce(this.position);
       }
-      if (this.name === "gro_monolithe" && !this.nearTotem && this.playerPos.distanceTo(this.position) < 2) {
+      if (this.name === "gro_monolithe" && !this.nearTotem && this.playerPos.distanceTo(this.position) < 0.2) {
         this.activatedTotem = this.name;
         console.log(this.activatedTotem);
-        console.log('near');
+        console.log('near', this.activatedTotem);
         this.sounds.add({
           position: this.position,
-          distance: 40,
+          distance: 0.40,
           sound: this.assets.sounds.ActivationTotem,
           loop: false
         })
@@ -142,20 +142,9 @@ export default class Totem {
           this.io_client.emit("musictime begin")
           this.nearTotem = true;
         }
-        // A remplacer ? En tout cas la fonction watchTotem semble toujours être appelé pour les totems enlevés du tableau
-        /*this.totemList.forEach(totem => {
-          if (totem.name === this.activatedTotem.name) {
-            console.log(this.activatedTotem.name);
-            this.io_client.emit("near totem")
-            this.io_client.emit("musictime begin")
-            this.nearTotem = true;
-          }
-        })*/
-        return;
+
       }
-      return;
     })
-    return;
   }
 
   createTorus() {

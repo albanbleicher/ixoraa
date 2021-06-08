@@ -18,6 +18,7 @@ import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Totem from './Totem'
 
 import io from 'socket.io-client'
+import { MeshToonMaterial } from 'three/build/three.module'
 
 export default class Planet {
   constructor(params) {
@@ -43,22 +44,22 @@ export default class Planet {
 
     this.init()
     this.createGrass()
-    this.setTotems()
+    // this.setTotems()
 
   }
   init() {
     this.gui = new dat.GUI({ width: 450 })
 
     const geometry = new BoxGeometry(1000, 1000, 0.1)
-    const material = new MeshStandardMaterial({
-      color: '#9E3C74',
-      roughness: 0.6
+    const material = new MeshToonMaterial({
+      color:'#15AB86',
+      gradientMap:this.assets.textures.threeTone
     })
 
     this.mesh = this.assets.models.ground.scene
     console.log(this.mesh);
     this.mesh.material = material
-    this.ground = this.mesh.children.find(item => item.name === "map_rework")
+    this.ground = this.mesh.children.find(item => item.name === "carte")
     this.ground.material = material
     this.mesh.traverse((obj) => {
       obj.receiveShadow = true
@@ -68,7 +69,7 @@ export default class Planet {
       const folder = this.debug.__folders.World.addFolder('Ground')
       folder.add(material, 'wireframe').name('Afficher le wireframe')
       folder.addColor(new ColorGUIHelper(material, 'color'), 'value').name('Couleur du sol')
-      folder.add(material, 'roughness', 0, 1, 0.1).name('Roughness')
+      // folder.add(material, 'roughness', 0, 1, 0.1).name('Roughness')
     }
     this.container.add(this.mesh)
     this.setMaterials()
@@ -76,30 +77,28 @@ export default class Planet {
     // Check the Totem distance
     // Could be done for all totem 
     // On ajoute chaque totem à une liste, puis on check la position du joueur pour chacun des totems
-    const totemForce = this.mesh.children.find(item => item.name === "gro_monolithe")
+    const totemForce = this.mesh.children.find(item => item.name === "monolithe_grand")
     const totemSagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
-    const totemBeaute = this.mesh.children.find(item => item.name === "gro_portal")
-    const totemEspoir = this.mesh.children.find(item => item.name === "bonbonne")
+    const totemBeaute = this.mesh.children.find(item => item.name === "portal_grand")
+    const totemEspoir = this.mesh.children.find(item => item.name === "arbre_espoir")
+    const brouillard = this.mesh.children.find(item => item.name === "brouillard")
+    brouillard.visible=false
     this.totemList.push(totemForce)
     this.totemList.push(totemSagesse)
     this.totemList.push(totemBeaute)
     this.totemList.push(totemEspoir)
 
-    console.log(this.totemList);
-    console.log(this.playerPos)
 
     /*this.totemList.forEach(totem => {
       this.watchTotem(totem)
     });*/
     // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
     this.io_client.on("winned", () => {
-      console.log('winned');
       /*const indexToRemove = (totem) => totem.name === this.activatedTotem.name;
       const totemToRemove = this.totemList.findIndex(indexToRemove);
       this.totemList.splice(totemToRemove, 1)*/
       //this.totemList = this.totemList.splice(totemToRemove, 1)
       this.nearTotem = false;
-      console.log(this.totemList)
     });
 
   }
@@ -120,7 +119,7 @@ export default class Planet {
     })
   }
   setMaterials() {
-    const MONOLITHE = this.mesh.children.find(item => item.name === 'gro_monolithe')
+    const MONOLITHE = this.mesh.children.find(item => item.name === 'monolithe_grand')
     const Sagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
 
     const textureLoader = new TextureLoader()
@@ -154,22 +153,29 @@ export default class Planet {
     MONOLITHE.material = material_monolithe
   }
   createGrass() {
-    const geometry = new PlaneBufferGeometry(0.5, 0.5, 1, 1)
+// 15AB86
+// 24C3AD
+// 14D1A9
+// 17FFC1
+console.log(this.assets.models.grass)
+    const geometry = this.assets.models.grass.scene.children[0].geometry;
+    console.log(geometry)
+    geometry.computeVertexNormals();
+					geometry.scale( 0.07, 0.07, 0.07 );
     const material = new MeshStandardMaterial({
-      alphaMap: this.assets.textures.grass,
-      transparent: true,
-      color: 'green',
+      color: 0x005c45,
       side: DoubleSide
     })
     const normalMat = new MeshNormalMaterial()
-    const count = 100000
+    const count = 10000
     console.log(this.ground);
     this.ground.updateMatrixWorld()
     const groundGeometry = this.ground.geometry.toNonIndexed()
-    groundGeometry.scale(0.103, 0.103, 0.103)
-    groundGeometry.rotateX(Math.PI * 0.5);
+    // groundGeometry.scale(0.103, 0.103, 0.103)
+    // groundGeometry.rotateX(Math.PI * 0.5);
 
     const groundMesh = new Mesh(groundGeometry, normalMat)
+    console.log(groundMesh.position)
     this.container.add(groundMesh)
     const dummy = new Object3D()
     console.log(groundMesh);
@@ -186,6 +192,7 @@ export default class Planet {
       sampler.sample(_position, _normal);
       _normal.add(_position)
       dummy.position.copy(_position);
+      dummy.position.y+=0.1
       // dummy.lookAt(_normal);
       dummy.updateMatrix();
 

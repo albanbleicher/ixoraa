@@ -2,7 +2,7 @@ import { AxesHelper, Color, Object3D } from 'three'
 
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
-import Grass from './Grass'
+import Ciel from './Ciel'
 import Planet from './Planet'
 import Physics from './Physics'
 import Player from './Player'
@@ -43,6 +43,7 @@ export default class World {
       this.renderer.setClearColor(color)
     })
     }
+    this.setCiel();
     this.setPlayer()
     this.setSounds()
     this.setPlanet()
@@ -97,7 +98,7 @@ export default class World {
   setFog() {
     this.fog = new Fog({
       camera:this.camera,
-      color:"#752b56",
+      color:"#0A0CFF",
       debug:this.debug,
       scene:this.scene
     })

@@ -29,7 +29,7 @@ export default class Player {
         this.player.mesh = new Mesh(geometry, material)
         console.log(this.player.mesh.position)
         this.player.collider = new Capsule( new Vector3( 0, 0.35, 0 ), new Vector3( 0, 0, 0 ), 0.35 );
-        this.player.collider.translate(new Vector3(10,0,0))
+        this.player.collider.translate(new Vector3(18.1,0.8,16.2))
         this.player.velocity  = new Vector3()
         this.player.direction = new Vector3()
         this.player.onFloor = false

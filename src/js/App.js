@@ -36,7 +36,7 @@ export default class App {
     this.renderer.outputEncoding = sRGBEncoding
     this.renderer.gammaFactor = 2.2
     // Set background color
-    this.renderer.setClearColor(0xab4f84, 1)
+    // this.renderer.setClearColor(0x0A0CFF, 1)
     
 
 
