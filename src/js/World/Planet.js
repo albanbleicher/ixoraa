@@ -88,6 +88,8 @@ export default class Planet {
     this.totemList.push(totemBeaute)
     this.totemList.push(totemEspoir)
 
+    console.log(this.totemList);
+    console.log(this.playerPos);
 
     /*this.totemList.forEach(totem => {
       this.watchTotem(totem)
