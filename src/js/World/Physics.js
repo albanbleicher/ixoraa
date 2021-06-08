@@ -33,11 +33,9 @@ export default class Physics {
         this.init()
     }
     init() {
-        console.log(this.planet);
         this.world.fromGraphNode(this.planet.mesh)
 
         this.io.on('strength', () => {
-            console.log('commandReversed')
             this.commandsReversed = true;
             setTimeout(() => {
                 this.commandsReversed = false;
@@ -248,9 +246,9 @@ export default class Physics {
                         this.moving.right = false;
 
                         break;
-                    case 'Space':
-                        this.moving.jump = true
-                        break;
+                    // case 'Space':
+                    //     this.moving.jump = true
+                    //     break;
                 }
                 break;
             case false:
@@ -276,9 +274,9 @@ export default class Physics {
                         this.moving.right = true;
                         this.moving.left = false;
                         break;
-                    case 'Space':
-                        this.moving.jump = true
-                        break;
+                    // case 'Space':
+                    //     this.moving.jump = true
+                    //     break;
                 }
                 break;
         }

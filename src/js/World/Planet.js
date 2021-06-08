@@ -57,7 +57,6 @@ export default class Planet {
     })
 
     this.mesh = this.assets.models.ground.scene
-    console.log(this.mesh);
     this.mesh.material = material
     this.ground = this.mesh.children.find(item => item.name === "carte")
     this.ground.material = material
@@ -88,8 +87,6 @@ export default class Planet {
     this.totemList.push(totemBeaute)
     this.totemList.push(totemEspoir)
 
-    console.log(this.totemList);
-    console.log(this.playerPos);
 
     /*this.totemList.forEach(totem => {
       this.watchTotem(totem)
@@ -106,7 +103,6 @@ export default class Planet {
   }
   setTotems() {
     this.totemList.forEach(singleTotem => {
-      console.log(singleTotem.name);
       const totem = new Totem({
         player: this.player,
         position: singleTotem.position,
@@ -124,11 +120,11 @@ export default class Planet {
     const MONOLITHE = this.mesh.children.find(item => item.name === 'monolithe_grand')
     const Sagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
 
-    const textureLoader = new TextureLoader()
-    textureLoader.crossOrigin = "Anonymous"
-    const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/1B1B1B_999999_575757_747474-64px.png')
+    // const textureLoader = new TextureLoader()
+    // textureLoader.crossOrigin = "Anonymous"
+    // const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/1B1B1B_999999_575757_747474-64px.png')
 
-    let material_monolithe = new MeshMatcapMaterial({ matcap: matCapTexture });
+    // let material_monolithe = new MeshMatcapMaterial({ matcap: matCapTexture });
     /*const material_monolithe = new MeshStandardMaterial({
       color: 0x555555,
       //reflectivity: 1,
@@ -152,16 +148,14 @@ export default class Planet {
     })
     this.container.add(totem.container)
     this.container.add(totem2.container)*/
-    MONOLITHE.material = material_monolithe
+    // MONOLITHE.material = material_monolithe
   }
   createGrass() {
 // 15AB86
 // 24C3AD
 // 14D1A9
 // 17FFC1
-console.log(this.assets.models.grass)
     const geometry = this.assets.models.grass.scene.children[0].geometry;
-    console.log(geometry)
     geometry.computeVertexNormals();
 					geometry.scale( 0.07, 0.07, 0.07 );
     const material = new MeshStandardMaterial({
@@ -170,17 +164,14 @@ console.log(this.assets.models.grass)
     })
     const normalMat = new MeshNormalMaterial()
     const count = 10000
-    console.log(this.ground);
     this.ground.updateMatrixWorld()
     const groundGeometry = this.ground.geometry.toNonIndexed()
     // groundGeometry.scale(0.103, 0.103, 0.103)
     // groundGeometry.rotateX(Math.PI * 0.5);
 
     const groundMesh = new Mesh(groundGeometry, normalMat)
-    console.log(groundMesh.position)
     this.container.add(groundMesh)
     const dummy = new Object3D()
-    console.log(groundMesh);
     const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute()
     const sampleMesh = new InstancedMesh(geometry, material, count);
 

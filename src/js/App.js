@@ -29,14 +29,13 @@ export default class App {
     // Set renderer
     this.renderer = new WebGLRenderer({
       canvas: this.canvas,
-      alpha: true,
       antialias: true,
       powerPreference: 'high-performance',
     })
     this.renderer.outputEncoding = sRGBEncoding
     this.renderer.gammaFactor = 2.2
     // Set background color
-    // this.renderer.setClearColor(0x0A0CFF, 1)
+    this.renderer.setClearColor(0x000000, 0)
     
 
 

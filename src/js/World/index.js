@@ -98,7 +98,7 @@ export default class World {
   setFog() {
     this.fog = new Fog({
       camera:this.camera,
-      color:"#0A0CFF",
+      color:"#66969C",
       debug:this.debug,
       scene:this.scene
     })
@@ -123,7 +123,7 @@ export default class World {
       assets: this.assets,
       debug:this.debug,
       renderer:this.renderer,
-      scene:this.container
+      scene:this.scene
     })
     this.container.add(this.ciel.container)
   }

@@ -1,6 +1,5 @@
-import { UnsignedByteType } from "three";
-import { PMREMGenerator, Object3D,MeshBasicMaterial, Mesh, PlaneGeometry } from "three"
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { Object3D, CubeTexture } from 'three'
+import { Color } from 'three/build/three.module'
 
 export default class Ciel {
   constructor(params) {
@@ -19,26 +18,19 @@ export default class Ciel {
     this.createCiel()
   }
   createCiel() {
-    let self = this;
-    const generator = new PMREMGenerator(this.renderer)
-    new RGBELoader()
-					.setDataType( UnsignedByteType ) // alt: FloatType, HalfFloatType
-					.load( 'test.hdr', function ( texture, textureData ) {
+    console.log('okkk');
+    const t = this.assets.textures.hdri
+    const cubeMap = new CubeTexture()
 
+    cubeMap.images[0] = t.px.image
+    cubeMap.images[1] = t.nx.image
+    cubeMap.images[2] = t.py.image
+    cubeMap.images[3] = t.ny.image
+    cubeMap.images[4] = t.pz.image
+    cubeMap.images[5] = t.nz.image
 
-						const sky = generator.fromEquirectangular( texture );
-            generator.compileEquirectangularShader()
-            self.scene.background = texture
+    cubeMap.needsUpdate = true
 
-						// const material = new MeshBasicMaterial( { map: texture } );
-
-						// const quad = new PlaneGeometry( 1.5 * textureData.width / textureData.height, 1.5 );
-
-						// const mesh = new Mesh( quad, material );
-
-						// self.scene.add( mesh );
-
-
-					} );
+    this.scene.background = cubeMap
   }
 }
