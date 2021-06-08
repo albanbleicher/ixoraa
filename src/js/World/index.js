@@ -55,6 +55,7 @@ export default class World {
     // this.setCiel()
     this.setFog()
     },100)
+
   
   }
   setLoader() {

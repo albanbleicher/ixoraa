@@ -19,6 +19,7 @@ import Totem from './Totem'
 
 import io from 'socket.io-client'
 import { MeshToonMaterial } from 'three/build/three.module'
+import { MODELS } from './utils'
 
 export default class Planet {
   constructor(params) {
@@ -117,22 +118,25 @@ export default class Planet {
     })
   }
   setMaterials() {
-    const MONOLITHE = this.mesh.children.find(item => item.name === 'monolithe_grand')
-    const Sagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
+    const force = this.mesh.children.find(item => item.name === MODELS.totems.force)
+    const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
 
-    // const textureLoader = new TextureLoader()
-    // textureLoader.crossOrigin = "Anonymous"
-    // const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/1B1B1B_999999_575757_747474-64px.png')
-
-    // let material_monolithe = new MeshMatcapMaterial({ matcap: matCapTexture });
-    /*const material_monolithe = new MeshStandardMaterial({
-      color: 0x555555,
-      //reflectivity: 1,
-      metalness: 0.65,
-      //emissive: 0x87A85f,
-      roughness: 0.65,
-    })*/
-
+   
+    // const material_monolithe = new MeshStandardMaterial({
+    //   color: 0x555555,
+    //   //reflectivity: 1,
+    //   metalness: 0.65,
+    //   //emissive: 0x87A85f,
+    //   roughness: 0.65,
+    //   enMap:this.assets.textures.hdri.full.texture
+    // })
+    let material = force.material;
+    console.log(material);
+    console.log(this.assets.textures.hdri.full);
+    material.envMap = this.assets.textures.hdri.full
+    material.envMapIntensity=0.3
+    force.material=material
+    monolithes.material=material
 
     /*const totem = new Totem({
       position: MONOLITHE.position,
@@ -159,7 +163,7 @@ export default class Planet {
     geometry.computeVertexNormals();
 					geometry.scale( 0.07, 0.07, 0.07 );
     const material = new MeshStandardMaterial({
-      color: 0x005c45,
+      color: 0x15AB86,
       side: DoubleSide
     })
     const normalMat = new MeshNormalMaterial()
