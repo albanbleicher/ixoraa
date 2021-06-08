@@ -45,16 +45,14 @@ export default class Planet {
 
     this.init()
     this.createGrass()
-    // this.setTotems()
+    this.setTotems()
 
   }
   init() {
-    this.gui = new dat.GUI({ width: 450 })
-
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshToonMaterial({
-      color:'#15AB86',
-      gradientMap:this.assets.textures.threeTone
+      color: '#15AB86',
+      gradientMap: this.assets.textures.threeTone
     })
 
     this.mesh = this.assets.models.ground.scene
@@ -77,17 +75,21 @@ export default class Planet {
     // Check the Totem distance
     // Could be done for all totem 
     // On ajoute chaque totem à une liste, puis on check la position du joueur pour chacun des totems
-    const totemForce = this.mesh.children.find(item => item.name === "monolithe_grand")
-    const totemSagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
-    const totemBeaute = this.mesh.children.find(item => item.name === "portal_grand")
-    const totemEspoir = this.mesh.children.find(item => item.name === "arbre_espoir")
+    const totemForce = this.mesh.children.find(item => item.name === MODELS.totems.force)
+    const totemSagesse = this.mesh.children.find(item => item.name === MODELS.totems.sagesse)
+    const totemBeaute = this.mesh.children.find(item => item.name === MODELS.totems.beaute)
+    const totemEspoir = this.mesh.children.find(item => item.name === "energieespoir")
     const brouillard = this.mesh.children.find(item => item.name === "brouillard")
-    brouillard.visible=false
+
+    console.log(this.mesh)
+
+    brouillard.visible = false;
     this.totemList.push(totemForce)
     this.totemList.push(totemSagesse)
     this.totemList.push(totemBeaute)
     this.totemList.push(totemEspoir)
 
+    console.log(this.totemList);
 
     /*this.totemList.forEach(totem => {
       this.watchTotem(totem)
@@ -104,6 +106,7 @@ export default class Planet {
   }
   setTotems() {
     this.totemList.forEach(singleTotem => {
+      console.log(singleTotem)
       const totem = new Totem({
         player: this.player,
         position: singleTotem.position,
@@ -121,7 +124,7 @@ export default class Planet {
     const force = this.mesh.children.find(item => item.name === MODELS.totems.force)
     const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
 
-   
+
     // const material_monolithe = new MeshStandardMaterial({
     //   color: 0x555555,
     //   //reflectivity: 1,
@@ -134,9 +137,9 @@ export default class Planet {
     console.log(material);
     console.log(this.assets.textures.hdri.full);
     material.envMap = this.assets.textures.hdri.full
-    material.envMapIntensity=0.3
-    force.material=material
-    monolithes.material=material
+    material.envMapIntensity = 0.3
+    force.material = material
+    monolithes.material = material
 
     /*const totem = new Totem({
       position: MONOLITHE.position,
@@ -155,13 +158,13 @@ export default class Planet {
     // MONOLITHE.material = material_monolithe
   }
   createGrass() {
-// 15AB86
-// 24C3AD
-// 14D1A9
-// 17FFC1
+    // 15AB86
+    // 24C3AD
+    // 14D1A9
+    // 17FFC1
     const geometry = this.assets.models.grass.scene.children[0].geometry;
     geometry.computeVertexNormals();
-					geometry.scale( 0.07, 0.07, 0.07 );
+    geometry.scale(0.07, 0.07, 0.07);
     const material = new MeshStandardMaterial({
       color: 0x2EDF86,
       side: DoubleSide
@@ -189,7 +192,7 @@ export default class Planet {
       sampler.sample(_position, _normal);
       _normal.add(_position)
       dummy.position.copy(_position);
-      dummy.position.y+=0.1
+      dummy.position.y += 0.1
       // dummy.lookAt(_normal);
       dummy.updateMatrix();
 

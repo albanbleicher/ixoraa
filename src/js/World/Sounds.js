@@ -1,5 +1,5 @@
 import { clamp } from "gsap/gsap-core"
-import { AudioListener, Object3D, PositionalAudio, AudioLoader, Audio } from "three"
+import { AudioListener, Object3D, PositionalAudio, AudioLoader, Audio, AudioAnalyser } from "three"
 
 export default class Sound {
     constructor(params) {
@@ -14,6 +14,7 @@ export default class Sound {
 
         this.sounds = []
         this.listener = null
+        this.analyser;
         this.totemPosition;
         this.activatedSound = false;
 
@@ -42,6 +43,10 @@ export default class Sound {
         emmiter.position.copy(params.position)
         // init PositionalAudio
         const positional = new PositionalAudio(this.listener)
+        const audio = new Audio(this.listener)
+
+        console.log(positional)
+        console.log(audio)
         // apply AudioBuffer from template loaded assets
         positional.setBuffer(params.sound)
         // set radius around PositionalAudio where sounds starts to fade
@@ -51,6 +56,9 @@ export default class Sound {
         // set loop
         positional.setLoop(params.loop)
         // add positionnal to emmiter and emmiter to container
+
+        this.analyser = new AudioAnalyser(audio, 32);
+        let analyser2 = new AudioAnalyser(audio, 32);
 
         positional.name = params.name
         emmiter.add(positional)
@@ -70,6 +78,8 @@ export default class Sound {
 
 
     watch() {
+        //if (this.analyser.fftSize)
+        //console.log(this.analyser.fftSize);
         if (this.sounds.length && this.player.player.mesh) {
             const playerPos = this.player.player.mesh.position
             /*this.sounds.forEach((sound, i) => {

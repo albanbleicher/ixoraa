@@ -29,10 +29,10 @@ export default class Totem {
     this.commandsReversed = false;
     this.activatedTotem = null;
     this.desactivatedTotem;
-    this.playerPos = new Vector3(0, 0, 0);
+    this.playerPos = new Vector3(20, 0, 0);
 
     this.init()
-    // this.watchTotem()
+    this.watchTotem()
   }
   init() {
     // create new totem mesh
@@ -174,7 +174,8 @@ export default class Totem {
         if (this.name === "gro_monolithe" && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 10) {
           this.obstacleTotemForce(this.position);
         }
-        if (!this.nearTotem && this.activatedTotem === null && this.playerPos.distanceTo(this.position) < 2) {
+        //console.log(this.playerPos.distanceTo(this.position))
+        if (!this.nearTotem && this.activatedTotem === null && (this.playerPos.distanceTo(this.position)) < 2) {
           this.activatedTotem = this.name;
 
           console.log(this.activatedTotem);
@@ -235,7 +236,7 @@ export default class Totem {
         this.container.add(torus);
         this.torusList.push(torus);
 
-        torus.position.set(this.position.x, this.position.y + 2, this.position.z);
+        torus.position.set(this.position.x, this.position.y, this.position.z);
         torus.material.transparent = true;
 
         //this.gui.add(torus.rotation, 'x').min(0).max(360).step(0.1).name('Rotation X')
