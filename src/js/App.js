@@ -55,7 +55,7 @@ export default class App {
       // if the window is only in the background without focus (for example, if you select another window without minimizing the browser one), 
       // which might cause some performance or batteries issues when testing on multiple browsers
       if (!(this.renderOnBlur?.activated && !document.hasFocus() ) ) {
-        this.renderer.render(this.scene, this.camera.camera)
+        // this.renderer.render(this.scene, this.camera.camera)
       }
     })
 

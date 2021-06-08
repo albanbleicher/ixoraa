@@ -34,11 +34,12 @@ import {
   
     }
     setEffects() {
+    console.log(this.params);
       const renderScene = new RenderPass(this.params.scene, this.params.camera)
       const bloomPass = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
       bloomPass.threshold =0;
-      bloomPass.strength = 5;
-      bloomPass.radius = .8;
+      bloomPass.strength = 0.1;
+      bloomPass.radius = .1;
   
       this.bloom = new EffectComposer(this.params.renderer);
       this.bloom.renderToScreen = false;

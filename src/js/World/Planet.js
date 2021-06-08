@@ -62,6 +62,7 @@ export default class Planet {
     this.ground = this.mesh.children.find(item => item.name === "carte")
     this.ground.material = material
     this.mesh.traverse((obj) => {
+     
       obj.receiveShadow = true
       obj.castShadow = true
     })
@@ -77,12 +78,11 @@ export default class Planet {
     // Check the Totem distance
     // Could be done for all totem 
     // On ajoute chaque totem à une liste, puis on check la position du joueur pour chacun des totems
-    const totemForce = this.mesh.children.find(item => item.name === "monolithe_grand")
-    const totemSagesse = this.mesh.children.find(item => item.name === "totem_sagesse")
-    const totemBeaute = this.mesh.children.find(item => item.name === "portal_grand")
-    const totemEspoir = this.mesh.children.find(item => item.name === "arbre_espoir")
-    const brouillard = this.mesh.children.find(item => item.name === "brouillard")
-    brouillard.visible=false
+    const totemForce = this.mesh.children.find(item => item.name === MODELS.totems.force)
+    const totemSagesse = this.mesh.children.find(item => item.name === MODELS.totems.sagesse)
+    const totemBeaute = this.mesh.children.find(item => item.name === MODELS.totems.beaute)
+    const totemEspoir = this.mesh.children.find(item => item.name === MODELS.totems.espoir)
+
     this.totemList.push(totemForce)
     this.totemList.push(totemSagesse)
     this.totemList.push(totemBeaute)

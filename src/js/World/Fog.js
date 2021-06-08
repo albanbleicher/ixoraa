@@ -8,7 +8,7 @@ export default class Fogg {
         this.debug = params.debug
         this.color = params.color
         this.scene = params.scene
-        this.init()
+        // this.init()
     } 
     init() {
         this.fog = new Fog(new Color(this.color), this.camera.camera.near, this.camera.camera.far-50)

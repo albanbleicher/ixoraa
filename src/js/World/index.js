@@ -9,6 +9,8 @@ import Player from './Player'
 import Sounds from './Sounds'
 import Fog from './Fog'
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
+import Effects from './Effects'
+import { Layers } from 'three/build/three.module'
 
 export default class World {
   constructor(options) {
@@ -26,8 +28,9 @@ export default class World {
     this.container = new Object3D()
     this.container.name = 'World'
 
-    this.BLOOM_LAYER = 1
-    this.SCENE_LAER = 0
+    this.BLOOM_SCENE = 1
+    this.ENTIRE_SCENE = 0
+    this.bloomLayer = new Layers()
 
     if (this.debug) {
       this.container.add(new AxesHelper(150))
@@ -37,6 +40,7 @@ export default class World {
     this.setLoader()
   }
   init() {
+    this.bloomLayer.set(this.BLOOM_SCENE)
     if(this.debug) {
       const color = {
         value: this.renderer.getClearColor()
@@ -57,8 +61,10 @@ export default class World {
     this.setPointLight()
     // this.setCiel()
     this.setFog()
+
     },100)
 
+    this.setEffects()
   
   }
   setLoader() {
@@ -161,5 +167,17 @@ export default class World {
       assets:this.assets
     })
     this.container.add(this.sounds.container)
+  }
+  setEffects() {
+    this.effects = new Effects({
+      BLOOM_SCENE:this.BLOOM_SCENE,
+      camera:this.camera.camera,
+      renderer:this.renderer,
+      scene:this.scene,
+      bloomLayer:this.bloomLayer
+    })
+    this.time.on('tick', () => {
+      this.effects.render()
+    })
   }
 }
