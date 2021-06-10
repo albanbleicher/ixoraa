@@ -81,7 +81,6 @@ export default class Planet {
     const totemEspoir = this.mesh.children.find(item => item.name === "energieespoir")
     const brouillard = this.mesh.children.find(item => item.name === "brouillard")
 
-    console.log(this.mesh)
 
     brouillard.visible = false;
     this.totemList.push(totemForce)
@@ -89,11 +88,6 @@ export default class Planet {
     this.totemList.push(totemBeaute)
     this.totemList.push(totemEspoir)
 
-    console.log(this.totemList);
-
-    /*this.totemList.forEach(totem => {
-      this.watchTotem(totem)
-    });*/
     // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
     this.io_client.on("winned", () => {
       /*const indexToRemove = (totem) => totem.name === this.activatedTotem.name;
@@ -106,7 +100,6 @@ export default class Planet {
   }
   setTotems() {
     this.totemList.forEach(singleTotem => {
-      console.log(singleTotem)
       const totem = new Totem({
         player: this.player,
         position: singleTotem.position,

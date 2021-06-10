@@ -2,6 +2,7 @@ import { Object3D, SphereGeometry, MeshNormalMaterial, Mesh, MeshBasicMaterial, 
 
 import io from 'socket.io-client'
 import gsap from 'gsap'
+import { MODELS } from './utils'
 
 export default class Totem {
   constructor(options) {
@@ -29,7 +30,7 @@ export default class Totem {
     this.commandsReversed = false;
     this.activatedTotem = null;
     this.desactivatedTotem;
-    this.playerPos = new Vector3(20, 0, 0);
+    this.playerPos = new Vector3(200, 0, 0);
 
     this.init()
     this.watchTotem()
@@ -53,8 +54,7 @@ export default class Totem {
       })*/
 
     // On pourra faire un map sur un array de totem quand on aura les noms
-    if (this.name === "gro_monolithe") {
-      console.log('launched')
+    if (this.name === MODELS.totems.force) {
       this.sounds.add({
         position: this.position,
         distance: 30,
@@ -88,7 +88,7 @@ export default class Totem {
       })
     }
 
-    if (this.name === "totem_sagesse") {
+    /*if (this.name === "totem_sagesse") {
       this.sounds.add({
         position: this.position,
         distance: 10,
@@ -96,7 +96,7 @@ export default class Totem {
         loop: true,
         name: 'Drum2'
       })
-    }
+    }*/
 
     // enable floating
     this.float()
@@ -106,9 +106,6 @@ export default class Totem {
       if (this.name === this.activatedTotem) {
         this.timing = timing;
         this.lines = lines;
-        console.log(this.timing)
-        console.log(this.lines)
-        console.log(this.activatedTotem);
         this.startPanningCamera();
 
         this.createTorus()
@@ -141,10 +138,8 @@ export default class Totem {
       this.nearTotem = false;
       this.watchTotem();
       this.endPanningCamera();
-      console.log(this.totemList);
       // C'était pas mal avant la refacto, maintenant le meilleur moyen de virer un totem de la liste lorsqu'il est gagné, c'est le désinstancier
       if (this.name === this.activatedTotem) {
-        console.log(this.activatedTotem);
         this.position = new Vector3(150, 150, 150);
         this.desactivatedTotem = true;
       }
@@ -164,15 +159,15 @@ export default class Totem {
   // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on créer les torus
   watchTotem() {
     this.time.on('tick', () => {
-      if (!this.desactivatedTotem) {
+      if (!this.desactivatedTotem && this.playerPos.x !== 0) {
         // Le player n'est pas présent lors de l'instanciation de la classe, pour l'instant il est add ici
         if (this.player) {
           this.playerPos = this.player.player.mesh.position
         }
 
         // On check pour l'obstacle de la force
-        if (this.name === "gro_monolithe" && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 10) {
-          this.obstacleTotemForce(this.position);
+        if (this.name === MODELS.totems.force && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 10) {
+          //this.obstacleTotemForce(this.position);
         }
         //console.log(this.playerPos.distanceTo(this.position))
         if (!this.nearTotem && this.activatedTotem === null && (this.playerPos.distanceTo(this.position)) < 2) {
@@ -211,7 +206,6 @@ export default class Totem {
   }
 
   createTorus() {
-    console.log('createTorus');
     const textureImg = 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGlnaHQlMjB0ZXh0dXJlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80'
 
     const textureLoader = new TextureLoader()
@@ -223,7 +217,6 @@ export default class Totem {
     for (let i = 0; i < this.lines.length; i++) {
 
       setTimeout(() => {
-        console.log(i, 'torussed');
         //let geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
         let geometry = new TorusGeometry(1, 0.1, 16, 100);
         //let material = new MeshBasicMaterial({ map: textureTorus });
@@ -232,7 +225,6 @@ export default class Totem {
         let torus = new Mesh(geometry, material);
         torus.material.needsUpdate = true
 
-        console.log('Add torus', torus);
         this.container.add(torus);
         this.torusList.push(torus);
 
@@ -242,7 +234,6 @@ export default class Totem {
         //this.gui.add(torus.rotation, 'x').min(0).max(360).step(0.1).name('Rotation X')
         let scaleFactor = 1;
         let opacityFactor = 1;
-        console.log(opacityFactor, scaleFactor, this.torusList);
 
         /*gsap.to(torus.scale, { x: 10, y: 10, z: 10, duration: 5 }).then(() => {
           gsap.to(torus.material, { opacity: 0, duration: 2 })
@@ -259,21 +250,17 @@ export default class Totem {
             opacityFactor -= 0.1
             torus.material.opacity = opacityFactor
             if (opacityFactor < 0 && this.torusList.length > 0) {
-              console.log(opacityFactor);
-              console.log('remove torus')
               this.torusList.shift();
               this.container.remove(torus);
             }
           }
         })
-        console.log((this.timing / (2.5 / this.lines[i].id)) * 2 * 1000)
       }, this.timing / (2.5 / this.lines[i].id) * 2 * 1000)
     }
   }
 
   removeTorus() {
     let opacitiesFactor = 1;
-    console.log('remove torus because null')
 
     this.time.on('tick', () => {
       opacitiesFactor -= 0.5
@@ -302,10 +289,7 @@ export default class Totem {
     let chocWave = new Mesh(geometry, material);
 
     //Rotation semble ne pas marcher ?
-    console.log(chocWave.rotation.y);
     chocWave.rotateX(Math.PI * 0.5);
-    console.log(chocWave.rotation.y);
-    console.log(Math.PI * 0.5);
     chocWave.position.set(this.position.x, this.position.y + 0.5, this.position.z);
     //chocWave.rotation.order = 'ZXY';
     this.container.add(chocWave);
@@ -332,12 +316,8 @@ export default class Totem {
       // on met un timeout de 500ms le temps que le mesh arrive dans la gueule du joueur
       if (!this.commandsReversed) {
         this.io_client.emit("strength")
-        console.log('touched');
-        console.log(this.commandsReversed)
         this.commandsReversed = true;
-        console.log(this.commandsReversed)
         setTimeout(() => {
-          console.log(this.commandsReversed)
           this.commandsReversed = false;
         }, 10000)
       }

@@ -1,6 +1,6 @@
 import '@style/App.scss'
 import App from '@js/App'
-// import gsap from 'gsap';
+import gsap from 'gsap';
 import io from "socket.io-client"
 
 const socket = io("http://localhost:3000");
@@ -17,37 +17,39 @@ socket.on('room is_synced', () => {
     canvas: document.querySelector('#_canvas'),
   })
 })
-  // document.addEventListener('DOMContentLoaded', () => {
-  //   const landing = document.querySelector('.landing')
-  //   const loading = document.querySelector('.loading')
-  //   const access = document.querySelector('.access')
-  //   const play = document.querySelector('.play')
-  //   const begin = document.querySelector('.begin')
-  //   const code = document.querySelector('.code')
+  document.addEventListener('DOMContentLoaded', () => {
+    const landing = document.querySelector('.landing')
+    const loading = document.querySelector('.loading')
+    const access = document.querySelector('.access')
+    const play = document.querySelector('.play')
+    const begin = document.querySelector('.begin')
+    const code = document.querySelector('.code')
 
 
-  //   play.addEventListener('click', () => {
-  //     socket.emit("room create");
-  //     socket.once("room code", (id) => {
-  //       console.log('test');
-  //       code.innerText = id;
-  //     });
-  //     socket.once('room is_synced', () => {
-  //       console.log('test')
+    play.addEventListener('click', () => {
+      socket.emit("room create");
+      socket.once("room code", (id) => {
+        console.log('test');
+        code.innerText = id;
+      });
+      socket.once('room is_synced', () => {
+        console.log('test')
 
-  //       gsap.to(access, { opacity: 0 }).then(() => {
-  //         gsap.to(access, { display: 'none' })
-  //       })
-  //       //musicFadeOut()
-  //       new App({
-  //         canvas: document.querySelector('#_canvas'),
-  //       })
-  //     })
+        gsap.to(access, { opacity: 0 }).then(() => {
+          gsap.to(access, { display: 'none' })
+        })
+        //musicFadeOut()
+        new App({
+          canvas: document.querySelector('#_canvas'),
+        })
+      })
 
-  //     gsap.to(landing, { opacity: 0 }).then(() => {
-  //       gsap.to(landing, { display: 'none' })
-  //     })
-  //   })
+      gsap.to(landing, { opacity: 0 }).then(() => {
+        gsap.to(landing, { display: 'none' })
+      })
+    })
+
+  })
 
   //   /*new App({
   //     canvas: document.querySelector('#_canvas'),
