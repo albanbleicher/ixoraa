@@ -11,15 +11,15 @@ import {
   Mesh,
   MeshNormalMaterial,
 } from 'three'
-import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 import * as dat from 'dat.gui'
 
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Totem from './Totem'
 
 import io from 'socket.io-client'
-import { MeshToonMaterial } from 'three/build/three.module'
+import { Color, MeshToonMaterial } from 'three/build/three.module'
 import { MODELS } from './utils'
+import Vegetation from './Vegetation'
 
 export default class Planet {
   constructor(params) {
@@ -44,7 +44,7 @@ export default class Planet {
     this.container.name = 'Planet'
 
     this.init()
-    this.createGrass()
+    this.createVegetation()
     // this.setTotems()
 
   }
@@ -52,17 +52,29 @@ export default class Planet {
     this.gui = new dat.GUI({ width: 450 })
 
     const geometry = new BoxGeometry(1000, 1000, 0.1)
-    const material = new MeshToonMaterial({
+    const material = new MeshStandardMaterial({
       color:'#15AB86',
-      gradientMap:this.assets.textures.threeTone
     })
 
     this.mesh = this.assets.models.ground.scene
     this.mesh.material = material
-    this.ground = this.mesh.children.find(item => item.name === "carte")
-    this.ground.material = material
+    const og = this.mesh.children.find(item => item.name === "carte_original")
+    const frontières = this.mesh.children.find(item => item.name === "frontieres")
+    og.visible=false
+    frontières.visible=false
+    this.ground = this.mesh.children.find(item => item.name === "carte_parent")
+    this.beauty = this.ground.children.find(item => item.name === "beauty")
+
+    this.ground.traverse(obj => {
+      switch(obj.name) {
+        case 'beauty' :
+          obj.material = new MeshNormalMaterial()
+          break;
+        default:
+          obj.material=material;
+      }
+    }) 
     this.mesh.traverse((obj) => {
-     
       obj.receiveShadow = true
       obj.castShadow = true
     })
@@ -82,6 +94,13 @@ export default class Planet {
     const totemSagesse = this.mesh.children.find(item => item.name === MODELS.totems.sagesse)
     const totemBeaute = this.mesh.children.find(item => item.name === MODELS.totems.beaute)
     const totemEspoir = this.mesh.children.find(item => item.name === MODELS.totems.espoir)
+    const arbre = this.mesh.children.find(item => item.name === MODELS.planet.arbre)
+    
+    // const brouillard = this.mesh.children.find(item => item.name === 'brouillard')
+    // brouillard.visible=false;
+
+    totemEspoir.layers.enable(1)
+    arbre.layers.enable(1)
 
     this.totemList.push(totemForce)
     this.totemList.push(totemSagesse)
@@ -131,8 +150,6 @@ export default class Planet {
     //   enMap:this.assets.textures.hdri.full.texture
     // })
     let material = force.material;
-    console.log(material);
-    console.log(this.assets.textures.hdri.full);
     material.envMap = this.assets.textures.hdri.full
     material.envMapIntensity=0.3
     force.material=material
@@ -154,49 +171,21 @@ export default class Planet {
     this.container.add(totem2.container)*/
     // MONOLITHE.material = material_monolithe
   }
-  createGrass() {
+  createVegetation() {
 // 15AB86
 // 24C3AD
 // 14D1A9
 // 17FFC1
-    const geometry = this.assets.models.grass.scene.children[0].geometry;
-    geometry.computeVertexNormals();
-					geometry.scale( 0.07, 0.07, 0.07 );
-    const material = new MeshStandardMaterial({
-      color: 0x2EDF86,
-      side: DoubleSide
+    const grassMaterial = new MeshStandardMaterial({
+      color:'#24C3AD'
     })
-    const normalMat = new MeshNormalMaterial()
-    const count = 10000
-    this.ground.updateMatrixWorld()
-    const groundGeometry = this.ground.geometry.toNonIndexed()
-    // groundGeometry.scale(0.103, 0.103, 0.103)
-    // groundGeometry.rotateX(Math.PI * 0.5);
-
-    const groundMesh = new Mesh(groundGeometry, normalMat)
-    this.container.add(groundMesh)
-    const dummy = new Object3D()
-    const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute()
-    const sampleMesh = new InstancedMesh(geometry, material, count);
-
-    const _position = new Vector3()
-    const _normal = new Vector3();
-
-    sampler.build()
-
-    for (let i = 0; i < count; i++) {
-
-      sampler.sample(_position, _normal);
-      _normal.add(_position)
-      dummy.position.copy(_position);
-      dummy.position.y+=0.1
-      // dummy.lookAt(_normal);
-      dummy.updateMatrix();
-
-      sampleMesh.setMatrixAt(i, dummy.matrix);
-    }
-    sampleMesh.instanceMatrix.needsUpdate = true;
-
-    this.container.add(sampleMesh)
+    // new Vegetation({
+    //   surface:this.beauty,
+    //   model:this.assets.models.grass.scene.children[0],
+    //   count:100,
+    //   scaleFactor:0.07,
+    //   material:grassMaterial,
+    //   container:this.container
+    // })
   }
 }

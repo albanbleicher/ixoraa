@@ -19,6 +19,7 @@ import {
   import {
     SMAAPass
   } from 'three/examples/jsm/postprocessing/SMAAPass.js'
+import { Color } from 'three/build/three.module';
   
   export default class Effects {
     constructor(params) {
@@ -26,7 +27,8 @@ import {
       this.bloom = {}
       this.final = {}
       this.darkMaterial = new MeshBasicMaterial({
-          color: 'black'
+          color: 'black',
+          fog:false
       })
       this.materials = {}
       this.setEffects()
@@ -34,12 +36,12 @@ import {
   
     }
     setEffects() {
-    console.log(this.params);
+    this.sceneBg = this.params.scene.background
       const renderScene = new RenderPass(this.params.scene, this.params.camera)
       const bloomPass = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
       bloomPass.threshold =0;
-      bloomPass.strength = 0.1;
-      bloomPass.radius = .1;
+      bloomPass.strength = 0.5;
+      bloomPass.radius = 0.2;
   
       this.bloom = new EffectComposer(this.params.renderer);
       this.bloom.renderToScreen = false;
@@ -92,8 +94,10 @@ import {
             delete self.materials[obj.uuid];
           }
         }
+        this.params.scene.background = new Color('black')
       this.params.scene.traverse(darkenNonBloomed);
       this.bloom.render();
+        this.params.scene.background = this.params.sky.skyTexture
       this.params.scene.traverse(restoreMaterial)
      this.final.render()
     }

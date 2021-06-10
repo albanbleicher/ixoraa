@@ -3,7 +3,7 @@ import App from '@js/App'
 // import gsap from 'gsap';
 import io from "socket.io-client"
 
-const socket = io("http://localhost:3000");
+// const socket = io("http://localhost:3000");
 
 // socket.onAny((event, ...args) => {
 //   console.log(event, args);

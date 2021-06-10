@@ -1,4 +1,4 @@
-import { AxesHelper, Color, Object3D } from 'three'
+import { AxesHelper, Color, Object3D, Layers } from 'three'
 
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
@@ -10,7 +10,6 @@ import Sounds from './Sounds'
 import Fog from './Fog'
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Effects from './Effects'
-import { Layers } from 'three/build/three.module'
 
 export default class World {
   constructor(options) {
@@ -50,7 +49,7 @@ export default class World {
       this.renderer.setClearColor(color)
     })
     }
-    this.setCiel();
+    // this.setCiel();
     this.setPlayer()
     this.setSounds()
     this.setPlanet()
@@ -59,12 +58,13 @@ export default class World {
 
     this.setAmbientLight()
     this.setPointLight()
-    // this.setCiel()
-    this.setFog()
+    this.setCiel()
+    // this.setFog()
+    this.setEffects()
+
 
     },100)
 
-    this.setEffects()
   
   }
   setLoader() {
@@ -174,10 +174,12 @@ export default class World {
       camera:this.camera.camera,
       renderer:this.renderer,
       scene:this.scene,
-      bloomLayer:this.bloomLayer
+      bloomLayer:this.bloomLayer,
+      sky: this.ciel
     })
     this.time.on('tick', () => {
       this.effects.render()
+
     })
   }
 }

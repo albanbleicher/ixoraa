@@ -1,8 +1,12 @@
 export const MODELS = {
     totems:{
-        force:'monolithe_grand',
         sagesse:'totem_sagesse',
+        force:'monolithe_grand',
+        espoir:'arbre_espoir',
         beaute:'portal_grand',
-        espoir:'arbre_espoir'
+    },
+    planet:{
+        monolithes:'monolithes_petits',
+        arbre:'tronc',
     }
 }
