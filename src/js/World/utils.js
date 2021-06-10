@@ -8,5 +8,7 @@ export const MODELS = {
     planet:{
         monolithes:'monolithes_petits',
         arbre:'tronc',
+        eau:'eau'
+
     }
 }

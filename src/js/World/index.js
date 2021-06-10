@@ -59,7 +59,7 @@ export default class World {
     this.setAmbientLight()
     this.setPointLight()
     this.setCiel()
-    // this.setFog()
+    this.setFog()
     this.setEffects()
 
 
@@ -175,7 +175,8 @@ export default class World {
       renderer:this.renderer,
       scene:this.scene,
       bloomLayer:this.bloomLayer,
-      sky: this.ciel
+      sky: this.ciel,
+      debug:this.debug
     })
     this.time.on('tick', () => {
       this.effects.render()

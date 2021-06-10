@@ -64,7 +64,8 @@ export default class Planet {
 
     this.ground = this.mesh.children.find(item => item.name === "carte_parent")
     this.beauty = this.ground.children.find(item => item.name === "beauty")
-
+    this.foret = this.ground.children.find(item => item.name === "forêt")
+    console.log(this.foret);
     this.ground.traverse((obj) => {
       obj.material = material
     })
@@ -135,6 +136,7 @@ export default class Planet {
   setMaterials() {
     const force = this.mesh.children.find(item => item.name === MODELS.totems.force)
     const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
+    const eau = this.mesh.children.find(item => item.name === MODELS.planet.eau)
 
    
     // const material_monolithe = new MeshStandardMaterial({
@@ -150,7 +152,6 @@ export default class Planet {
     material.envMapIntensity=0.3
     force.material=material
     monolithes.material=material
-
     /*const totem = new Totem({
       position: MONOLITHE.position,
       time: this.time,
@@ -180,53 +181,31 @@ export default class Planet {
 // 24C3AD
 // 14D1A9
 // 17FFC1
-    // const grassMaterial = new MeshStandardMaterial({
-    //   color:'#24C3AD'
-    // })
-    // new Vegetation({
-    //   surface:this.beauty,
-    //   model:this.assets.models.grass.scene.children[0],
-    //   count:100,
-    //   scaleFactor:0.07,
-    //   material:grassMaterial,
-    //   container:this.container
-    // })
-    const geometry = this.assets.models.grass.scene.children[0].geometry;
-    geometry.computeVertexNormals();
-					geometry.scale( 0.07, 0.07, 0.07 );
-    const material = new MeshStandardMaterial({
-      color: 0x24C3AD,
-      side: DoubleSide
+    const grassMaterial = new MeshStandardMaterial({
+      color:'#24C3AD',
+      side:DoubleSide
     })
-    const normalMat = new MeshNormalMaterial()
-    const count = 10000
-    this.ground.updateMatrixWorld()
-    const groundGeometry = this.ground.geometry.toNonIndexed()
-    // groundGeometry.scale(0.103, 0.103, 0.103)
-    // groundGeometry.rotateX(Math.PI * 0.5);
-
-    const groundMesh = new Mesh(groundGeometry, normalMat)
-    const dummy = new Object3D()
-    const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute()
-    const sampleMesh = new InstancedMesh(geometry, material, count);
-    console.log(sampleMesh);
-    const _position = new Vector3()
-    const _normal = new Vector3();
-
-    sampler.build()
-
-    for (let i = 0; i < count; i++) {
-
-      sampler.sample(_position, _normal);
-      _normal.add(_position)
-      dummy.position.copy(_position);
-      // dummy.lookAt(_normal);
-      dummy.updateMatrix();
-
-      sampleMesh.setMatrixAt(i, dummy.matrix);
-    }
-    sampleMesh.instanceMatrix.needsUpdate = true;
-
-    this.container.add(sampleMesh)
+    new Vegetation({
+      surface:this.beauty,
+      model:this.assets.models.grass.scene.children[0],
+      count:10000,
+      scaleFactor:1,
+      material:grassMaterial,
+      container:this.container
+    }) 
+    const flowersMaterial = new MeshStandardMaterial({
+      color:'red',
+      emissive:'red',
+      side:DoubleSide
+    })
+    console.log(this.assets.models.flowers.scene.children[0]);
+    new Vegetation({
+      surface:this.foret,
+      model:this.assets.models.flowers.scene.children[0],
+      count:6000,
+      scaleFactor:1,
+      container:this.container
+    }) 
+    
   }
 }
