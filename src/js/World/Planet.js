@@ -12,6 +12,7 @@ import {
   MeshNormalMaterial,
 } from 'three'
 import * as dat from 'dat.gui'
+import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Totem from './Totem'
@@ -45,6 +46,8 @@ export default class Planet {
 
     this.init()
     this.createVegetation()
+    this.setMaterials()
+    this.hideUnnecessary()
     // this.setTotems()
 
   }
@@ -58,26 +61,19 @@ export default class Planet {
 
     this.mesh = this.assets.models.ground.scene
     this.mesh.material = material
-    const og = this.mesh.children.find(item => item.name === "carte_original")
-    const frontières = this.mesh.children.find(item => item.name === "frontieres")
-    og.visible=false
-    frontières.visible=false
+
     this.ground = this.mesh.children.find(item => item.name === "carte_parent")
     this.beauty = this.ground.children.find(item => item.name === "beauty")
 
-    this.ground.traverse(obj => {
-      switch(obj.name) {
-        case 'beauty' :
-          obj.material = new MeshNormalMaterial()
-          break;
-        default:
-          obj.material=material;
-      }
-    }) 
+    this.ground.traverse((obj) => {
+      obj.material = material
+    })
+
     this.mesh.traverse((obj) => {
       obj.receiveShadow = true
       obj.castShadow = true
     })
+
     if (this.debug) {
       const folder = this.debug.__folders.World.addFolder('Ground')
       folder.add(material, 'wireframe').name('Afficher le wireframe')
@@ -85,7 +81,7 @@ export default class Planet {
       // folder.add(material, 'roughness', 0, 1, 0.1).name('Roughness')
     }
     this.container.add(this.mesh)
-    this.setMaterials()
+
 
     // Check the Totem distance
     // Could be done for all totem 
@@ -171,14 +167,22 @@ export default class Planet {
     this.container.add(totem2.container)*/
     // MONOLITHE.material = material_monolithe
   }
+  hideUnnecessary() {
+    const original_map = this.mesh.children.find(item => item.name === "carte_original")
+    const frontieres = this.mesh.children.find(item => item.name === "frontieres")
+    const tree_blocks = this.mesh.children.find(item => item.name === "pare_chocs")
+    original_map.visible=false
+    frontieres.visible=false
+    tree_blocks.visible = false  
+  }
   createVegetation() {
 // 15AB86
 // 24C3AD
 // 14D1A9
 // 17FFC1
-    const grassMaterial = new MeshStandardMaterial({
-      color:'#24C3AD'
-    })
+    // const grassMaterial = new MeshStandardMaterial({
+    //   color:'#24C3AD'
+    // })
     // new Vegetation({
     //   surface:this.beauty,
     //   model:this.assets.models.grass.scene.children[0],
@@ -187,5 +191,42 @@ export default class Planet {
     //   material:grassMaterial,
     //   container:this.container
     // })
+    const geometry = this.assets.models.grass.scene.children[0].geometry;
+    geometry.computeVertexNormals();
+					geometry.scale( 0.07, 0.07, 0.07 );
+    const material = new MeshStandardMaterial({
+      color: 0x24C3AD,
+      side: DoubleSide
+    })
+    const normalMat = new MeshNormalMaterial()
+    const count = 10000
+    this.ground.updateMatrixWorld()
+    const groundGeometry = this.ground.geometry.toNonIndexed()
+    // groundGeometry.scale(0.103, 0.103, 0.103)
+    // groundGeometry.rotateX(Math.PI * 0.5);
+
+    const groundMesh = new Mesh(groundGeometry, normalMat)
+    const dummy = new Object3D()
+    const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute()
+    const sampleMesh = new InstancedMesh(geometry, material, count);
+    console.log(sampleMesh);
+    const _position = new Vector3()
+    const _normal = new Vector3();
+
+    sampler.build()
+
+    for (let i = 0; i < count; i++) {
+
+      sampler.sample(_position, _normal);
+      _normal.add(_position)
+      dummy.position.copy(_position);
+      // dummy.lookAt(_normal);
+      dummy.updateMatrix();
+
+      sampleMesh.setMatrixAt(i, dummy.matrix);
+    }
+    sampleMesh.instanceMatrix.needsUpdate = true;
+
+    this.container.add(sampleMesh)
   }
 }

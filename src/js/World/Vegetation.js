@@ -39,6 +39,8 @@ export default class Vegetation {
 
       sampleMesh.setMatrixAt(i, dummy.matrix);
     }
+    console.log(sampleMesh);
+    console.log(this.container);
     sampleMesh.instanceMatrix.needsUpdate = true;
 
     this.container.add(sampleMesh)
