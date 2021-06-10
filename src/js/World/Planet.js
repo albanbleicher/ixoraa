@@ -30,6 +30,7 @@ export default class Planet {
     this.camera = params.camera.camera
     this.player = params.player
     this.sounds = params.sounds
+    this.emit = params.emit
     this.gui = null
     this.mesh = null
 
@@ -108,6 +109,7 @@ export default class Planet {
         assets: this.assets,
         camera: this.camera,
         name: singleTotem.name,
+        emit: this.emit,
         totemList: this.totemList
       })
       this.container.add(totem.container)

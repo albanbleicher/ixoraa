@@ -1,7 +1,7 @@
 import { clamp } from "gsap/gsap-core"
 import { AudioListener, Object3D, PositionalAudio, AudioLoader, Audio, AudioAnalyser } from "three"
 
-import pitchDetect from '../lib/pitchDetect';
+import Emitting from "../Tools/Emitting";
 
 export default class Sound {
     constructor(params) {
@@ -10,6 +10,7 @@ export default class Sound {
         this.camera = params.camera
         this.time = params.time
         this.assets = params.assets
+        this.emit = params.emit
 
         this.container = new Object3D()
         this.container.name = 'Sound'
@@ -21,6 +22,7 @@ export default class Sound {
         this.totemPosition;
         this.activatedSound = false;
 
+        console.log('params', params.emit)
         this.init()
         this.time.on('tick', () => {
             this.watch()
@@ -30,6 +32,8 @@ export default class Sound {
         // create audio listener and pass it to the camera
         this.listener = new AudioListener()
         this.camera.camera.add(this.listener)
+
+        console.log(this.emit)
 
     }
 
@@ -115,8 +119,21 @@ export default class Sound {
                     //this.sounds[i].setVolume(clamp(0, 1, this.lerp(this.sounds[0].distance, this.sounds[0].distance + 5, playerPos.distanceTo(this.sounds[i].position)))) 
                 }
                 if (this.melody) {
-                    console.log(this.melody.analyser.getFrequencyData());
-                    console.log(this.melody.frequency);
+                    //console.log(this.melody.analyser.getFrequencyData());
+                    let freqIndex = 0
+                    if (!this.watchedFrequencyIsPlaying && this.melody.analyser.getFrequencyData()[freqIndex] > 180) {
+                        this.watchedFrequencyIsPlaying = true
+                        console.log('boom', this.melody.analyser.getFrequencyData()[0]);
+                        if (this.emit) {
+                            console.log(this.emit)
+                            this.emit.waving();
+                        }
+                    }
+                    else if (this.watchedFrequencyIsPlaying && this.melody.analyser.getFrequencyData()[freqIndex] < 150) {
+                        this.watchedFrequencyIsPlaying = false
+                        //console.log('noboom', this.melody.analyser.getFrequencyData()[0])
+                    }
+                    // console.log(this.melody.analyser.getFrequencyData());
                     if (!this.melody.positional.isPlaying) {
                         this.melody.positional.play();
                     }

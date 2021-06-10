@@ -257,22 +257,22 @@ export default class Physics {
                     case 'KeyW':
                     case 'up':
                         this.moving.forward = true;
-                        this.moving.backward = false;
+                        //this.moving.backward = false;
                         break;
                     case 'ArrowLeft':
                     case 'KeyA':
                         this.moving.left = true;
-                        this.moving.right = false;
+                        //this.moving.right = false;
                         break;
                     case 'ArrowDown':
                     case 'KeyS':
                         this.moving.backward = true;
-                        this.moving.forward = false;
+                        //this.moving.forward = false;
                         break;
                     case 'ArrowRight':
                     case 'KeyD':
                         this.moving.right = true;
-                        this.moving.left = false;
+                        //this.moving.left = false;
                         break;
                     // case 'Space':
                     //     this.moving.jump = true

@@ -3,6 +3,7 @@ import { Object3D, SphereGeometry, MeshNormalMaterial, Mesh, MeshBasicMaterial, 
 import io from 'socket.io-client'
 import gsap from 'gsap'
 import { MODELS } from './utils'
+import Emitting from '../Tools/Emitting'
 
 export default class Totem {
   constructor(options) {
@@ -15,6 +16,7 @@ export default class Totem {
     this.camera = options.camera
     this.name = options.name
     this.totemList = options.totemList
+    this.emit = options.emit
 
     // Set up
     this.container = new Object3D()
@@ -23,7 +25,7 @@ export default class Totem {
     this.io_client = io("http://localhost:3000");
     this.nearTotem = false;
     this.timing;
-    this.lines;
+    this.lines = [{ id: 1 }];
 
     this.torusList = [];
     this.obstacleEmitted = false;
@@ -79,6 +81,7 @@ export default class Totem {
         name: 'Flute1'
       })*/
 
+      console.log(this.emit)
       this.sounds.add({
         position: this.position,
         distance: 10,
@@ -88,7 +91,8 @@ export default class Totem {
       })
     }
 
-    /*if (this.name === "totem_sagesse") {
+    if (this.name === MODELS.totems.sagesse) {
+      console.log(this.emit)
       this.sounds.add({
         position: this.position,
         distance: 10,
@@ -96,7 +100,14 @@ export default class Totem {
         loop: true,
         name: 'Drum2'
       })
-    }*/
+      this.sounds.add({
+        position: this.position,
+        distance: 10,
+        sound: this.assets.sounds.Guitar1,
+        loop: true,
+        name: 'Guitar1'
+      })
+    }
 
     // enable floating
     this.float()
@@ -107,8 +118,6 @@ export default class Totem {
         this.timing = timing;
         this.lines = lines;
         this.startPanningCamera();
-
-        this.createTorus()
       }
     });
 
@@ -128,7 +137,7 @@ export default class Totem {
       if (this.name === this.activatedTotem) {
         console.log('correct');
         //this.removeTorus();
-        this.createTorus();
+        //this.createTorus();
       }
     });
 
@@ -158,6 +167,10 @@ export default class Totem {
   // Pour chaque totem, on check la position, emet near totem/musictime begin lorsqu'on est proche
   // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on créer les torus
   watchTotem() {
+    this.emit.on('wave', () => {
+      console.log('emit');
+      this.createTorus()
+    })
     this.time.on('tick', () => {
       if (!this.desactivatedTotem && this.playerPos.x !== 0) {
         // Le player n'est pas présent lors de l'instanciation de la classe, pour l'instant il est add ici
@@ -204,6 +217,8 @@ export default class Totem {
       }
     })
   }
+
+
 
   createTorus() {
     const textureImg = 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGlnaHQlMjB0ZXh0dXJlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80'
