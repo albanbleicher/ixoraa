@@ -8,6 +8,7 @@ export default class Vegetation {
         this.model = params.model
         this.count = params.count
         this.scaleFactor = params.scaleFactor
+        this.isBloom = params.isBloom
         this.material = params.material ? params.material : params.model.material
         this.generate()
     }
@@ -26,13 +27,16 @@ export default class Vegetation {
         const _position = new Vector3()
         const _normal = new Vector3();
         sampleMesh.name = 'GRASS'
+        if(this.isBloom) {
+            sampleMesh.layers.enable(1)
+        }
         sampler.build()
     
         for (let i = 0; i < this.count; i++) {
           sampler.sample(_position, _normal);
           _normal.add(_position)
           dummy.position.copy(_position);
-          // dummy.lookAt(_normal);
+        //   dummy.lookAt(_normal);
           dummy.updateMatrix();
           sampleMesh.setMatrixAt(i, dummy.matrix);
         }

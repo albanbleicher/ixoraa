@@ -204,7 +204,8 @@ export default class Planet {
       model:this.assets.models.flowers.scene.children[0],
       count:6000,
       scaleFactor:1,
-      container:this.container
+      container:this.container,
+      isBloom:true
     }) 
     
   }
