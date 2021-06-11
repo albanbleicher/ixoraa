@@ -19,7 +19,6 @@ export default class Ciel {
     this.createCiel()
   }
   createCiel() {
-    console.log('okkk');
     const t = this.assets.textures.hdri
     const cubeMap = new CubeTexture()
 

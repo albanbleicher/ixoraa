@@ -2,6 +2,7 @@ import { Object3D, SphereGeometry, MeshNormalMaterial, Mesh, MeshBasicMaterial, 
 
 import io from 'socket.io-client'
 import gsap from 'gsap'
+import { MODELS } from './utils'
 
 export default class Totem {
   constructor(options) {
@@ -14,15 +15,16 @@ export default class Totem {
     this.camera = options.camera
     this.name = options.name
     this.totemList = options.totemList
+    this.waveemit = options.waveemit
 
     // Set up
     this.container = new Object3D()
     this.container.name = 'Totem'
 
-    this.io_client = io("http://localhost:3000");
+    this.io_client = io("ws://localhost:3000");
     this.nearTotem = false;
     this.timing;
-    this.lines;
+    this.lines = [{ id: 1 }];
 
     this.torusList = [];
     this.obstacleEmitted = false;
@@ -32,86 +34,68 @@ export default class Totem {
     this.playerPos = new Vector3(0, 0, 0);
 
     this.init()
-    // this.watchTotem()
+    this.watchTotem()
   }
   init() {
-    // create new totem mesh
-    const geometry = new SphereGeometry(1, 10, 10)
-    const material = new MeshNormalMaterial()
-    const mesh = new Mesh(geometry, material)
-    // set position based on pass props
-    mesh.position.copy(this.position)
+    switch (this.name) {
+      case MODELS.totems.sagesse:
+        this.sounds.add({
+          position: this.position,
+          distance: 10,
+          sound: this.assets.sounds.Drum2,
+          loop: true,
+          name: 'Drum2'
+        })
+        break;
+      case MODELS.totems.espoir:
+        break;
+      case MODELS.totems.beaute:
+        break;
+      case MODELS.totems.force:
 
-    this.container.add(mesh)
+        this.sounds.add({
+          position: this.position,
+          distance: 30,
+          sound: this.assets.sounds.Space1,
+          loop: true,
+          name: 'longSpace1'
+        })
 
-    // add a sound that will be emmited from totem's position
-    /*this.sounds.add({
-        position: this.position,
-        distance: 10,
-        sound: this.assets.sounds.totem,
-        loop: true
-      })*/
+        this.sounds.add({
+          position: this.position,
+          distance: 20,
+          sound: this.assets.sounds.Drum1,
+          loop: true,
+          name: 'Drum1'
+        })
 
-    // On pourra faire un map sur un array de totem quand on aura les noms
-    if (this.name === "gro_monolithe") {
-      console.log('launched')
-      this.sounds.add({
-        position: this.position,
-        distance: 30,
-        sound: this.assets.sounds.Space1,
-        loop: true,
-        name: 'longSpace1'
-      })
+        /*this.sounds.add({
+          position: this.position,
+          distance: 10,
+          sound: this.assets.sounds.Flute1,
+          loop: true,
+          name: 'Flute1'
+        })*/
 
-      this.sounds.add({
-        position: this.position,
-        distance: 20,
-        sound: this.assets.sounds.Drum1,
-        loop: true,
-        name: 'Drum1'
-      })
-
-      /*this.sounds.add({
-        position: this.position,
-        distance: 10,
-        sound: this.assets.sounds.Flute1,
-        loop: true,
-        name: 'Flute1'
-      })*/
-
-      this.sounds.add({
-        position: this.position,
-        distance: 10,
-        sound: this.assets.sounds.Guitar1,
-        loop: true,
-        name: 'Guitar1'
-      })
+        this.sounds.add({
+          position: this.position,
+          distance: 10,
+          sound: this.assets.sounds.Guitar1,
+          loop: true,
+          name: 'Guitar1'
+        })
+        break;
     }
-
-    if (this.name === "totem_sagesse") {
-      this.sounds.add({
-        position: this.position,
-        distance: 10,
-        sound: this.assets.sounds.Drum2,
-        loop: true,
-        name: 'Drum2'
-      })
-    }
-
-    // enable floating
-    this.float()
 
     this.io_client.on("musictime begin", (timing, lines) => {
       //Lorsque l'interaction se lance, on vérifie quel totem vient d'être activé, et on lance les torus à sa position
       if (this.name === this.activatedTotem) {
         this.timing = timing;
         this.lines = lines;
-        console.log(this.timing)
-        console.log(this.lines)
         console.log(this.activatedTotem);
         this.startPanningCamera();
 
-        this.createTorus()
+        //this.createTorus()
       }
     });
 
@@ -131,7 +115,7 @@ export default class Totem {
       if (this.name === this.activatedTotem) {
         console.log('correct');
         //this.removeTorus();
-        this.createTorus();
+        //this.createTorus();
       }
     });
 
@@ -141,10 +125,9 @@ export default class Totem {
       this.nearTotem = false;
       this.watchTotem();
       this.endPanningCamera();
-      console.log(this.totemList);
       // C'était pas mal avant la refacto, maintenant le meilleur moyen de virer un totem de la liste lorsqu'il est gagné, c'est le désinstancier
       if (this.name === this.activatedTotem) {
-        console.log(this.activatedTotem);
+
         this.position = new Vector3(150, 150, 150);
         this.desactivatedTotem = true;
       }
@@ -153,16 +136,16 @@ export default class Totem {
       this.totemList.splice(totemToRemove, 1)*/
     });
   }
-  float() {
-    this.time.on('tick', () => {
-      this.container.children[0].position.y = this.position.y * 2 + Math.cos(this.time.current * 0.001)
-    })
-  }
 
 
   // Pour chaque totem, on check la position, emet near totem/musictime begin lorsqu'on est proche
   // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on créer les torus
   watchTotem() {
+    this.waveemit.on('wave', () => {
+      console.log('emit');
+      this.createTorus()
+    })
+
     this.time.on('tick', () => {
       if (!this.desactivatedTotem) {
         // Le player n'est pas présent lors de l'instanciation de la classe, pour l'instant il est add ici
@@ -177,8 +160,7 @@ export default class Totem {
         if (!this.nearTotem && this.activatedTotem === null && this.playerPos.distanceTo(this.position) < 2) {
           this.activatedTotem = this.name;
 
-          console.log(this.activatedTotem);
-          console.log('near');
+          console.log('near', this.activatedTotem);
 
           this.sounds.add({
             position: this.position,
@@ -241,7 +223,6 @@ export default class Totem {
         //this.gui.add(torus.rotation, 'x').min(0).max(360).step(0.1).name('Rotation X')
         let scaleFactor = 1;
         let opacityFactor = 1;
-        console.log(opacityFactor, scaleFactor, this.torusList);
 
         /*gsap.to(torus.scale, { x: 10, y: 10, z: 10, duration: 5 }).then(() => {
           gsap.to(torus.material, { opacity: 0, duration: 2 })
@@ -258,15 +239,12 @@ export default class Totem {
             opacityFactor -= 0.1
             torus.material.opacity = opacityFactor
             if (opacityFactor < 0 && this.torusList.length > 0) {
-              console.log(opacityFactor);
-              console.log('remove torus')
               this.torusList.shift();
               this.container.remove(torus);
             }
           }
         })
-        console.log((this.timing / (2.5 / this.lines[i].id)) * 2 * 1000)
-      }, this.timing / (2.5 / this.lines[i].id) * 2 * 1000)
+      }, 10)
     }
   }
 
@@ -301,10 +279,7 @@ export default class Totem {
     let chocWave = new Mesh(geometry, material);
 
     //Rotation semble ne pas marcher ?
-    console.log(chocWave.rotation.y);
     chocWave.rotateX(Math.PI * 0.5);
-    console.log(chocWave.rotation.y);
-    console.log(Math.PI * 0.5);
     chocWave.position.set(this.position.x, this.position.y + 0.5, this.position.z);
     //chocWave.rotation.order = 'ZXY';
     this.container.add(chocWave);
@@ -331,12 +306,8 @@ export default class Totem {
       // on met un timeout de 500ms le temps que le mesh arrive dans la gueule du joueur
       if (!this.commandsReversed) {
         this.io_client.emit("strength")
-        console.log('touched');
-        console.log(this.commandsReversed)
         this.commandsReversed = true;
-        console.log(this.commandsReversed)
         setTimeout(() => {
-          console.log(this.commandsReversed)
           this.commandsReversed = false;
         }, 10000)
       }

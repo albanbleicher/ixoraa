@@ -31,6 +31,7 @@ export default class Planet {
     this.camera = params.camera.camera
     this.player = params.player
     this.sounds = params.sounds
+    this.waveemit = params.waveemit
     this.gui = null
     this.mesh = null
 
@@ -48,7 +49,7 @@ export default class Planet {
     this.createVegetation()
     this.setMaterials()
     this.hideUnnecessary()
-    // this.setTotems()
+    this.setTotems()
 
   }
   init() {
@@ -56,7 +57,7 @@ export default class Planet {
 
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshStandardMaterial({
-      color:'#15AB86',
+      color: '#15AB86',
     })
 
     this.mesh = this.assets.models.ground.scene
@@ -92,7 +93,7 @@ export default class Planet {
     const totemBeaute = this.mesh.children.find(item => item.name === MODELS.totems.beaute)
     const totemEspoir = this.mesh.children.find(item => item.name === MODELS.totems.espoir)
     const arbre = this.mesh.children.find(item => item.name === MODELS.planet.arbre)
-    
+
     // const brouillard = this.mesh.children.find(item => item.name === 'brouillard')
     // brouillard.visible=false;
 
@@ -120,6 +121,7 @@ export default class Planet {
   }
   setTotems() {
     this.totemList.forEach(singleTotem => {
+      console.log(singleTotem)
       const totem = new Totem({
         player: this.player,
         position: singleTotem.position,
@@ -128,7 +130,8 @@ export default class Planet {
         assets: this.assets,
         camera: this.camera,
         name: singleTotem.name,
-        totemList: this.totemList
+        totemList: this.totemList,
+        waveemit: this.waveemit,
       })
       this.container.add(totem.container)
     })
@@ -138,7 +141,7 @@ export default class Planet {
     const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
     const eau = this.mesh.children.find(item => item.name === MODELS.planet.eau)
 
-   
+
     // const material_monolithe = new MeshStandardMaterial({
     //   color: 0x555555,
     //   //reflectivity: 1,
@@ -149,9 +152,9 @@ export default class Planet {
     // })
     let material = force.material;
     material.envMap = this.assets.textures.hdri.full
-    material.envMapIntensity=0.3
-    force.material=material
-    monolithes.material=material
+    material.envMapIntensity = 0.3
+    force.material = material
+    monolithes.material = material
     /*const totem = new Totem({
       position: MONOLITHE.position,
       time: this.time,
@@ -172,41 +175,41 @@ export default class Planet {
     const original_map = this.mesh.children.find(item => item.name === "carte_original")
     const frontieres = this.mesh.children.find(item => item.name === "frontieres")
     const tree_blocks = this.mesh.children.find(item => item.name === "pare_chocs")
-    original_map.visible=false
-    frontieres.visible=false
-    tree_blocks.visible = false  
+    original_map.visible = false
+    frontieres.visible = false
+    tree_blocks.visible = false
   }
   createVegetation() {
-// 15AB86
-// 24C3AD
-// 14D1A9
-// 17FFC1
+    // 15AB86
+    // 24C3AD
+    // 14D1A9
+    // 17FFC1
     const grassMaterial = new MeshStandardMaterial({
-      color:'#24C3AD',
-      side:DoubleSide
+      color: '#24C3AD',
+      side: DoubleSide
     })
     new Vegetation({
-      surface:this.beauty,
-      model:this.assets.models.grass.scene.children[0],
-      count:10000,
-      scaleFactor:1,
-      material:grassMaterial,
-      container:this.container
-    }) 
+      surface: this.beauty,
+      model: this.assets.models.grass.scene.children[0],
+      count: 10000,
+      scaleFactor: 1,
+      material: grassMaterial,
+      container: this.container
+    })
     const flowersMaterial = new MeshStandardMaterial({
-      color:'red',
-      emissive:'red',
-      side:DoubleSide
+      color: 'red',
+      emissive: 'red',
+      side: DoubleSide
     })
     console.log(this.assets.models.flowers.scene.children[0]);
     new Vegetation({
-      surface:this.foret,
-      model:this.assets.models.flowers.scene.children[0],
-      count:6000,
-      scaleFactor:1,
-      container:this.container,
-      isBloom:true
-    }) 
-    
+      surface: this.foret,
+      model: this.assets.models.flowers.scene.children[0],
+      count: 6000,
+      scaleFactor: 1,
+      container: this.container,
+      isBloom: true
+    })
+
   }
 }
