@@ -5,8 +5,7 @@ import {
     LinearFilter,
     RGBAFormat,
     sRGBEncoding,
-    WebGLRenderTarget
-
+    WebGLRenderTarget,
   } from 'three'
   
   import {
@@ -37,7 +36,7 @@ import { Color } from 'three/build/three.module';
       })
       this.materials = {}
       this.setEffects()
-      this.setDebug()
+      if(params.debug) this.setDebug()
     }
     setEffects() {
     this.sceneBg = this.params.scene.background
@@ -48,10 +47,11 @@ import { Color } from 'three/build/three.module';
           minFilter: LinearFilter,
           magFilter:LinearFilter,
           format: RGBAFormat,
-          encoding: sRGBEncoding
+          encoding: sRGBEncoding,
+          generateMipmaps:true
       }
   )
-      const renderScene = new RenderPass(this.params.scene, this.params.camera)
+      const renderScene = new RenderPass(this.params.scene, this.params.camera, null,0x000000,1)
       this.bloomPass = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
       this.bloomPass.threshold =0;
       this.bloomPass.strength = 0.5;
