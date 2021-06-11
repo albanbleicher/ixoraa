@@ -1,5 +1,5 @@
 import { clamp } from "gsap/gsap-core"
-import { AudioListener, Object3D, PositionalAudio, AudioLoader, Audio } from "three"
+import { AudioListener, Object3D, PositionalAudio, AudioLoader, Audio, AudioAnalyser } from "three"
 
 export default class Sound {
     constructor(params) {
@@ -8,11 +8,13 @@ export default class Sound {
         this.camera = params.camera
         this.time = params.time
         this.assets = params.assets
+        this.waveemit = params.waveemit
 
         this.container = new Object3D()
         this.container.name = 'Sound'
 
         this.sounds = []
+        this.currentMelody;
         this.listener = null
         this.totemPosition;
         this.activatedSound = false;
@@ -52,12 +54,23 @@ export default class Sound {
         positional.setLoop(params.loop)
         // add positionnal to emmiter and emmiter to container
 
+        const analyser = new AudioAnalyser(positional, 32);
+        const frequency = analyser.getFrequencyData();
+
         positional.name = params.name
         emmiter.add(positional)
         this.container.add(emmiter)
 
         // En faisant ce check, on fait jouer le son de l'activation une seule fois
-        if (positional.name !== "ActivationTotem") {
+        if (positional.name === "Guitar1") {
+            this.melody = {
+                position: params.position,
+                positional,
+                analyser,
+                frequency,
+                distance: params.distance
+            };
+        } else if (positional.name !== "ActivationTotem") {
             this.sounds.push({
                 position: params.position,
                 positional,
@@ -72,24 +85,32 @@ export default class Sound {
     watch() {
         if (this.sounds.length && this.player.player.mesh) {
             const playerPos = this.player.player.mesh.position
-            /*this.sounds.forEach((sound, i) => {
-                //console.log("sound", sound.positional.name)
-                //console.log("distance", playerPos.distanceTo(sound.position))
-                if (sound.positional.name === "Drum1" && !sound.positional.isPlaying && playerPos.distanceTo(sound.position) < sound.distance + 15 && playerPos.distanceTo(sound.position) > 2) {
-                    console.log(ref)
-                    //console.log('aaahhh'); 
-                    sound.positional.play()
-                } else if ((playerPos.distanceTo(sound.position) > sound.distance + 15 || playerPos.distanceTo(sound.position) < 5) && sound.positional.isPlaying) {
-                    sound.positional.stop()
-                } //if (!sound.positional.isPlaying && playerPos.distanceTo(sound.position) < 5) //console.log('stop taht'); //this.add(this.totemPosition)
-            })
-        }*/
 
             if (playerPos.distanceTo(this.sounds[0].position) < this.sounds[0].distance) {
                 for (let i = 0; i < this.sounds.length; i++) {
                     if (!this.sounds[i].positional.isPlaying)
                         this.sounds[i].positional.play();
                     //this.sounds[i].setVolume(clamp(0, 1, this.lerp(this.sounds[0].distance, this.sounds[0].distance + 5, playerPos.distanceTo(this.sounds[i].position)))) 
+                }
+                if (this.melody) {
+                    //console.log(this.melody.analyser.getFrequencyData());
+                    let freqIndex = 0
+                    if (!this.watchedFrequencyIsPlaying && this.melody.analyser.getFrequencyData()[freqIndex] > 170) {
+                        this.watchedFrequencyIsPlaying = true
+                        console.log('boom', this.melody.analyser.getFrequencyData()[0]);
+                        if (this.waveemit) {
+                            console.log(this.waveemit)
+                            this.waveemit.waving();
+                        }
+                    }
+                    else if (this.watchedFrequencyIsPlaying && this.melody.analyser.getFrequencyData()[freqIndex] < 150) {
+                        this.watchedFrequencyIsPlaying = false
+                        //console.log('noboom', this.melody.analyser.getFrequencyData()[0])
+                    }
+                    // console.log(this.melody.analyser.getFrequencyData());
+                    if (!this.melody.positional.isPlaying) {
+                        this.melody.positional.play();
+                    }
                 }
             }
         }
