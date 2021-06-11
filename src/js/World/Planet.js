@@ -1,24 +1,16 @@
 import {
   BoxGeometry,
   MeshStandardMaterial,
-  MeshMatcapMaterial,
   Object3D,
-  InstancedMesh,
-  Vector3,
-  PlaneBufferGeometry,
-  TextureLoader,
   DoubleSide,
-  Mesh,
-  MeshNormalMaterial,
+  SubtractiveBlending,
 } from 'three'
 import * as dat from 'dat.gui'
-import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler'
 
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Totem from './Totem'
 
 import io from 'socket.io-client'
-import { Color, MeshToonMaterial } from 'three/build/three.module'
 import { MODELS } from './utils'
 import Vegetation from './Vegetation'
 
@@ -48,11 +40,11 @@ export default class Planet {
     this.createVegetation()
     this.setMaterials()
     this.hideUnnecessary()
+    if (params.debug) this.setDebug()
     this.setTotems()
 
   }
   init() {
-    this.gui = new dat.GUI({ width: 450 })
 
     const geometry = new BoxGeometry(1000, 1000, 0.1)
     const material = new MeshStandardMaterial({
@@ -63,7 +55,7 @@ export default class Planet {
     this.mesh.material = material
 
     this.ground = this.mesh.children.find(item => item.name === "carte_parent")
-    this.beauty = this.ground.children.find(item => item.name === "beauty")
+    this.force = this.ground.children.find(item => item.name === "monolithes")
     this.foret = this.ground.children.find(item => item.name === "forêt")
     console.log(this.foret);
     this.ground.traverse((obj) => {
@@ -74,13 +66,6 @@ export default class Planet {
       obj.receiveShadow = true
       obj.castShadow = true
     })
-
-    if (this.debug) {
-      const folder = this.debug.__folders.World.addFolder('Ground')
-      folder.add(material, 'wireframe').name('Afficher le wireframe')
-      folder.addColor(new ColorGUIHelper(material, 'color'), 'value').name('Couleur du sol')
-      // folder.add(material, 'roughness', 0, 1, 0.1).name('Roughness')
-    }
     this.container.add(this.mesh)
 
 
@@ -92,6 +77,7 @@ export default class Planet {
     const totemBeaute = this.mesh.children.find(item => item.name === MODELS.totems.beaute)
     const totemEspoir = this.mesh.children.find(item => item.name === MODELS.totems.espoir)
     const arbre = this.mesh.children.find(item => item.name === MODELS.planet.arbre)
+    console.log(arbre);
 
     // const brouillard = this.mesh.children.find(item => item.name === 'brouillard')
     // brouillard.visible=false;
@@ -185,30 +171,77 @@ export default class Planet {
     // 17FFC1
     const grassMaterial = new MeshStandardMaterial({
       color: '#24C3AD',
-      side: DoubleSide
+      side: DoubleSide,
+      stencilWrite: true,
     })
-    new Vegetation({
-      surface: this.beauty,
+    this.grass = new Vegetation({
+      surface: this.force,
       model: this.assets.models.grass.scene.children[0],
       count: 10000,
       scaleFactor: 1,
       material: grassMaterial,
       container: this.container
     })
-    const flowersMaterial = new MeshStandardMaterial({
+    const foliageMaterial = new MeshStandardMaterial({
       color: 'red',
       emissive: 'red',
-      side: DoubleSide
     })
-    console.log(this.assets.models.flowers.scene.children[0]);
-    new Vegetation({
+    this.foliage = new Vegetation({
       surface: this.foret,
-      model: this.assets.models.flowers.scene.children[0],
+      model: this.assets.models.foliage.scene.children[0],
       count: 6000,
       scaleFactor: 1,
+      material: foliageMaterial,
       container: this.container,
-      isBloom: true
     })
 
+  }
+  setDebug() {
+    let self = this;
+    const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
+
+    const folderGround = this.debug.__folders.World.addFolder('Ground')
+    const folderMonolithes = this.debug.__folders.World.addFolder('Monolithes')
+    const folderVege = this.debug.__folders.World.addFolder('Végetation')
+    const folderGrass = folderVege.addFolder('Herbe')
+    const folderFoliage = folderVege.addFolder('Foliage')
+    folderMonolithes.addColor(new ColorGUIHelper(monolithes.material, 'color'), 'value').name('Couleur des monolithes')
+    folderMonolithes.add(monolithes.material, 'envMapIntensity').min(0).max(10).step(0.1).name('Intensité du reflet')
+    folderMonolithes.add(monolithes.material, 'metalness').min(0).max(1).step(0.01).name('Effet métal')
+    folderMonolithes.add(monolithes.material, 'roughness').min(0).max(1).step(0.01).name('Roughness')
+
+    folderGround.add(this.ground.material, 'wireframe').name('Afficher le wireframe')
+    folderGround.addColor(new ColorGUIHelper(this.ground.material, 'color'), 'value').name('Couleur du sol')
+    console.log(this.grass.mesh.material);
+    folderGrass.addColor(new ColorGUIHelper(this.grass.mesh.material, 'color'), 'value').name('Couleur de l\'herbe')
+    folderGrass.add(this.grass, 'count').min(0).max(10000).step(1).name('Quantité').onChange((count) => {
+      const material = self.grass.mesh.material
+      self.grass.destroy()
+
+      self.grass = new Vegetation({
+        surface: self.force,
+        model: self.assets.models.grass.scene.children[0],
+        count: count,
+        scaleFactor: 1,
+        material: material,
+        container: self.container
+      })
+    })
+    folderFoliage.addColor(new ColorGUIHelper(this.foliage.mesh.material, 'color'), 'value').name('Couleur du foliage')
+    folderFoliage.addColor(new ColorGUIHelper(this.foliage.mesh.material, 'emissive'), 'value').name('Couleur de  l\'emission')
+
+    folderFoliage.add(this.foliage, 'count').min(0).max(10000).step(1).name('Quantité').onChange((count) => {
+      const material = self.foliage.mesh.material
+      self.foliage.destroy()
+
+      self.foliage = new Vegetation({
+        surface: self.foret,
+        model: self.assets.models.foliage.scene.children[0],
+        count: count,
+        scaleFactor: 1,
+        material: material,
+        container: self.container
+      })
+    })
   }
 }

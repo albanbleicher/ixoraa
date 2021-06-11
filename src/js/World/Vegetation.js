@@ -22,26 +22,31 @@ export default class Vegetation {
     
         const groundMesh = new Mesh(groundGeometry, this.material)
         const dummy = new Object3D()
-        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute()
-        const sampleMesh = new InstancedMesh(this.model.geometry, this.material, this.count);
+        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute('color')
+        this.mesh = new InstancedMesh(this.model.geometry, this.material, this.count);
         const _position = new Vector3()
         const _normal = new Vector3();
-        sampleMesh.name = 'GRASS'
+        this.mesh.name = 'GRASS'
         if(this.isBloom) {
-            sampleMesh.layers.enable(1)
+            this.mesh.layers.enable(1)
         }
         sampler.build()
     
         for (let i = 0; i < this.count; i++) {
           sampler.sample(_position, _normal);
-          _normal.add(_position)
+          // _normal.add(_position)
           dummy.position.copy(_position);
-        //   dummy.lookAt(_normal);
+          dummy.lookAt(_normal);
           dummy.updateMatrix();
-          sampleMesh.setMatrixAt(i, dummy.matrix);
+          this.mesh.setMatrixAt(i, dummy.matrix);
         }
-        sampleMesh.instanceMatrix.needsUpdate = true;
+        this.mesh.instanceMatrix.needsUpdate = true;
     
-        this.container.add(sampleMesh)
+        this.container.add(this.mesh)
+    }
+    destroy() {
+      this.mesh.geometry.dispose();
+      this.mesh.material.dispose();
+      this.container.remove( this.mesh );
     }
 }

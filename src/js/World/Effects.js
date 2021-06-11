@@ -5,8 +5,7 @@ import {
     LinearFilter,
     RGBAFormat,
     sRGBEncoding,
-    WebGLRenderTarget
-
+    WebGLRenderTarget,
   } from 'three'
   
   import {
@@ -37,10 +36,11 @@ import { Color } from 'three/build/three.module';
       })
       this.materials = {}
       this.setEffects()
-      this.setDebug()
+      if(params.debug) this.setDebug()
     }
     setEffects() {
     this.sceneBg = this.params.scene.background
+    this.tempFogColor = this.params.scene.fog.color 
     this.renderTarget = new WebGLRenderTarget(
       window.innerWidth,
       window.innerHeight,
@@ -48,7 +48,7 @@ import { Color } from 'three/build/three.module';
           minFilter: LinearFilter,
           magFilter:LinearFilter,
           format: RGBAFormat,
-          encoding: sRGBEncoding
+          encoding: sRGBEncoding,
       }
   )
       const renderScene = new RenderPass(this.params.scene, this.params.camera)
@@ -116,11 +116,17 @@ import { Color } from 'three/build/three.module';
           }
         }
         this.params.scene.background = new Color('black')
+        // this.params.scene.fog.color = new Color('black')
       this.params.scene.traverse(darkenNonBloomed);
+  
       this.bloom.render();
+      // this.params.scene.fog.color = this.tempFogColor
+
         this.params.scene.background = this.params.sky.skyTexture
       this.params.scene.traverse(restoreMaterial)
+
         this.final.render()
+
     }
     update() {
       this.bloom.setPixelRatio(Math.min(window.devicePixelRatio, 2))

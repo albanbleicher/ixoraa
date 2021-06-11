@@ -29,14 +29,10 @@ export default class App {
       canvas: this.canvas,
       antialias: true,
       powerPreference: 'high-performance',
+
      
     })
-
     this.renderer.gammaFactor = 2.2
-    // Set background color
-    
-
-
     // Set renderer pixel ratio & sizes
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(this.sizes.viewport.width, this.sizes.viewport.height)
