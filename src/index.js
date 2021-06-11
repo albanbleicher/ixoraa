@@ -12,11 +12,6 @@ socket.emit("room create");
 socket.once("room code", (room) => {
   console.log('code', room);
 });
-socket.on('room is_synced', () => {
-  new App({
-    canvas: document.querySelector('#_canvas'),
-  })
-})
 document.addEventListener('DOMContentLoaded', () => {
   const landing = document.querySelector('.landing')
   const loading = document.querySelector('.loading')

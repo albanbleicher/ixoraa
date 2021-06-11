@@ -29,14 +29,22 @@ export default class Totem {
     this.torusList = [];
     this.obstacleEmitted = false;
     this.commandsReversed = false;
+    this.isStatic = true;
     this.activatedTotem = null;
     this.desactivatedTotem;
-    this.playerPos = new Vector3(0, 0, 0);
+
+    // Timing
+    this.startTime;
+    this.endTime;
+    this.currentTiming = [];
 
     this.init()
     this.watchTotem()
+    this.startRecordTiming();
+
   }
   init() {
+    console.log(this.player.player.mesh.position)
     switch (this.name) {
       case MODELS.totems.sagesse:
         this.sounds.add({
@@ -69,17 +77,9 @@ export default class Totem {
           name: 'Drum1'
         })
 
-        /*this.sounds.add({
-          position: this.position,
-          distance: 10,
-          sound: this.assets.sounds.Flute1,
-          loop: true,
-          name: 'Flute1'
-        })*/
-
         this.sounds.add({
           position: this.position,
-          distance: 10,
+          distance: 5,
           sound: this.assets.sounds.Guitar1,
           loop: true,
           name: 'Guitar1'
@@ -92,10 +92,9 @@ export default class Totem {
       if (this.name === this.activatedTotem) {
         this.timing = timing;
         this.lines = lines;
-        console.log(this.activatedTotem);
         this.startPanningCamera();
-
-        //this.createTorus()
+        // Must be there soon
+        //this.startRecordTiming();
       }
     });
 
@@ -143,11 +142,30 @@ export default class Totem {
   watchTotem() {
     this.waveemit.on('wave', () => {
       console.log('emit');
+      this.endTime = performance.now();
+      console.log(this.startTime);
+      console.log(this.endTime)
+      var timeDiff = this.endTime - this.startTime; //in ms 
+      this.currentTiming.push(timeDiff);
+
+      // strip the ms 
+      timeDiff /= 1000;
+      console.log(timeDiff)
+
+      if (this.currentTiming.length > 8) {
+        this.io_client.emit("musictime begin", this.currentTiming, this.currentTiming.length);
+        this.currentTiming = [];
+        console.log('send currentTiming')
+      }
+
       this.createTorus()
     })
 
     this.time.on('tick', () => {
-      if (!this.desactivatedTotem) {
+      if (this.isStatic) {
+        this.checkStaticPosition()
+      }
+      if (!this.desactivatedTotem && !this.isStatic) {
         // Le player n'est pas présent lors de l'instanciation de la classe, pour l'instant il est add ici
         if (this.player) {
           this.playerPos = this.player.player.mesh.position
@@ -160,8 +178,6 @@ export default class Totem {
         if (!this.nearTotem && this.activatedTotem === null && this.playerPos.distanceTo(this.position) < 2) {
           this.activatedTotem = this.name;
 
-          console.log('near', this.activatedTotem);
-
           this.sounds.add({
             position: this.position,
             distance: 2,
@@ -171,8 +187,8 @@ export default class Totem {
           })
 
           if (this.name === this.activatedTotem || this.nearTotem) {
+            console.log('near', this.activatedTotem);
             this.io_client.emit("near totem")
-            this.io_client.emit("musictime begin")
             this.nearTotem = true;
           }
           // A remplacer ? En tout cas la fonction watchTotem semble toujours être appelé pour les totems enlevés du tableau
@@ -201,51 +217,45 @@ export default class Totem {
 
     const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/BD5345_460F11_732622_EDB7B1-64px.png')
 
-    for (let i = 0; i < this.lines.length; i++) {
+    console.log('torussed');
+    //let geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
+    let geometry = new TorusGeometry(1, 0.1, 16, 100);
+    //let material = new MeshBasicMaterial({ map: textureTorus });
+    let material = new MeshMatcapMaterial({ matcap: matCapTexture });
 
-      setTimeout(() => {
-        console.log(i, 'torussed');
-        //let geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
-        let geometry = new TorusGeometry(1, 0.1, 16, 100);
-        //let material = new MeshBasicMaterial({ map: textureTorus });
-        let material = new MeshMatcapMaterial({ matcap: matCapTexture });
+    let torus = new Mesh(geometry, material);
+    torus.material.needsUpdate = true
 
-        let torus = new Mesh(geometry, material);
-        torus.material.needsUpdate = true
+    console.log('Add torus', torus);
+    this.container.add(torus);
+    this.torusList.push(torus);
 
-        console.log('Add torus', torus);
-        this.container.add(torus);
-        this.torusList.push(torus);
+    torus.position.set(this.position.x, this.position.y + 2, this.position.z);
+    torus.material.transparent = true;
 
-        torus.position.set(this.position.x, this.position.y + 2, this.position.z);
-        torus.material.transparent = true;
+    let scaleFactor = 1;
+    let opacityFactor = 1;
 
-        //this.gui.add(torus.rotation, 'x').min(0).max(360).step(0.1).name('Rotation X')
-        let scaleFactor = 1;
-        let opacityFactor = 1;
+    /*gsap.to(torus.scale, { x: 10, y: 10, z: 10, duration: 5 }).then(() => {
+      gsap.to(torus.material, { opacity: 0, duration: 2 })
+    })*/
+    // La scale grandi, puis l'opacité diminue
+    this.time.on('tick', () => {
+      if (torus.scale.x < 10) {
+        torus.lookAt(this.player.player.mesh.position);
 
-        /*gsap.to(torus.scale, { x: 10, y: 10, z: 10, duration: 5 }).then(() => {
-          gsap.to(torus.material, { opacity: 0, duration: 2 })
-        })*/
-        // La scale grandi, puis l'opacité diminue
-        this.time.on('tick', () => {
-          if (torus.scale.x < 10) {
-            torus.lookAt(this.player.player.mesh.position);
-
-            scaleFactor += 0.1
-            torus.scale.set(scaleFactor, scaleFactor, scaleFactor);
-          } else {
-            // Merge with remove Torus
-            opacityFactor -= 0.1
-            torus.material.opacity = opacityFactor
-            if (opacityFactor < 0 && this.torusList.length > 0) {
-              this.torusList.shift();
-              this.container.remove(torus);
-            }
-          }
-        })
-      }, 10)
-    }
+        scaleFactor += 0.1
+        torus.scale.set(scaleFactor, scaleFactor, scaleFactor);
+      } else {
+        // Merge with remove Torus
+        opacityFactor -= 0.1
+        torus.material.opacity = opacityFactor
+        if (opacityFactor < 0 && this.torusList.length > 0) {
+          this.torusList.shift();
+          this.container.remove(torus);
+        }
+      }
+    })
   }
 
   removeTorus() {
@@ -316,10 +326,28 @@ export default class Totem {
 
   }
 
+  checkStaticPosition() {
+    console.log(this.player.player.mesh.position.x);
+    if (this.player.player.mesh.position.x !== 0) {
+      console.log('yes', this.player.player.mesh.position.x);
+      this.isStatic = false
+    }
+  }
+
+  startRecordTiming() {
+    this.startTime = performance.now();
+  };
+
+  endRecordTiming() {
+    // Emit the array when 2 secondes without earing note
+  }
+
   startPanningCamera() {
     gsap.to(this.camera.position,
       { x: 2, y: 1, z: 4, ease: "power3.out", duration: 5 },
     )
+    this.player.player.mesh.lookAt(this.position);
+
   }
 
   endPanningCamera() {
