@@ -3,6 +3,7 @@ import {
   MeshStandardMaterial,
   Object3D,
   DoubleSide,
+  SubtractiveBlending,
 } from 'three'
 import * as dat from 'dat.gui'
 
@@ -55,7 +56,7 @@ export default class Planet {
     this.mesh.material = material
 
     this.ground = this.mesh.children.find(item => item.name === "carte_parent")
-    this.beauty = this.ground.children.find(item => item.name === "beauty")
+    this.force = this.ground.children.find(item => item.name === "monolithes")
     this.foret = this.ground.children.find(item => item.name === "forêt")
     console.log(this.foret);
     this.ground.traverse((obj) => {
@@ -77,6 +78,7 @@ export default class Planet {
     const totemBeaute = this.mesh.children.find(item => item.name === MODELS.totems.beaute)
     const totemEspoir = this.mesh.children.find(item => item.name === MODELS.totems.espoir)
     const arbre = this.mesh.children.find(item => item.name === MODELS.planet.arbre)
+    console.log(arbre);
 
     // const brouillard = this.mesh.children.find(item => item.name === 'brouillard')
     // brouillard.visible=false;
@@ -170,10 +172,11 @@ export default class Planet {
     // 17FFC1
     const grassMaterial = new MeshStandardMaterial({
       color: '#24C3AD',
-      side: DoubleSide
+      side: DoubleSide, 
+      stencilWrite:true,
     })
     this.grass = new Vegetation({
-      surface:this.beauty,
+      surface:this.force,
       model:this.assets.models.grass.scene.children[0],
       count:10000,
       scaleFactor:1,
@@ -191,7 +194,6 @@ export default class Planet {
       scaleFactor:1,
       material:foliageMaterial,
       container:this.container,
-      isBloom:true
     }) 
     
   }
@@ -218,7 +220,7 @@ export default class Planet {
       self.grass.destroy()
       
       self.grass = new Vegetation({
-        surface:self.beauty,
+        surface:self.force,
         model:self.assets.models.grass.scene.children[0],
         count:count,
         scaleFactor:1,
@@ -238,7 +240,6 @@ export default class Planet {
         model:self.assets.models.foliage.scene.children[0],
         count:count,
         scaleFactor:1,
-        isBloom:true,
         material:material,
         container:self.container
       }) 

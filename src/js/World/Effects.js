@@ -40,6 +40,7 @@ import { Color } from 'three/build/three.module';
     }
     setEffects() {
     this.sceneBg = this.params.scene.background
+    this.tempFogColor = this.params.scene.fog.color 
     this.renderTarget = new WebGLRenderTarget(
       window.innerWidth,
       window.innerHeight,
@@ -48,10 +49,9 @@ import { Color } from 'three/build/three.module';
           magFilter:LinearFilter,
           format: RGBAFormat,
           encoding: sRGBEncoding,
-          generateMipmaps:true
       }
   )
-      const renderScene = new RenderPass(this.params.scene, this.params.camera, null,0x000000,1)
+      const renderScene = new RenderPass(this.params.scene, this.params.camera)
       this.bloomPass = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
       this.bloomPass.threshold =0;
       this.bloomPass.strength = 0.5;
@@ -116,11 +116,17 @@ import { Color } from 'three/build/three.module';
           }
         }
         this.params.scene.background = new Color('black')
+        // this.params.scene.fog.color = new Color('black')
       this.params.scene.traverse(darkenNonBloomed);
+  
       this.bloom.render();
+      // this.params.scene.fog.color = this.tempFogColor
+
         this.params.scene.background = this.params.sky.skyTexture
       this.params.scene.traverse(restoreMaterial)
+
         this.final.render()
+
     }
     update() {
       this.bloom.setPixelRatio(Math.min(window.devicePixelRatio, 2))
