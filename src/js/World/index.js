@@ -55,7 +55,11 @@ export default class World {
     // this.setCiel();
     this.setPlayer()
     this.setSounds()
-    this.setPlanet()
+    setTimeout(() => {
+      this.setPlanet()
+
+
+    }, 100)
     setTimeout(() => {
       this.setPhysics()
 

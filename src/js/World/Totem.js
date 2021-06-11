@@ -22,7 +22,7 @@ export default class Totem {
     this.container.name = 'Totem'
 
     this.io_client = io("ws://localhost:3000");
-    this.nearTotem = false;
+    //this.nearTotem = false;
     this.timing;
     this.lines = [{ id: 1 }];
 
@@ -30,21 +30,19 @@ export default class Totem {
     this.obstacleEmitted = false;
     this.commandsReversed = false;
     this.isStatic = true;
-    this.activatedTotem = null;
+    this.isActivated = false;
     this.desactivatedTotem;
 
     // Timing
-    this.startTime;
+    this.startTime = 0;
     this.endTime;
     this.currentTiming = [];
 
     this.init()
     this.watchTotem()
-    this.startRecordTiming();
 
   }
   init() {
-    console.log(this.player.player.mesh.position)
     switch (this.name) {
       case MODELS.totems.sagesse:
         this.sounds.add({
@@ -89,29 +87,30 @@ export default class Totem {
 
     this.io_client.on("musictime begin", (timing, lines) => {
       //Lorsque l'interaction se lance, on vérifie quel totem vient d'être activé, et on lance les torus à sa position
-      if (this.name === this.activatedTotem) {
+      if (this.isActivated) {
         this.timing = timing;
         this.lines = lines;
         this.startPanningCamera();
         // Must be there soon
-        //this.startRecordTiming();
+        this.startRecordTiming();
       }
     });
 
     // Si on se trompe, on remove les torus et on relance les torus (create torus plutôt que watchTotem ?)
     this.io_client.on("wrong", () => {
-      if (this.name === this.activatedTotem) {
-        this.nearTotem = false;
+      if (this.isActivated) {
+        //this.nearTotem = false;
         this.removeTorus()
-        this.watchTotem()
+        //this.watchTotem()
         //this.createTorus();
         console.log('wrong');
+        this.isActivated = false;
       }
     });
 
     // Si on a réussi la manche, on passe à la suivante en créant de nouveaux torus
     this.io_client.on("correct", () => {
-      if (this.name === this.activatedTotem) {
+      if (this.isActivated) {
         console.log('correct');
         //this.removeTorus();
         //this.createTorus();
@@ -121,11 +120,11 @@ export default class Totem {
     // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
     this.io_client.on("winned", () => {
       console.log('winned');
-      this.nearTotem = false;
-      this.watchTotem();
+      //this.nearTotem = false;
+      //this.watchTotem();
       this.endPanningCamera();
       // C'était pas mal avant la refacto, maintenant le meilleur moyen de virer un totem de la liste lorsqu'il est gagné, c'est le désinstancier
-      if (this.name === this.activatedTotem) {
+      if (this.isActivated) {
 
         this.position = new Vector3(150, 150, 150);
         this.desactivatedTotem = true;
@@ -143,14 +142,11 @@ export default class Totem {
     this.waveemit.on('wave', () => {
       console.log('emit');
       this.endTime = performance.now();
-      console.log(this.startTime);
-      console.log(this.endTime)
       var timeDiff = this.endTime - this.startTime; //in ms 
       this.currentTiming.push(timeDiff);
 
       // strip the ms 
       timeDiff /= 1000;
-      console.log(timeDiff)
 
       if (this.currentTiming.length > 8) {
         this.io_client.emit("musictime begin", this.currentTiming, this.currentTiming.length);
@@ -165,7 +161,10 @@ export default class Totem {
       if (this.isStatic) {
         this.checkStaticPosition()
       }
+
       if (!this.desactivatedTotem && !this.isStatic) {
+
+
         // Le player n'est pas présent lors de l'instanciation de la classe, pour l'instant il est add ici
         if (this.player) {
           this.playerPos = this.player.player.mesh.position
@@ -175,9 +174,10 @@ export default class Totem {
         if (this.name === "gro_monolithe" && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 10) {
           this.obstacleTotemForce(this.position);
         }
-        if (!this.nearTotem && this.activatedTotem === null && this.playerPos.distanceTo(this.position) < 2) {
-          this.activatedTotem = this.name;
-
+        // Si on est pas déjà proche d'un totem, que le totem voulu est en activation, et que la position du totem courant est moins loin du perso que 2
+        if (!this.isActivated && this.playerPos.distanceTo(this.position) < 2) {
+          console.warn('enter : ' + this.name);
+          this.isActivated = true
           this.sounds.add({
             position: this.position,
             distance: 2,
@@ -186,10 +186,10 @@ export default class Totem {
             name: 'ActivationTotem'
           })
 
-          if (this.name === this.activatedTotem || this.nearTotem) {
-            console.log('near', this.activatedTotem);
+          if (this.isActivated) {
+            console.log('near', this.isActivated);
             this.io_client.emit("near totem")
-            this.nearTotem = true;
+            //this.nearTotem = true;
           }
           // A remplacer ? En tout cas la fonction watchTotem semble toujours être appelé pour les totems enlevés du tableau
           /*this.totemList.forEach(totem => {
@@ -197,10 +197,13 @@ export default class Totem {
               console.log(this.activatedTotem.name);
               this.io_client.emit("near totem")
               this.io_client.emit("musictime begin")
-              this.nearTotem = true;
+              //this.nearTotem = true;
             }
           })*/
           return;
+        } else if (this.isActivated && this.playerPos.distanceTo(this.position) >= 2) {
+          this.isActivated = false;
+          console.warn('exit : ' + this.name);
         }
         return;
       }
@@ -327,9 +330,7 @@ export default class Totem {
   }
 
   checkStaticPosition() {
-    console.log(this.player.player.mesh.position.x);
     if (this.player.player.mesh.position.x !== 0) {
-      console.log('yes', this.player.player.mesh.position.x);
       this.isStatic = false
     }
   }

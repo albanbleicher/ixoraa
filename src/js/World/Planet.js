@@ -40,7 +40,6 @@ export default class Planet {
     this.totemList = [];
     this.commandsReversed = false;
     this.playerPos = this.player.player.mesh.position;
-
     // Set up
     this.container = new Object3D()
     this.container.name = 'Planet'
