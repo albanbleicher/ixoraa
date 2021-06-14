@@ -4,6 +4,7 @@ import {
   Object3D,
   DoubleSide,
   SubtractiveBlending,
+  ShaderMaterial
 } from 'three'
 import * as dat from 'dat.gui'
 
@@ -13,6 +14,7 @@ import Totem from './Totem'
 import io from 'socket.io-client'
 import { MODELS } from './utils'
 import Vegetation from './Vegetation'
+import { Color, Mesh, MeshNormalMaterial } from 'three/build/three.module'
 
 export default class Planet {
   constructor(params) {
@@ -57,7 +59,6 @@ export default class Planet {
     this.ground = this.mesh.children.find(item => item.name === "carte_parent")
     this.force = this.ground.children.find(item => item.name === "monolithes")
     this.foret = this.ground.children.find(item => item.name === "forêt")
-    console.log(this.foret);
     this.ground.traverse((obj) => {
       obj.material = material
     })
@@ -77,11 +78,18 @@ export default class Planet {
     const totemBeaute = this.mesh.children.find(item => item.name === MODELS.totems.beaute)
     const totemEspoir = this.mesh.children.find(item => item.name === MODELS.totems.espoir)
     const arbre = this.mesh.children.find(item => item.name === MODELS.planet.arbre)
-    console.log(arbre);
 
     // const brouillard = this.mesh.children.find(item => item.name === 'brouillard')
     // brouillard.visible=false;
-
+    const auras = this.mesh.children.filter(item => item.name.includes('energie'))
+    auras.forEach(aura => {
+      const material = new MeshStandardMaterial({
+        color:new Color('orange'),
+        emissive:new Color('orange')
+      })
+      aura.material = material
+      aura.layers.enable(1)
+    })
     totemEspoir.layers.enable(1)
     arbre.layers.enable(1)
 
@@ -106,7 +114,6 @@ export default class Planet {
   }
   setTotems() {
     this.totemList.forEach(singleTotem => {
-      console.log(singleTotem)
       const totem = new Totem({
         player: this.player,
         position: singleTotem.position,
@@ -125,8 +132,37 @@ export default class Planet {
     const force = this.mesh.children.find(item => item.name === MODELS.totems.force)
     const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
     const eau = this.mesh.children.find(item => item.name === MODELS.planet.eau)
+console.log(eau);
+eau.material = new ShaderMaterial({
+  uniforms: {
+    color1: {
+      value: new Color("lightblue")
+    },
+    color2: {
+      value: new Color("yellow")
+    }
+  },
+  vertexShader: `
+    varying vec2 vUv;
 
-
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+    }
+  `,
+  fragmentShader: `
+    uniform vec3 color1;
+    uniform vec3 color2;
+  
+    varying vec2 vUv;
+    
+    void main() {
+      
+      gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
+    }
+  `,
+  // wireframe: true
+});
     // const material_monolithe = new MeshStandardMaterial({
     //   color: 0x555555,
     //   //reflectivity: 1,
@@ -205,6 +241,27 @@ export default class Planet {
     const folderVege = this.debug.__folders.World.addFolder('Végetation')
     const folderGrass = folderVege.addFolder('Herbe')
     const folderFoliage = folderVege.addFolder('Foliage')
+    const folderAuras = this.debug.__folders.World.addFolder('Auras des totems')
+    const auras = this.mesh.children.filter(item => item.name.includes('energie'))
+    let auraMaterial = new MeshStandardMaterial({
+      color:new Color('orange'),
+      emissive:new Color('orange')
+    })
+    folderAuras.addColor(new ColorGUIHelper(auraMaterial, 'color'), 'value').name('Couleur').onChange((color) => {
+      auras.forEach(aura => {
+        aura.material.color = new Color(color)
+      })
+    })
+    folderAuras.addColor(new ColorGUIHelper(auraMaterial, 'emissive'), 'value').name('Emissive').onChange((color) => {
+        auras.forEach(aura => {
+          aura.material.emissive = new Color(color)
+        })
+    })
+    folderAuras.add(auraMaterial, 'emissiveIntensity').name('Intensité de l\'emissive').min(0).max(1).step(0.01).onChange((intensity) => {
+      auras.forEach(aura => {
+        aura.material.emissiveIntensity = intensity
+      })
+  })
     folderMonolithes.addColor(new ColorGUIHelper(monolithes.material, 'color'), 'value').name('Couleur des monolithes')
     folderMonolithes.add(monolithes.material, 'envMapIntensity').min(0).max(10).step(0.1).name('Intensité du reflet')
     folderMonolithes.add(monolithes.material, 'metalness').min(0).max(1).step(0.01).name('Effet métal')
@@ -212,7 +269,6 @@ export default class Planet {
 
     folderGround.add(this.ground.material, 'wireframe').name('Afficher le wireframe')
     folderGround.addColor(new ColorGUIHelper(this.ground.material, 'color'), 'value').name('Couleur du sol')
-    console.log(this.grass.mesh.material);
     folderGrass.addColor(new ColorGUIHelper(this.grass.mesh.material, 'color'), 'value').name('Couleur de l\'herbe')
     folderGrass.add(this.grass, 'count').min(0).max(10000).step(1).name('Quantité').onChange((count) => {
       const material = self.grass.mesh.material

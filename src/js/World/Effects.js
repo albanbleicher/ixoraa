@@ -116,11 +116,11 @@ import { Color } from 'three/build/three.module';
           }
         }
         this.params.scene.background = new Color('black')
-        // this.params.scene.fog.color = new Color('black')
+        this.params.scene.fog.color = new Color('black')
       this.params.scene.traverse(darkenNonBloomed);
   
       this.bloom.render();
-      // this.params.scene.fog.color = this.tempFogColor
+      this.params.scene.fog.color = this.tempFogColor
 
         this.params.scene.background = this.params.sky.skyTexture
       this.params.scene.traverse(restoreMaterial)

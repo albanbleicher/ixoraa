@@ -103,7 +103,6 @@ export default class Totem {
         this.removeTorus()
         //this.watchTotem()
         //this.createTorus();
-        console.log('wrong');
         this.isActivated = false;
       }
     });
@@ -111,7 +110,6 @@ export default class Totem {
     // Si on a réussi la manche, on passe à la suivante en créant de nouveaux torus
     this.io_client.on("correct", () => {
       if (this.isActivated) {
-        console.log('correct');
         //this.removeTorus();
         //this.createTorus();
       }
@@ -119,7 +117,6 @@ export default class Totem {
 
     // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
     this.io_client.on("winned", () => {
-      console.log('winned');
       //this.nearTotem = false;
       //this.watchTotem();
       this.endPanningCamera();
@@ -140,7 +137,6 @@ export default class Totem {
   // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on créer les torus
   watchTotem() {
     this.waveemit.on('wave', () => {
-      console.log('emit');
       this.endTime = performance.now();
       var timeDiff = this.endTime - this.startTime; //in ms 
       this.currentTiming.push(timeDiff);
@@ -151,7 +147,6 @@ export default class Totem {
       if (this.currentTiming.length > 8) {
         this.io_client.emit("musictime begin", this.currentTiming, this.currentTiming.length);
         this.currentTiming = [];
-        console.log('send currentTiming')
       }
 
       this.createTorus()
@@ -176,7 +171,6 @@ export default class Totem {
         }
         // Si on est pas déjà proche d'un totem, que le totem voulu est en activation, et que la position du totem courant est moins loin du perso que 2
         if (!this.isActivated && this.playerPos.distanceTo(this.position) < 2) {
-          console.warn('enter : ' + this.name);
           this.isActivated = true
           this.sounds.add({
             position: this.position,
@@ -187,14 +181,12 @@ export default class Totem {
           })
 
           if (this.isActivated) {
-            console.log('near', this.isActivated);
             this.io_client.emit("near totem")
             //this.nearTotem = true;
           }
           // A remplacer ? En tout cas la fonction watchTotem semble toujours être appelé pour les totems enlevés du tableau
           /*this.totemList.forEach(totem => {
             if (totem.name === this.activatedTotem.name) {
-              console.log(this.activatedTotem.name);
               this.io_client.emit("near totem")
               this.io_client.emit("musictime begin")
               //this.nearTotem = true;
@@ -203,7 +195,6 @@ export default class Totem {
           return;
         } else if (this.isActivated && this.playerPos.distanceTo(this.position) >= 2) {
           this.isActivated = false;
-          console.warn('exit : ' + this.name);
         }
         return;
       }
@@ -211,7 +202,6 @@ export default class Totem {
   }
 
   createTorus() {
-    console.log('createTorus');
     const textureImg = 'https://images.unsplash.com/photo-1550859492-d5da9d8e45f3?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bGlnaHQlMjB0ZXh0dXJlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80'
 
     const textureLoader = new TextureLoader()
@@ -220,7 +210,6 @@ export default class Totem {
 
     const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/BD5345_460F11_732622_EDB7B1-64px.png')
 
-    console.log('torussed');
     //let geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
     let geometry = new TorusGeometry(1, 0.1, 16, 100);
     //let material = new MeshBasicMaterial({ map: textureTorus });
@@ -229,7 +218,6 @@ export default class Totem {
     let torus = new Mesh(geometry, material);
     torus.material.needsUpdate = true
 
-    console.log('Add torus', torus);
     this.container.add(torus);
     this.torusList.push(torus);
 
@@ -263,7 +251,6 @@ export default class Totem {
 
   removeTorus() {
     let opacitiesFactor = 1;
-    console.log('remove torus because null')
 
     this.time.on('tick', () => {
       opacitiesFactor -= 0.5

@@ -52,25 +52,16 @@ export default class World {
         this.renderer.setClearColor(color)
       })
     }
-    // this.setCiel();
-    this.setPlayer()
-    this.setSounds()
-    setTimeout(() => {
+
+      this.setPlayer()
+      this.setSounds()
       this.setPlanet()
-
-
-    }, 100)
-    setTimeout(() => {
       this.setPhysics()
-
       this.setAmbientLight()
       this.setPointLight()
       this.setCiel()
       this.setFog()
       this.setEffects()
-
-
-    }, 100)
 
 
   }
@@ -84,7 +75,7 @@ export default class World {
       this.loadDiv.remove()
     } else {
       this.assets.on('ressourceLoad', () => {
-        this.progress.style.width = this.loadModels.innerHTML = `${Math.floor((this.assets.done / this.assets.total) * 100) +
+        this.progress.style.width = `${Math.floor((this.assets.done / this.assets.total) * 100) +
           Math.floor((1 / this.assets.total) * this.assets.currentPercent)
           }%`
       })
