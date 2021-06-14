@@ -22,7 +22,7 @@ export default class Vegetation {
     
         const groundMesh = new Mesh(groundGeometry, this.material)
         const dummy = new Object3D()
-        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute('color')
+        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute()
         this.mesh = new InstancedMesh(this.model.geometry, this.material, this.count);
         const _position = new Vector3()
         const _normal = new Vector3();

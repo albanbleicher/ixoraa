@@ -28,9 +28,7 @@ export default class App {
     this.renderer = new WebGLRenderer({
       canvas: this.canvas,
       antialias: true,
-      powerPreference: 'high-performance',
-
-     
+      powerPreference: 'high-performance',     
     })
     this.renderer.gammaFactor = 2.2
     // Set renderer pixel ratio & sizes

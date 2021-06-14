@@ -44,23 +44,18 @@ export default class Physics {
 
         this.io.on('move up', () => {
             this.move('up')
-            console.log('up');
         })
         this.io.on('move right', () => {
             this.move('right')
-            console.log('right');
         })
         this.io.on('move down', () => {
             this.move('down')
-            console.log('down');
         })
         this.io.on('move left', () => {
             this.move('left')
-            console.log('left');
         })
         this.io.on('end', () => {
             this.still()
-            console.log('end');
         })
         window.addEventListener('keydown', (e) => this.moveKeyboard(e))
         window.addEventListener('keyup', (e) => this.stillKeyboard(e))

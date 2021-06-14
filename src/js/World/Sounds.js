@@ -36,7 +36,6 @@ export default class Sound {
         return v0 * (1 - t) + v1 * t;
     }
     add(params) {
-        console.log(params)
 
         this.totemPosition = params
         // create an empty 3D object to add PositionalAudio
@@ -101,21 +100,16 @@ export default class Sound {
                     //this.sounds[i].setVolume(clamp(0, 1, this.lerp(this.sounds[0].distance, this.sounds[0].distance + 5, playerPos.distanceTo(this.sounds[i].position)))) 
                 }
                 if (this.melody) {
-                    //console.log(this.melody.analyser.getFrequencyData());
                     let freqIndex = 0
                     if (!this.watchedFrequencyIsPlaying && this.melody.analyser.getFrequencyData()[freqIndex] > 170) {
                         this.watchedFrequencyIsPlaying = true
-                        console.log('boom', this.melody.analyser.getFrequencyData()[0]);
                         if (this.waveemit) {
-                            console.log(this.waveemit)
                             this.waveemit.waving();
                         }
                     }
                     else if (this.watchedFrequencyIsPlaying && this.melody.analyser.getFrequencyData()[freqIndex] < 150) {
                         this.watchedFrequencyIsPlaying = false
-                        //console.log('noboom', this.melody.analyser.getFrequencyData()[0])
                     }
-                    // console.log(this.melody.analyser.getFrequencyData());
                     if (!this.melody.positional.isPlaying) {
                         this.melody.positional.play();
                     }
