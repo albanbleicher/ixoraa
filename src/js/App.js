@@ -1,10 +1,8 @@
-import { Scene, sRGBEncoding, WebGLRenderer } from 'three'
+import { Scene, sRGBEncoding, WebGLRenderer, LinearFilter, RGBAFormat } from 'three'
 import * as dat from 'dat.gui'
-
 import Sizes from '@tools/Sizes'
 import Time from '@tools/Time'
 import Assets from '@tools/Loader'
-
 import Camera from './Camera'
 import World from '@world/index'
 
@@ -31,14 +29,10 @@ export default class App {
       canvas: this.canvas,
       antialias: true,
       powerPreference: 'high-performance',
+
+     
     })
-    this.renderer.outputEncoding = sRGBEncoding
     this.renderer.gammaFactor = 2.2
-    // Set background color
-    this.renderer.setClearColor(0x000000, 0)
-    
-
-
     // Set renderer pixel ratio & sizes
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(this.sizes.viewport.width, this.sizes.viewport.height)
@@ -55,7 +49,7 @@ export default class App {
       // if the window is only in the background without focus (for example, if you select another window without minimizing the browser one), 
       // which might cause some performance or batteries issues when testing on multiple browsers
       if (!(this.renderOnBlur?.activated && !document.hasFocus() ) ) {
-        this.renderer.render(this.scene, this.camera.camera)
+        // this.renderer.render(this.scene, this.camera.camera)
       }
     })
 

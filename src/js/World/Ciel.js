@@ -9,6 +9,7 @@ export default class Ciel {
     this.debug = params.debug
     this.renderer = params.renderer
     this.scene = params.scene
+    this.skyTexture = new Color('green')
 
     // Set up
     this.container = new Object3D()
@@ -18,7 +19,6 @@ export default class Ciel {
     this.createCiel()
   }
   createCiel() {
-    console.log('okkk');
     const t = this.assets.textures.hdri
     const cubeMap = new CubeTexture()
 
@@ -30,7 +30,6 @@ export default class Ciel {
     cubeMap.images[5] = t.nz.image
 
     cubeMap.needsUpdate = true
-
-    this.scene.background = cubeMap
+    this.skyTexture = cubeMap
   }
 }
