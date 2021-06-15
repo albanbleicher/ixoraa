@@ -68,9 +68,9 @@ export default class Sound {
 
         // Near totem 
 
-        this.io_client.on('near totem is ok', () => {
+        /*this.io_client.on('near totem is ok', () => {
 
-        })
+        })*/
 
 
         // En faisant ce check, on fait jouer le son de l'activation une seule fois

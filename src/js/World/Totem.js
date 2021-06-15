@@ -63,9 +63,9 @@ export default class Totem {
         this.sounds.add({
           position: this.position,
           distance: 30,
-          sound: this.assets.sounds.Space1,
+          sound: this.assets.sounds.Space1_1,
           loop: true,
-          name: 'longSpace1'
+          name: 'Space1_1'
         })
 
         this.sounds.add({
