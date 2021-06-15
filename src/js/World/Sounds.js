@@ -46,8 +46,7 @@ export default class Sound {
         const positional = new PositionalAudio(this.listener)
         const audio = new Audio(this.listener)
 
-        console.log(positional)
-        console.log(audio)
+
         // apply AudioBuffer from template loaded assets
         positional.setBuffer(params.sound)
         // set radius around PositionalAudio where sounds starts to fade
@@ -89,10 +88,8 @@ export default class Sound {
     watch() {
         //if (this.analyser.fftSize)
         //console.log(this.analyser.fftSize);
-        console.log(this.sounds.length);
         if (this.sounds.length && this.player.player.mesh) {
             const playerPos = this.player.player.mesh.position
-            console.log(playerPos.distanceTo(this.sounds[0].position), this.sounds[0].distance, playerPos.distanceTo(this.sounds[0].position) < this.sounds[0].distance)
             if (playerPos.distanceTo(this.sounds[0].position) < this.sounds[0].distance) {
                 for (let i = 0; i < this.sounds.length; i++) {
                     if (!this.sounds[i].positional.isPlaying)

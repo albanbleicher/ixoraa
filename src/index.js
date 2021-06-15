@@ -3,49 +3,51 @@ import App from '@js/App'
 import gsap from 'gsap';
 import io from "socket.io-client"
 
-const socket = io("http://localhost:3000");
-
-socket.onAny((event, ...args) => {
-  console.log(event, args);
-});
-socket.emit("room create");
-socket.once("room code", (room) => {
-  console.log('code', room);
-});
-document.addEventListener('DOMContentLoaded', () => {
-  const landing = document.querySelector('.landing')
-  const loading = document.querySelector('.loading')
-  const access = document.querySelector('.access')
-  const play = document.querySelector('.play')
-  const begin = document.querySelector('.begin')
-  const code = document.querySelector('.code')
-
-
-  play.addEventListener('click', () => {
-    socket.emit("room create");
-    socket.once("room code", (id) => {
-      console.log('test');
-      code.innerText = id;
-    });
-    socket.once('room is_synced', () => {
-      console.log('test')
-
-      gsap.to(access, { opacity: 0 }).then(() => {
-        gsap.to(access, { display: 'none' })
-      })
-      //musicFadeOut()
+// const socket = io("http://localhost:3000");
       new App({
-        canvas: document.querySelector('#_canvas'),
-      })
-    })
+          canvas: document.querySelector('#_canvas'),
+        })
+// socket.onAny((event, ...args) => {
+//   console.log(event, args);
+// });
+// socket.emit("room create");
+// socket.once("room code", (room) => {
+//   console.log('code', room);
+// });
+// document.addEventListener('DOMContentLoaded', () => {
+//   const landing = document.querySelector('.landing')
+//   const loading = document.querySelector('.loading')
+//   const access = document.querySelector('.access')
+//   const play = document.querySelector('.play')
+//   const begin = document.querySelector('.begin')
+//   const code = document.querySelector('.code')
 
-    gsap.to(landing, { opacity: 0 }).then(() => {
-      gsap.to(landing, { display: 'none' })
-    })
-  })
+
+//   play.addEventListener('click', () => {
+//     socket.emit("room create");
+//     socket.once("room code", (id) => {
+//       console.log('test');
+//       code.innerText = id;
+//     });
+//     socket.once('room is_synced', () => {
+//       console.log('test')
+
+//       gsap.to(access, { opacity: 0 }).then(() => {
+//         gsap.to(access, { display: 'none' })
+//       })
+//       //musicFadeOut()
+//       new App({
+//         canvas: document.querySelector('#_canvas'),
+//       })
+//     })
+
+//     gsap.to(landing, { opacity: 0 }).then(() => {
+//       gsap.to(landing, { display: 'none' })
+//     })
+//   })
 
 
-})
+// })
 
 // function musicFadeOut() {
 //   // Initial volume of 0.20

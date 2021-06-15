@@ -39,34 +39,22 @@ export default class Planet {
     this.container.name = 'Planet'
 
     this.init()
-    this.createVegetation()
+    // this.createVegetation()
     this.setMaterials()
     this.hideUnnecessary()
-    if (params.debug) this.setDebug()
-    this.setTotems()
+    // if (params.debug) this.setDebug()
+    // this.setTotems()
 
   }
   init() {
 
     const geometry = new BoxGeometry(1000, 1000, 0.1)
-    const material = new MeshStandardMaterial({
-      color: '#15AB86',
-    })
+ 
 
-    this.mesh = this.assets.models.ground.scene
-    this.mesh.material = material
+    this.mesh = this.assets.models.map.scene
 
-    this.ground = this.mesh.children.find(item => item.name === "carte_parent")
-    this.force = this.ground.children.find(item => item.name === "monolithes")
-    this.foret = this.ground.children.find(item => item.name === "forêt")
-    this.ground.traverse((obj) => {
-      obj.material = material
-    })
+    this.physics = this.mesh.children.find(item => item.name === "PHYSICS")
 
-    this.mesh.traverse((obj) => {
-      obj.receiveShadow = true
-      obj.castShadow = true
-    })
     this.container.add(this.mesh)
 
 
@@ -78,7 +66,12 @@ export default class Planet {
     const totemBeaute = this.mesh.children.find(item => item.name === MODELS.totems.beaute)
     const totemEspoir = this.mesh.children.find(item => item.name === MODELS.totems.espoir)
     const arbre = this.mesh.children.find(item => item.name === MODELS.planet.arbre)
+    const arbreEspoir = this.mesh.children.find(item => item.name === MODELS.planet.arbre_espoir)
 
+    const ground = this.mesh.children.find(item => item.name === MODELS.planet.ground)
+    ground.material = new MeshStandardMaterial({
+      color: '#15AB86',
+    })
     // const brouillard = this.mesh.children.find(item => item.name === 'brouillard')
     // brouillard.visible=false;
     const auras = this.mesh.children.filter(item => item.name.includes('energie'))
@@ -90,7 +83,7 @@ export default class Planet {
       aura.material = material
       aura.layers.enable(1)
     })
-    totemEspoir.layers.enable(1)
+    arbreEspoir.layers.enable(1)
     arbre.layers.enable(1)
 
     this.totemList.push(totemForce)
@@ -98,7 +91,6 @@ export default class Planet {
     this.totemList.push(totemBeaute)
     this.totemList.push(totemEspoir)
 
-    console.log(this.totemList);
 
     /*this.totemList.forEach(totem => {
       this.watchTotem(totem)
@@ -130,10 +122,11 @@ export default class Planet {
     })
   }
   setMaterials() {
-    const force = this.mesh.children.find(item => item.name === MODELS.totems.force)
+    const force = this.mesh.children.find(item => item.name === MODELS.planet.grand_monolithe)
+    const rochers = this.mesh.children.find(item => item.name === MODELS.planet.rochers)
     const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
     const eau = this.mesh.children.find(item => item.name === MODELS.planet.eau)
-console.log(eau);
+    console.log('monolithes', monolithes)
 eau.material = new ShaderMaterial({
   uniforms: {
     color1: {
@@ -164,42 +157,21 @@ eau.material = new ShaderMaterial({
   `,
   // wireframe: true
 });
-    // const material_monolithe = new MeshStandardMaterial({
-    //   color: 0x555555,
-    //   //reflectivity: 1,
-    //   metalness: 0.65,
-    //   //emissive: 0x87A85f,
-    //   roughness: 0.65,
-    //   enMap:this.assets.textures.hdri.full.texture
-    // })
-    let material = force.material;
-    material.envMap = this.assets.textures.hdri.full
+    const material = new MeshStandardMaterial({
+      color: 0x555555,
+      reflectivity: 1,
+      //emissive: 0x87A85f,
+      enMap:this.assets.textures.hdri.full.texture
+    })
     material.envMapIntensity = 0.3
     force.material = material
     monolithes.material = material
-    /*const totem = new Totem({
-      position: MONOLITHE.position,
-      time: this.time,
-      sounds: this.sounds,
-      assets: this.assets
-    })
-    const totem2 = new Totem({
-      position: Sagesse.position,
-      time: this.time,
-      sounds: this.sounds,
-      assets: this.assets
-    })
-    this.container.add(totem.container)
-    this.container.add(totem2.container)*/
-    // MONOLITHE.material = material_monolithe
+    rochers.material = material
+    
   }
   hideUnnecessary() {
-    const original_map = this.mesh.children.find(item => item.name === "carte_original")
-    const frontieres = this.mesh.children.find(item => item.name === "frontieres")
-    const tree_blocks = this.mesh.children.find(item => item.name === "pare_chocs")
-    original_map.visible = false
-    frontieres.visible = false
-    tree_blocks.visible = false
+    const PHYSICS = this.physics;
+    PHYSICS.visible = false
   }
   createVegetation() {
     // 15AB86
@@ -268,8 +240,8 @@ eau.material = new ShaderMaterial({
     folderMonolithes.add(monolithes.material, 'metalness').min(0).max(1).step(0.01).name('Effet métal')
     folderMonolithes.add(monolithes.material, 'roughness').min(0).max(1).step(0.01).name('Roughness')
 
-    folderGround.add(this.ground.material, 'wireframe').name('Afficher le wireframe')
-    folderGround.addColor(new ColorGUIHelper(this.ground.material, 'color'), 'value').name('Couleur du sol')
+    folderGround.add(this.physics.material, 'wireframe').name('Afficher le wireframe')
+    folderGround.addColor(new ColorGUIHelper(this.physics.material, 'color'), 'value').name('Couleur du sol')
     folderGrass.addColor(new ColorGUIHelper(this.grass.mesh.material, 'color'), 'value').name('Couleur de l\'herbe')
     folderGrass.add(this.grass, 'count').min(0).max(10000).step(1).name('Quantité').onChange((count) => {
       const material = self.grass.mesh.material

@@ -33,7 +33,7 @@ export default class Physics {
         this.init()
     }
     init() {
-        this.world.fromGraphNode(this.planet.mesh)
+        this.world.fromGraphNode(this.planet.physics)
 
         this.io.on('strength', () => {
             this.commandsReversed = true;
