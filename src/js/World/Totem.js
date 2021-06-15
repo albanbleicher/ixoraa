@@ -81,7 +81,7 @@ export default class Totem {
           distance: 5,
           sound: this.assets.sounds.Guitar1,
           loop: true,
-          name: 'Guitar1'
+          name: 'Pattern1_1'
         })
         break;
     }
