@@ -11,8 +11,36 @@ body {
   font-family: 'Montserrat', sans-serif;
   color:color('primary')
 }
+.app {
+	width: 100%;
+	height: 100%;
+	outline: none;
+}
 canvas {
 	width: 100%;
 	height: 100%;
 	outline: none;
 }
+.debugger {
+	background-color: color('primary');
+	color: white;
+	font-family: monospace;
+	font-size: 1.2rem;
+	padding:10px;
+	position: fixed;
+	z-index: 9999;
+	top: 5px;
+	left: 5px;
+	&#energie_sagesse {
+		top: 20px;
+	}
+	&#aura_force {
+		top: 60px;
+	}
+	&#aura_espoir {
+		top: 110px;
+	}
+	&#aura_beaute {
+		top: 160px;
+	}
+} 

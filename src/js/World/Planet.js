@@ -1,12 +1,9 @@
 import {
-  BoxGeometry,
   MeshStandardMaterial,
   Object3D,
   DoubleSide,
-  SubtractiveBlending,
-  ShaderMaterial
+  Color
 } from 'three'
-import * as dat from 'dat.gui'
 
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Totem from './Totem'
@@ -14,8 +11,8 @@ import Totem from './Totem'
 import io from 'socket.io-client'
 import { MODELS } from './utils'
 import Vegetation from './Vegetation'
-import { Color, Mesh, MeshNormalMaterial } from 'three/build/three.module'
-
+import { getMesh } from '@js/Tools/Functions.js'
+import { Vector3 } from 'three/build/three.module'
 export default class Planet {
   constructor(params) {
     // params
@@ -24,12 +21,12 @@ export default class Planet {
     this.debug = params.debug
     this.camera = params.camera.camera
     this.player = params.player
-    this.sounds = params.sounds
+    this.listener = params.listener
     this.waveemit = params.waveemit
     this.gui = null
     this.mesh = null
 
-    this.io_client = io("http://localhost:3000");
+    this.socket = params.socket
 
     this.totemList = [];
     this.commandsReversed = false;
@@ -39,170 +36,115 @@ export default class Planet {
     this.container.name = 'Planet'
 
     this.init()
-    // this.createVegetation()
+    this.createVegetation()
     this.setMaterials()
-    this.hideUnnecessary()
+    this.setBloomingItems()
     // if (params.debug) this.setDebug()
-    // this.setTotems()
+    this.setTotems()
 
   }
   init() {
-
-    const geometry = new BoxGeometry(1000, 1000, 0.1)
- 
-
+    // Get global Mesh from Loader and define is as Planet's Mesh
     this.mesh = this.assets.models.map.scene
-
-    this.physics = this.mesh.children.find(item => item.name === "PHYSICS")
-
+    // Get Physics Mesh from previous Mesh and define it as Planet's Physics (=> see Physics.js)
+    this.physics = getMesh({ parent:this.mesh, name:MODELS.planet.physics, strict:true })
+    // Hiding Physics Mesh because we don't want to see it
+    this.physics.visible = false
+    // Get displayed Ground 
+    this.ground = getMesh({parent:this.mesh, name:MODELS.planet.ground, strict:true})
     this.container.add(this.mesh)
-
-
-    // Check the Totem distance
-    // Could be done for all totem 
-    // On ajoute chaque totem à une liste, puis on check la position du joueur pour chacun des totems
-    const totemForce = this.mesh.children.find(item => item.name === MODELS.totems.force)
-    const totemSagesse = this.mesh.children.find(item => item.name === MODELS.totems.sagesse)
-    const totemBeaute = this.mesh.children.find(item => item.name === MODELS.totems.beaute)
-    const totemEspoir = this.mesh.children.find(item => item.name === MODELS.totems.espoir)
-    const arbre = this.mesh.children.find(item => item.name === MODELS.planet.arbre)
-    const arbreEspoir = this.mesh.children.find(item => item.name === MODELS.planet.arbre_espoir)
-
-    const ground = this.mesh.children.find(item => item.name === MODELS.planet.ground)
-    ground.material = new MeshStandardMaterial({
-      color: '#15AB86',
-    })
-    // const brouillard = this.mesh.children.find(item => item.name === 'brouillard')
-    // brouillard.visible=false;
-    const auras = this.mesh.children.filter(item => item.name.includes('energie'))
-    auras.forEach(aura => {
-      const material = new MeshStandardMaterial({
-        color:new Color('orange'),
-        emissive:new Color('orange')
-      })
-      aura.material = material
-      aura.layers.enable(1)
-    })
-    arbreEspoir.layers.enable(1)
-    arbre.layers.enable(1)
-
-    this.totemList.push(totemForce)
-    this.totemList.push(totemSagesse)
-    this.totemList.push(totemBeaute)
-    this.totemList.push(totemEspoir)
-
-
-    /*this.totemList.forEach(totem => {
-      this.watchTotem(totem)
-    });*/
-    // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
-    this.io_client.on("winned", () => {
-      /*const indexToRemove = (totem) => totem.name === this.activatedTotem.name;
-      const totemToRemove = this.totemList.findIndex(indexToRemove);
-      this.totemList.splice(totemToRemove, 1)*/
-      //this.totemList = this.totemList.splice(totemToRemove, 1)
-      this.nearTotem = false;
-    });
-
   }
   setTotems() {
-    this.totemList.forEach(singleTotem => {
+    // Retrieving each Totem's Mesh and set a list
+    MODELS.totems.forEach(totem => {
+
+      this.totemList.push(getMesh({ parent:this.mesh, name: totem,strict:true }))
+    })
+    this.totemList.forEach(totemMesh => {
+      let position = new Vector3()
+      totemMesh.getWorldPosition(position)
       const totem = new Totem({
         player: this.player,
-        position: singleTotem.position,
+        position,
         time: this.time,
-        sounds: this.sounds,
+        socket:this.socket,
         assets: this.assets,
         camera: this.camera,
-        name: singleTotem.name,
+        name: totemMesh.name,
         totemList: this.totemList,
         waveemit: this.waveemit,
+        listener: this.listener
       })
       this.container.add(totem.container)
     })
   }
   setMaterials() {
-    const force = this.mesh.children.find(item => item.name === MODELS.planet.grand_monolithe)
-    const rochers = this.mesh.children.find(item => item.name === MODELS.planet.rochers)
-    const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
-    const eau = this.mesh.children.find(item => item.name === MODELS.planet.eau)
-    console.log('monolithes', monolithes)
-eau.material = new ShaderMaterial({
-  uniforms: {
-    color1: {
-      value: new Color("lightblue")
-    },
-    color2: {
-      value: new Color("yellow")
-    }
-  },
-  vertexShader: `
-    varying vec2 vUv;
-
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-    }
-  `,
-  fragmentShader: `
-    uniform vec3 color1;
-    uniform vec3 color2;
-  
-    varying vec2 vUv;
-    
-    void main() {
-      
-      gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
-    }
-  `,
-  // wireframe: true
-});
-    const material = new MeshStandardMaterial({
-      color: 0x555555,
-      reflectivity: 1,
-      //emissive: 0x87A85f,
-      enMap:this.assets.textures.hdri.full.texture
+    this.ground.material = new MeshStandardMaterial({
+      color: '#15AB86',
     })
-    material.envMapIntensity = 0.3
-    force.material = material
-    monolithes.material = material
-    rochers.material = material
+
+const strength = getMesh({parent: this.mesh, name:MODELS.planet.bigMonolithe, strict:true})
+const monolithes = getMesh({parent: this.mesh, name:MODELS.planet.smallMonolithes, strict:true})
+const rocks = getMesh({parent: this.mesh, name:MODELS.planet.rocks, strict:true})
+const strengthEnvironment = [strength, monolithes, rocks]
+
+strengthEnvironment.forEach(element => {
+  let material = strength.material;
+  material.envMap = this.assets.textures.hdri.full
+  material.envMapIntensity = 0.3
+
+  element.material = material
+})
+
     
   }
-  hideUnnecessary() {
-    const PHYSICS = this.physics;
-    PHYSICS.visible = false
+  setBloomingItems() {
+    const bigTree = getMesh({parent: this.mesh, name: MODELS.planet.bigTree, strict:true})
+    const hopeTree = getMesh({parent: this.mesh, name: MODELS.planet.hopeTree, strict:true})
+    const spirits = []
+    this.mesh.traverse(obj => {
+        if(obj.name.includes('energie')) spirits.push(obj)
+      })
+
+
+    spirits.forEach(spirit => {
+      const material = new MeshStandardMaterial({
+        color:new Color('orange'),
+        emissive:new Color('orange')
+      })
+      spirit.material = material
+      spirit.layers.enable(1)
+    })
+    hopeTree.layers.enable(1)
+    bigTree.layers.enable(1)
   }
   createVegetation() {
-    // 15AB86
-    // 24C3AD
-    // 14D1A9
-    // 17FFC1
+
     const grassMaterial = new MeshStandardMaterial({
       color: '#24C3AD',
       side: DoubleSide,
       stencilWrite: true,
     })
     this.grass = new Vegetation({
-      surface: this.force,
+      surface: this.ground,
       model: this.assets.models.grass.scene.children[0],
       count: 10000,
       scaleFactor: 1,
       material: grassMaterial,
       container: this.container
     })
-    const foliageMaterial = new MeshStandardMaterial({
-      color: 'red',
-      emissive: 'red',
-    })
-    this.foliage = new Vegetation({
-      surface: this.foret,
-      model: this.assets.models.foliage.scene.children[0],
-      count: 6000,
-      scaleFactor: 1,
-      material: foliageMaterial,
-      container: this.container,
-    })
+    // const foliageMaterial = new MeshStandardMaterial({
+    //   color: 'red',
+    //   emissive: 'red',
+    // })
+    // this.foliage = new Vegetation({
+    //   surface: this.foret,
+    //   model: this.assets.models.foliage.scene.children[0],
+    //   count: 6000,
+    //   scaleFactor: 1,
+    //   material: foliageMaterial,
+    //   container: this.container,
+    // })
 
   }
   setDebug() {

@@ -1,4 +1,4 @@
-import { AxesHelper, Color, Object3D, Layers } from 'three'
+import { AxesHelper, Object3D, Layers, AudioListener } from 'three'
 
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
@@ -6,12 +6,10 @@ import Ciel from './Ciel'
 import Planet from './Planet'
 import Physics from './Physics'
 import Player from './Player'
-import Sounds from './Sounds'
 import Fog from './Fog'
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Effects from './Effects'
 import WaveEmit from '../Tools/WaveEmit'
-
 export default class World {
   constructor(options) {
     // Set options
@@ -20,8 +18,10 @@ export default class World {
     this.assets = options.assets
     this.renderer = options.renderer
     this.scene = options.scene
-
+    this.socket = options.socket
     this.camera = options.camera
+
+    this.listener = new AudioListener() // Create global AudioListener for World
 
     this.player = null
     // Set up
@@ -54,7 +54,6 @@ export default class World {
     }
 
       this.setPlayer()
-      this.setSounds()
       this.setPlanet()
       this.setPhysics()
       this.setAmbientLight()
@@ -99,7 +98,8 @@ export default class World {
       time: this.time,
       player: this.player.player,
       planet: this.planet,
-      camera: this.camera.camera
+      camera: this.camera.camera,
+      socket:this.socket
     })
   }
   setFog() {
@@ -142,7 +142,7 @@ export default class World {
       camera: this.camera,
       physics: this.physics,
       player: this.player,
-      sounds: this.sounds,
+      listener:this.listener,
       waveemit: this.waveemit
     })
     this.container.add(this.planet.container)
@@ -156,17 +156,7 @@ export default class World {
     })
     this.container.add(this.player.container)
   }
-  setSounds() {
-    this.sounds = new Sounds({
-      time: this.time,
-      player: this.player,
-      debug: this.debug,
-      camera: this.camera,
-      assets: this.assets,
-      waveemit: this.waveemit
-    })
-    this.container.add(this.sounds.container)
-  }
+
   setEffects() {
     this.effects = new Effects({
       BLOOM_SCENE: this.BLOOM_SCENE,
