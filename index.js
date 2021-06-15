@@ -31,22 +31,22 @@ const server = express()
   .use((req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  
+
    // Add this
    if (req.method === 'OPTIONS') {
-  
+
         res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, OPTIONS');
         res.header('Access-Control-Max-Age', 120);
         return res.status(200).json({});
     }
-  
-  
+
+
     res.sendFile(INDEX, { root: __dirname })
     //next();
 
-  
+
   })
-  .listen(PORT, () => 
+  .listen(PORT, () =>
   {
     const Socket = new Handler(server)
     Socket.init()

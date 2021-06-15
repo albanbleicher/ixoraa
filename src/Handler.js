@@ -15,16 +15,13 @@ class Handler {
     constructor(http) {
         this.io = require('socket.io')(http, {
             cors: {
-                origin: ["http://localhost:8080", "localhost:8080", "http://localhost:8081", "localhost:8081", "http://192.168.1.11:8081", "http://10.137.33.108:8081/", "http://10.137.33.108:8080/", "https://play.ixoraa.albchr.dev", "https://game.ixoraa.albchr.dev"],
+                origin: ["http://localhost:8080", "localhost:8080", "http://localhost:8081", "localhost:8081"],
                 methods: ["GET", "POST"],
             }
         });
     }
     init() {
         let self = this
-        this.melody = 3
-        //this.lines = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]
-        this.lines = [{ id: 1 }]
         this.rooms = null
         this.currentRoom = null;
         this.io.on(EVENTS.USER_CONNECT, (socket) => {
@@ -47,16 +44,11 @@ class Handler {
         socket.on(MOVEMENTS.RIGHT, () => movements.right(this.io))
         socket.on(MOVEMENTS.END, () => movements.end(this.io))
         socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))
-        socket.on(MUSICTIME.NEARTOTEM, () => { musictime.nearTotem(this.io);})
-        socket.on(MUSICTIME.BEGIN, () => {
-            // old system for colors and buttons
-            //const notes = ['green', 'red', 'blue'];
-            //this.melody = [];
-            //for(let i=0; i<5; i++){
-            //    this.melody.push(notes[Math.floor(Math.random() * 3)])
-            //}
-            musictime.begin(this.io, this.currentRoom, this.melody, this.lines);
-        })
+        socket.on(MUSICTIME.NEARTOTEM, () => { musictime.nearTotem(this.io, this.currentRoom); })
+        socket.on(MUSICTIME.NEARTOTEMISOK, () => { musictime.nearTotemIsOk(this.io, this.currentRoom); })
+        //old melody
+        socket.on(MUSICTIME.BEGIN, (melody) => { musictime.begin(this.io, this.currentRoom, melody); })
+        socket.on(MUSICTIME.PLAYNOTE, () => musictime.playNote(this.io, this.currentRoom))
         socket.on(MUSICTIME.CORRECT, () => musictime.correct(this.io, this.melody, this.lines))
         socket.on(MUSICTIME.WRONG, () => musictime.wrong(this.io))
         socket.on(MUSICTIME.WINNED, () => musictime.winned(this.io))

@@ -20,7 +20,7 @@ class Rooms {
         if (this.list.includes(room)) {
             this.socket.join(room);
             this.io.emit(ROOMS_EVENTS.IS_SYNCED)
-            console.log('io', this.io)
+            //console.log('io', this.io)
             //this.io.to(room).emit(ROOMS_EVENTS.IS_SYNCED)
             return room;
         }
