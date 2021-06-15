@@ -65,8 +65,17 @@ export default class Sound {
         emmiter.add(positional)
         this.container.add(emmiter)
 
+
+        // Near totem 
+
+        this.io_client.on('near totem is ok', () => {
+
+        })
+
+
         // En faisant ce check, on fait jouer le son de l'activation une seule fois
         if (positional.name === "Guitar1") {
+            console.log('guitar 1 enter');
             this.melody = {
                 position: params.position,
                 positional,
@@ -89,10 +98,10 @@ export default class Sound {
     watch() {
         //if (this.analyser.fftSize)
         //console.log(this.analyser.fftSize);
-        console.log(this.sounds.length);
+        //console.log(this.sounds.length);
         if (this.sounds.length && this.player.player.mesh) {
-            const playerPos = this.player.player.mesh.position
-            console.log(playerPos.distanceTo(this.sounds[0].position), this.sounds[0].distance, playerPos.distanceTo(this.sounds[0].position) < this.sounds[0].distance)
+            const playerPos = this.player.player.mesh.position;
+            //console.log(this.sounds[0].position < this.sounds[0].distance)
             if (playerPos.distanceTo(this.sounds[0].position) < this.sounds[0].distance) {
                 for (let i = 0; i < this.sounds.length; i++) {
                     if (!this.sounds[i].positional.isPlaying)
@@ -101,7 +110,7 @@ export default class Sound {
                 }
                 if (this.melody) {
                     let freqIndex = 0
-                    if (!this.watchedFrequencyIsPlaying && this.melody.analyser.getFrequencyData()[freqIndex] > 170) {
+                    if (!this.watchedFrequencyIsPlaying && this.melody.analyser.getFrequencyData()[freqIndex] > 160) {
                         this.watchedFrequencyIsPlaying = true
                         if (this.waveemit) {
                             this.waveemit.waving();
@@ -111,6 +120,8 @@ export default class Sound {
                         this.watchedFrequencyIsPlaying = false
                     }
                     if (!this.melody.positional.isPlaying) {
+                        console.log('guitar 1 playing');
+
                         this.melody.positional.play();
                     }
                 }

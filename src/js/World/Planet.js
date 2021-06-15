@@ -4,7 +4,8 @@ import {
   Object3D,
   DoubleSide,
   SubtractiveBlending,
-  ShaderMaterial
+  ShaderMaterial,
+  Vector3
 } from 'three'
 import * as dat from 'dat.gui'
 
@@ -84,8 +85,8 @@ export default class Planet {
     const auras = this.mesh.children.filter(item => item.name.includes('energie'))
     auras.forEach(aura => {
       const material = new MeshStandardMaterial({
-        color:new Color('orange'),
-        emissive:new Color('orange')
+        color: new Color('orange'),
+        emissive: new Color('orange')
       })
       aura.material = material
       aura.layers.enable(1)
@@ -115,9 +116,12 @@ export default class Planet {
   }
   setTotems() {
     this.totemList.forEach(singleTotem => {
+      singleTotem.geometry.computeBoundingSphere()
+      const vector = singleTotem.geometry.boundingSphere.center;
+      console.log(vector);
       const totem = new Totem({
         player: this.player,
-        position: singleTotem.position,
+        position: vector,
         time: this.time,
         sounds: this.sounds,
         assets: this.assets,
@@ -133,17 +137,17 @@ export default class Planet {
     const force = this.mesh.children.find(item => item.name === MODELS.totems.force)
     const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
     const eau = this.mesh.children.find(item => item.name === MODELS.planet.eau)
-console.log(eau);
-eau.material = new ShaderMaterial({
-  uniforms: {
-    color1: {
-      value: new Color("lightblue")
-    },
-    color2: {
-      value: new Color("yellow")
-    }
-  },
-  vertexShader: `
+    console.log(eau);
+    eau.material = new ShaderMaterial({
+      uniforms: {
+        color1: {
+          value: new Color("lightblue")
+        },
+        color2: {
+          value: new Color("yellow")
+        }
+      },
+      vertexShader: `
     varying vec2 vUv;
 
     void main() {
@@ -151,7 +155,7 @@ eau.material = new ShaderMaterial({
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
     }
   `,
-  fragmentShader: `
+      fragmentShader: `
     uniform vec3 color1;
     uniform vec3 color2;
   
@@ -162,8 +166,8 @@ eau.material = new ShaderMaterial({
       gl_FragColor = vec4(mix(color1, color2, vUv.y), 1.0);
     }
   `,
-  // wireframe: true
-});
+      // wireframe: true
+    });
     // const material_monolithe = new MeshStandardMaterial({
     //   color: 0x555555,
     //   //reflectivity: 1,
@@ -245,8 +249,8 @@ eau.material = new ShaderMaterial({
     const folderAuras = this.debug.__folders.World.addFolder('Auras des totems')
     const auras = this.mesh.children.filter(item => item.name.includes('energie'))
     let auraMaterial = new MeshStandardMaterial({
-      color:new Color('orange'),
-      emissive:new Color('orange')
+      color: new Color('orange'),
+      emissive: new Color('orange')
     })
     folderAuras.addColor(new ColorGUIHelper(auraMaterial, 'color'), 'value').name('Couleur').onChange((color) => {
       auras.forEach(aura => {
@@ -254,15 +258,15 @@ eau.material = new ShaderMaterial({
       })
     })
     folderAuras.addColor(new ColorGUIHelper(auraMaterial, 'emissive'), 'value').name('Emissive').onChange((color) => {
-        auras.forEach(aura => {
-          aura.material.emissive = new Color(color)
-        })
+      auras.forEach(aura => {
+        aura.material.emissive = new Color(color)
+      })
     })
     folderAuras.add(auraMaterial, 'emissiveIntensity').name('Intensité de l\'emissive').min(0).max(1).step(0.01).onChange((intensity) => {
       auras.forEach(aura => {
         aura.material.emissiveIntensity = intensity
       })
-  })
+    })
     folderMonolithes.addColor(new ColorGUIHelper(monolithes.material, 'color'), 'value').name('Couleur des monolithes')
     folderMonolithes.add(monolithes.material, 'envMapIntensity').min(0).max(10).step(0.1).name('Intensité du reflet')
     folderMonolithes.add(monolithes.material, 'metalness').min(0).max(1).step(0.01).name('Effet métal')
