@@ -40,7 +40,15 @@ export default {
       attempts: [],
       levels: 2,
       currentLevel: 1,
-      lines: [],
+      lines: [
+        // { time: 0.5, id: 1 },
+        // { time: 0.9, id: 2 },
+        // { time: 1.8, id: 3 },
+        // { time: 2.9, id: 4 },
+        // { time: 3.3, id: 5 },
+        // { time: 3.9, id: 6 },
+        // { time: 4.2, id: 7 },
+      ],
       waveTime: false,
     };
   },
@@ -49,15 +57,15 @@ export default {
     console.log(this.io);
     //const result = await this.returnsPromise(time, lines);
     //console.log(result)
-    this.handleMove();
   },
   mounted() {
+    //this.handleMove();
     this.io.on("phoneConnected", () => {
       this.connected = true;
     });
-    this.io.on("musictime begin", async(time, lines) => {
-      console.log('it started')
-      const result = await this.returnsPromise(time, lines);
+    this.io.on("musictime begin", async (lines) => {
+      console.log("it started", lines);
+      const result = await this.returnsPromise(lines);
       console.log(result);
       this.handleMove();
     });
@@ -67,20 +75,31 @@ export default {
   },
   methods: {
     handleMove() {
+      console.log(this.lines);
       // Pour chaque ligne, active l'animation d'ondes en décalée
-      this.lines.forEach((el) => {
-        const line = this.$refs["line" + el.id];
-        const timeline = gsap.timeline();
-        setTimeout(() => {
-          timeline.to(line, {
+      this.lines.forEach((el, i) => {
+        const line = this.$refs["line" + i];
+        console.log(line);
+        gsap
+          .to(line, {
             width: 1200,
             height: 1200,
-            duration: this.waveTime * 4,
+            duration: 4,
+            delay: el.time,
+            ease: "none",
+          })
+          .then(() => {
+            gsap.to(line, {
+              width: 2400,
+              height: 2400,
+              duration: 4,
+              ease: "none",
+            });
           });
-        }, (this.waveTime / (2.5 / el.id)) * 2 * 1000);
       });
     },
     playNote() {
+      console.log("test");
       // Pour la ligne courante ligne, vérifie si l'intersection avec le bouton est juste
       const currentLineId = "line" + (this.completedNotes.length + 1);
       const line = this.$refs[currentLineId][0];
@@ -129,29 +148,29 @@ export default {
     },
     restartMusicTime() {
       console.log("restart");
-      console.log(this.lines)
+      console.log(this.lines);
       this.waveTime = false;
       this.lines = [];
       this.completedNotes = [];
-      console.log(this.lines)
+      console.log(this.lines);
     },
     fadeOutOpacity() {
-      this.lines.forEach((el) => {
-        const line = this.$refs["line" + el.id];
+      this.lines.forEach((el, i) => {
+        const line = this.$refs["line" + el[i]];
+        console.log("fadeout", el[i]);
         const timeline = gsap.timeline({
           onComplete: () => this.restartMusicTime(),
         });
-        setTimeout(() => {
-          timeline.to(line, {
-            opacity: 0,
-            duration: this.waveTime / 3,
-          });
-        }, (this.waveTime / 10) * 1000);
+        gsap.to(line, {
+          opacity: 0,
+          duration: 2,
+          delay: el.time,
+        });
       });
     },
-    returnsPromise(time, lines) {
+    returnsPromise(lines, time) {
       return new Promise((resolve) => {
-        this.waveTime = time;
+        console.log(lines);
         this.lines = lines;
         resolve();
       });

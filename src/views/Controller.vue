@@ -24,7 +24,7 @@ export default {
     return {
       nearTotem: false,
       time: null,
-      lines: null
+      lines: null,
     };
   },
   created() {
@@ -32,34 +32,53 @@ export default {
     console.log(this.io);
   },
   mounted() {
+    console.log("mounted");
     // To replace when server works
     const joystickController = document.querySelector(".joystickController");
     const musicalController = document.querySelector(".musicalController");
 
     this.io.on("near totem", () => {
-      setTimeout(() => {
-        gsap.to(joystickController, { opacity: 0, display: 'none', duration: 0.5 });
-          setTimeout(() => {
-            gsap.to(musicalController, { display: 'flex', duration: 0.5 });
-            gsap.to(musicalController, { opacity: 1, duration: 1 });
-          }, 1000);
-      }, 1000);
+      console.log("near totem");
+      gsap.to(joystickController, {
+        opacity: 0,
+        display: "none",
+        duration: 0.5,
+        delay: 1,
+      });
+      gsap
+        .to(musicalController, {
+          display: "flex",
+          duration: 0.5,
+          delay: 1,
+        })
+        .then(() => {
+          gsap
+            .to(musicalController, { opacity: 1, duration: 1, delay: 1 })
+            .then(() => {
+              console.log("near totem is ok");
+              this.io.emit("near totem is ok");
+            });
+        });
     });
     this.io.on("musictime begin", async (time, lines) => {
-      console.log('it started')
-      const result = await this.returnsPromise(time, lines);
-      console.log(result);
-      console.log("musicTime Begin");
+      console.log("it started");
+      //const result = await this.returnsPromise(time, lines);
+      //console.log(result);
+      //console.log("musicTime Begin");
     });
 
     this.io.on("winned", () => {
-      console.log('winned')
+      console.log("winned");
       setTimeout(() => {
-        gsap.to(musicalController, { opacity: 0, display: 'none', duration: 0.5 });
-          setTimeout(() => {
-            gsap.to(joystickController, { display: 'flex', duration: 0.5 });
-            gsap.to(joystickController, { opacity: 1, duration: 1 });
-          }, 1000);
+        gsap.to(musicalController, {
+          opacity: 0,
+          display: "none",
+          duration: 0.5,
+        });
+        setTimeout(() => {
+          gsap.to(joystickController, { display: "flex", duration: 0.5 });
+          gsap.to(joystickController, { opacity: 1, duration: 1 });
+        }, 1000);
       }, 1000);
     });
 
@@ -68,21 +87,19 @@ export default {
           gsap.to(musicalController, { opacity: 1})
       });
     });*/
-    
   },
-    updated(){
-    console.log('child updated')
+  updated() {
+    console.log("child updated");
   },
   methods: {
     returnsPromise(time, lines) {
-      console.log('return promise', time, lines)
+      console.log("return promise", time, lines);
       return new Promise((resolve) => {
         this.time = time;
         this.lines = lines;
         resolve();
       });
     },
-  }
-  
+  },
 };
 </script>
