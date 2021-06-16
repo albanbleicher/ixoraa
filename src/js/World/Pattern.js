@@ -15,7 +15,6 @@ export default class Pattern extends EventEmitter {
         this.create()
     }
     create() {
-        console.log(this.patterns);
         // create Positional for each Totem's track
         // Drums
         const drumsPositional = new Positional({

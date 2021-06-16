@@ -41,12 +41,34 @@ export default class Totem {
     switch (this.name) {
       case MODELS.totems[0]: // sagesse
       this.screen = new TotemScreen({
-        name:'wisdom',
-        description:'nature shows by its behaviour how wisdom and time are important to survive.'
+        name:'Sagesse',
+        description:'La nature montre par son comportement, combien la sagesse et la patience sont des valeurs importante pour la survie de chaque être.'
       })
+      this.pattern = new Pattern({
+        drums: this.assets.sounds.totems.strength.drums,
+        patterns: [
+          {
+            chord:this.assets.sounds.totems.strength.firstChord,
+            melody:this.assets.sounds.totems.strength.firstMelody,
+          },
+          {
+            chord:this.assets.sounds.totems.strength.secondChord,
+            melody:this.assets.sounds.totems.strength.secondMelody,
+          }
+        ],
+        steps:this.steps,
+        player:this.player,
+        position: this.position,
+        listener: this.listener
+      })
+    this.container.add(this.pattern.container)
 
         break;
       case MODELS.totems[1]: // force
+      this.screen = new TotemScreen({
+        name:'Force',
+        description:'La nature est puissante, forte. Elle exprime toute son énergie à travers différents phénomènes.'
+      })
       this.pattern = new Pattern({
         drums: this.assets.sounds.totems.wisdom.drums,
         patterns: [
@@ -67,8 +89,52 @@ export default class Totem {
     this.container.add(this.pattern.container)
         break;
       case MODELS.totems[2]: // espoir
+      this.pattern = new Pattern({
+        drums: this.assets.sounds.totems.hope.drums,
+        patterns: [
+          {
+            chord:this.assets.sounds.totems.hope.firstChord,
+            melody:this.assets.sounds.totems.hope.firstMelody,
+          },
+          {
+            chord:this.assets.sounds.totems.hope.secondChord,
+            melody:this.assets.sounds.totems.hope.secondMelody,
+          }
+        ],
+        steps:this.steps,
+        player:this.player,
+        position: this.position,
+        listener: this.listener
+      })
+    this.container.add(this.pattern.container)
+      this.screen = new TotemScreen({
+        name:'Espoir',
+        description:'Porteuse d\'espoir, la nature ...'
+      })
         break;
       case MODELS.totems[3]: // beauté
+      this.pattern = new Pattern({
+        drums: this.assets.sounds.totems.beauty.drums,
+        patterns: [
+          {
+            chord:this.assets.sounds.totems.beauty.firstChord,
+            melody:this.assets.sounds.totems.beauty.firstMelody,
+          },
+          {
+            chord:this.assets.sounds.totems.beauty.secondChord,
+            melody:this.assets.sounds.totems.beauty.secondMelody,
+          }
+        ],
+        steps:this.steps,
+        player:this.player,
+        position: this.position,
+        listener: this.listener
+      })
+    this.container.add(this.pattern.container)
+      this.screen = new TotemScreen({
+        name:'Beauté',
+        description:'blablalbaaaa'
+      })
         break;
     }
     this.totemDebugger = document.createElement('span')

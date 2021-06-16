@@ -14,14 +14,20 @@ export default class Physics {
         this.player = params.player
         this.camera = params.camera
         this.socket = params.socket
-
+        this.speeds = {
+            front: 15,
+            sides:0.05,
+        }
         this.world = new Octree()
 
         this.moving = {
             forward: false,
             backward: false,
-            left: false,
-            right: false,
+            sides:false,
+            rotateValue:0,
+            oldRotateValue:0,
+            left:false,
+            right:false,
             jump: false
         }
         this.commandsReversed = false;
@@ -43,14 +49,11 @@ export default class Physics {
         this.socket.on('move up', () => {
             this.move('up')
         })
-        this.socket.on('move right', () => {
-            this.move('right')
-        })
         this.socket.on('move down', () => {
             this.move('down')
         })
-        this.socket.on('move left', () => {
-            this.move('left')
+        this.socket.on('move sides', (rotateValue) => {
+            this.move('sides', rotateValue)
         })
         this.socket.on('end', () => {
             this.still()
@@ -109,7 +112,7 @@ export default class Physics {
         // this.player.mesh.position.copy(this.player.collider.end);
         this.player.mesh.position.set(
             this.player.collider.end.x,
-            this.player.collider.end.y + 0.25 + Math.sin(this.time.elapsed * 0.0015) * 0.25,
+            this.player.collider.end.y/* + 0.25 + Math.sin(this.time.elapsed * 0.0015) * 0.25 */,
             this.player.collider.end.z
         )
     }
@@ -141,12 +144,19 @@ export default class Physics {
 
             }
 
-            if (this.moving.backward) {
+            // if (this.moving.backward) {
 
-                this.player.velocity.add(this.getForwardVector().multiplyScalar(- speed * delta));
+            //     this.player.velocity.add(this.getForwardVector().multiplyScalar(- speed * delta));
+
+            // }
+
+            if (this.moving.sides) {
+
+                this.player.mesh.rotation.y -= this.moving.rotateValue;
+                // this.player.mesh.position.z -= this.moving.walkValue;
+
 
             }
-
             if (this.moving.left) {
 
                 this.player.mesh.rotation.y += 0.05
@@ -160,6 +170,7 @@ export default class Physics {
 
             }
 
+
             if (this.moving.jump) {
 
                 this.player.velocity.y = 15;
@@ -169,7 +180,7 @@ export default class Physics {
         }
 
     }
-    move(e) {
+    move(e, vector) {
         switch (this.commandsReversed) {
             case true:
                 switch (e) {
@@ -177,18 +188,15 @@ export default class Physics {
                         this.moving.backward = true;
                         this.moving.forward = false;
                         break;
-                    case 'left':
-                        this.moving.right = true;
-                        this.moving.left = false;
+                    case 'sides':
+                        this.moving.sides = true
+                        this.moving.rotateValue = vector.x * 0.01
                         break;
                     case 'down':
                         this.moving.forward = true;
                         this.moving.backward = false;
                         break;
-                    case 'right':
-                        this.moving.left = true;
-                        this.moving.right = false;
-                        break;
+               
                 }
                 break;
             case false:
@@ -197,25 +205,22 @@ export default class Physics {
                         this.moving.forward = true;
                         this.moving.backward = false;
                         break;
-                    case 'left':
-                        this.moving.left = true;
-                        this.moving.right = false;
-                        break;
+                        case 'sides':
+                            this.moving.sides = true
+                            this.moving.oldRotateValue = this.player.mesh.rotation.y
+                            this.moving.rotateValue = vector.x * 0.01
+                            break;
                     case 'down':
                         this.moving.backward = true;
                         this.moving.forward = false;
                         break;
-                    case 'right':
-                        this.moving.right = true;
-                        this.moving.left = false;
-                        break;
+                   
                 }
                 break;
         }
     }
     still() {
-        this.moving.right = false
-        this.moving.left = false
+        this.moving.sides = false
         this.moving.backward = false
         this.moving.forward = false
     }

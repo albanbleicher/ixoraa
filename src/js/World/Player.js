@@ -45,10 +45,12 @@ export default class Player {
         })
         if (this.debug) {
             this.debugFolder = this.debug.addFolder('Player')
+            this.debugFolder.open()
             // this.debugFolder.open()
             this.debugFolder.add(this.player.mesh.position, 'x').min(-1000).max(1000).step(0.1).listen()
             this.debugFolder.add(this.player.mesh.position, 'y').min(-1000).max(1000).step(0.1).listen()
             this.debugFolder.add(this.player.mesh.position, 'z').min(-1000).max(1000).step(0.1).listen()
+            this.debugFolder.add(this.player.mesh.rotation, 'y').min(0).max(1).step(0.1).listen()
         }
     }
 

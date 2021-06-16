@@ -7,21 +7,11 @@ let socket = false;
   if (!window.location.hash.includes('#nosocket')) {
     socket = io("ws://localhost:3000");
     console.log('[Socket] Enabled.');
-    
-  
-      socket.onAny((event, ...args) => {
-      console.log(event, args);
-    });
     socket.emit("room create");
-    socket.once("room code", (room) => {
-      console.log('[Socket] Room code :', room);
-    });
     document.addEventListener('DOMContentLoaded', () => {
       const landing = document.querySelector('.landing')
-      const loading = document.querySelector('.loading')
       const access = document.querySelector('.access')
       const play = document.querySelector('.play')
-      const begin = document.querySelector('.begin')
       const code = document.querySelector('.code')
   
   

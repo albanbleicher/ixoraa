@@ -2,7 +2,6 @@ import { Object3D, PositionalAudio, AudioAnalyser, MeshNormalMaterial, SphereGeo
 
 export default class Positional {
     constructor(params) {
-        console.log(params);
         this.listener = params.listener
         this.sound = params.sound
         this.playing = params.playing
@@ -25,6 +24,7 @@ export default class Positional {
         const geometry = new SphereGeometry(this.distance,10,10)
 
         const emmiter = new Mesh(geometry,material)
+        emmiter.visible = false
         // move this object according to passed position
         emmiter.position.copy(this.position)
         // init PositionalAudio
