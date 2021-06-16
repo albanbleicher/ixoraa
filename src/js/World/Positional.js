@@ -1,7 +1,8 @@
-import { Object3D, PositionalAudio, AudioAnalyser } from "three"
+import { Object3D, PositionalAudio, AudioAnalyser, MeshNormalMaterial, SphereGeometry, Mesh } from "three"
 
 export default class Positional {
     constructor(params) {
+        console.log(params);
         this.listener = params.listener
         this.sound = params.sound
         this.playing = params.playing
@@ -15,7 +16,13 @@ export default class Positional {
     create() {
 
         // Create empty object 3D to place Positional
-        const emmiter = new Object3D()
+        const material = new MeshNormalMaterial({
+            wireframe:true,
+        wireframeLinewidth:3
+        })
+        const geometry = new SphereGeometry(0.5,10,10)
+
+        const emmiter = new Mesh(geometry,material)
         // move this object according to passed position
         emmiter.position.copy(this.position)
         // init PositionalAudio
