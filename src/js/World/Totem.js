@@ -95,21 +95,28 @@ export default class Totem {
   // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on créer les torus
   watchTotem() {
     this.waveemit.on('wave', () => {
-      this.endTime = performance.now();
-      var timeDiff = this.endTime - this.startTime; //in ms 
+      this.endTime = performance.mark('end');
+      performance.measure("measure", 'start', 'end');
+      var timeDiff = performance.getEntriesByName('measure'); //in ms 
       // strip the ms 
-      timeDiff /= 1000;
-      this.currentTiming.push(timeDiff);
+      console.log(timeDiff.duration)
+
+      this.currentTiming.push({ time: timeDiff.duration / 1000, id: this.currentTiming.length + 1 });
+      performance.clearMarks('end');
+      console.log(this.currentTiming);
 
       console.log(this.currentTiming.length)
       if (this.currentTiming.length > 8) {
-        this.io_client.emit("musictime begin", this.currentTiming, this.currentTiming.length);
-        this.currentTiming = [];
+
+        // Just for debug, should be delete then, the setTimeOut too
+        //this.io_client.emit("near totem")
+        setTimeout(() => {
+          this.io_client.emit("musictime begin", this.currentTiming);
+          this.currentTiming = [];
+        }, 2000)
       }
 
-      setTimeout(() => {
-        this.createTorus()
-      })
+      this.createTorus()
     })
 
     this.time.on('tick', () => {
@@ -130,12 +137,12 @@ export default class Totem {
           this.obstacleTotemForce(this.position);
         }
         // Si on est pas déjà proche d'un totem, que le totem voulu est en activation, et que la position du totem courant est moins loin du perso que 2
-        if (!this.isActivated && this.playerPos.distanceTo(this.position) < 5) {
+        if (!this.isActivated && this.playerPos.distanceTo(this.position) < 2) {
           console.warn('enter : ' + this.name);
           this.isActivated = true
           this.sounds.add({
             position: this.position,
-            distance: 2,
+            distance: 1,
             sound: this.assets.sounds.ActivationTotem,
             loop: false,
             name: 'ActivationTotem'
@@ -147,9 +154,7 @@ export default class Totem {
 
             this.startPanningCamera();
             // Must be there soon
-            setTimeout(() => {
-              this.startRecordTiming();
-            }, 2000)
+            this.startRecordTiming();
           }
           // A remplacer ? En tout cas la fonction watchTotem semble toujours être appelé pour les totems enlevés du tableau
           /*this.totemList.forEach(totem => {
@@ -288,7 +293,8 @@ export default class Totem {
   }
 
   startRecordTiming() {
-    this.startTime = performance.now();
+    console.log('startRecord')
+    this.startTime = performance.mark('start');
   };
 
   endRecordTiming() {

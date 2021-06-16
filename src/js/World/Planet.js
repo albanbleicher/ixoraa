@@ -2,13 +2,13 @@ import {
   MeshStandardMaterial,
   Object3D,
   DoubleSide,
-  Color
+  Color,
+  Vector3
 } from 'three'
 
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Totem from './Totem'
 
-import io from 'socket.io-client'
 import { MODELS } from './utils'
 import Vegetation from './Vegetation'
 import { getMesh } from '@js/Tools/Functions.js'
@@ -159,8 +159,8 @@ strengthEnvironment.forEach(element => {
     const folderAuras = this.debug.__folders.World.addFolder('Auras des totems')
     const auras = this.mesh.children.filter(item => item.name.includes('energie'))
     let auraMaterial = new MeshStandardMaterial({
-      color:new Color('orange'),
-      emissive:new Color('orange')
+      color: new Color('orange'),
+      emissive: new Color('orange')
     })
     folderAuras.addColor(new ColorGUIHelper(auraMaterial, 'color'), 'value').name('Couleur').onChange((color) => {
       auras.forEach(aura => {
@@ -168,15 +168,15 @@ strengthEnvironment.forEach(element => {
       })
     })
     folderAuras.addColor(new ColorGUIHelper(auraMaterial, 'emissive'), 'value').name('Emissive').onChange((color) => {
-        auras.forEach(aura => {
-          aura.material.emissive = new Color(color)
-        })
+      auras.forEach(aura => {
+        aura.material.emissive = new Color(color)
+      })
     })
     folderAuras.add(auraMaterial, 'emissiveIntensity').name('Intensité de l\'emissive').min(0).max(1).step(0.01).onChange((intensity) => {
       auras.forEach(aura => {
         aura.material.emissiveIntensity = intensity
       })
-  })
+    })
     folderMonolithes.addColor(new ColorGUIHelper(monolithes.material, 'color'), 'value').name('Couleur des monolithes')
     folderMonolithes.add(monolithes.material, 'envMapIntensity').min(0).max(10).step(0.1).name('Intensité du reflet')
     folderMonolithes.add(monolithes.material, 'metalness').min(0).max(1).step(0.01).name('Effet métal')

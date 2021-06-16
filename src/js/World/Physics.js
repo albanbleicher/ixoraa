@@ -106,7 +106,12 @@ export default class Physics {
 
         this.playerCollitions();
 
-        this.player.mesh.position.copy(this.player.collider.end);
+        // this.player.mesh.position.copy(this.player.collider.end);
+        this.player.mesh.position.set(
+            this.player.collider.end.x,
+            this.player.collider.end.y + 0.25 + Math.sin(this.time.elapsed * 0.0015) * 0.25,
+            this.player.collider.end.z
+        )
     }
     getForwardVector() {
 
