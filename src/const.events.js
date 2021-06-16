@@ -14,8 +14,7 @@ exports.ROOMS_EVENTS = {
 exports.MOVEMENTS = {
     UP: 'move up',
     DOWN: 'move down',
-    LEFT: 'move left',
-    RIGHT: 'move right',
+    SIDES:'move sides',
     END: 'end'
 }
 

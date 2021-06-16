@@ -40,9 +40,9 @@ class Handler {
         const self = this;
         socket.on(MOVEMENTS.UP, () => movements.up(this.io))
         socket.on(MOVEMENTS.DOWN, () => movements.down(this.io))
-        socket.on(MOVEMENTS.LEFT, () => movements.left(this.io))
-        socket.on(MOVEMENTS.RIGHT, () => movements.right(this.io))
+        socket.on(MOVEMENTS.SIDES, (angle) => movements.sides(this.io, angle))
         socket.on(MOVEMENTS.END, () => movements.end(this.io))
+        
         socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))
         socket.on(MUSICTIME.NEARTOTEM, () => { musictime.nearTotem(this.io, this.currentRoom); })
         socket.on(MUSICTIME.NEARTOTEMISOK, () => { musictime.nearTotemIsOk(this.io, this.currentRoom); })
