@@ -12,7 +12,6 @@ import Totem from './Totem'
 import { MODELS } from './utils'
 import Vegetation from './Vegetation'
 import { getMesh } from '@js/Tools/Functions.js'
-import { Vector3 } from 'three/build/three.module'
 export default class Planet {
   constructor(params) {
     // params
@@ -46,6 +45,11 @@ export default class Planet {
   init() {
     // Get global Mesh from Loader and define is as Planet's Mesh
     this.mesh = this.assets.models.map.scene
+    this.mesh.traverse(obj => {
+      console.log(obj);
+      obj.castShadow=true
+      obj.receiveShadow=true
+    })
     // Get Physics Mesh from previous Mesh and define it as Planet's Physics (=> see Physics.js)
     this.physics = getMesh({ parent:this.mesh, name:MODELS.planet.physics, strict:true })
     // Hiding Physics Mesh because we don't want to see it

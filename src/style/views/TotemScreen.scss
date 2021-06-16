@@ -9,11 +9,11 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    pointer-events: none;
     h2 {
         font-size: 3rem;
         margin:0;
         color:white;
-
     }
     p {
         font-size: 0.9rem;

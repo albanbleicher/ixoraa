@@ -29,6 +29,7 @@ export default class App {
       canvas: this.canvas,
       antialias: true,
       powerPreference: 'high-performance',     
+      shadowMap:{enabled:true}
     })
     this.renderer.gammaFactor = 2.2
     // Set renderer pixel ratio & sizes
