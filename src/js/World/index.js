@@ -53,15 +53,15 @@ export default class World {
       })
     }
 
-      this.setPlayer()
-      this.setSounds()
-      this.setPlanet()
-      this.setPhysics()
-      this.setAmbientLight()
-      this.setPointLight()
-      this.setCiel()
-      this.setFog()
-      this.setEffects()
+    this.setPlayer()
+    this.setSounds()
+    this.setPlanet()
+    this.setPhysics()
+    this.setAmbientLight()
+    this.setPointLight()
+    this.setCiel()
+    this.setFog()
+    this.setEffects()
 
 
   }
@@ -152,7 +152,8 @@ export default class World {
       physics: this.physics,
       time: this.time,
       camera: this.camera,
-      debug: this.debug
+      debug: this.debug,
+      assets: this.assets
     })
     this.container.add(this.player.container)
   }

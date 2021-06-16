@@ -12,6 +12,7 @@ export default class Player {
         this.camera = params.camera
         this.debug = params.debug
         this.player = {}
+        this.assets = params.assets
 
         this.velocity = new Vector3();
         this.direction = new Vector3();
@@ -23,10 +24,13 @@ export default class Player {
     }
     async init() {
         // Add sphere to simulate player
-        const geometry = new SphereGeometry(0.05, 10, 10)
-        const material = new MeshNormalMaterial()
 
-        this.player.mesh = new Mesh(geometry, material)
+        this.player.mesh = this.assets.models.conscience_humaine.scene.children[0]
+
+        this.player.mesh.material = new MeshStandardMaterial({
+            normalMap: this.assets.textures.player_tex
+        })
+
         this.player.collider = new Capsule(new Vector3(0, 0.35, 0), new Vector3(0, 0, 0), 0.35);
         this.player.collider.translate(new Vector3(-19.3, 0.8, 11.2))
         this.player.velocity = new Vector3()
