@@ -11,6 +11,7 @@
 </template>
 <script>
 import JoystickDisplacement from "@/components/JoystickDisplacement";
+import JoystickDirection from "@/components/JoystickDirection";
 import MusicTime from "@/components/MusicTime";
 import io from "socket.io-client";
 import gsap from "gsap";
@@ -18,6 +19,7 @@ import gsap from "gsap";
 export default {
   components: {
     JoystickDisplacement,
+    JoystickDirection,
     MusicTime,
   },
   data() {

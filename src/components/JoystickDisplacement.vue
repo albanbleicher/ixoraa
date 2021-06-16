@@ -4,7 +4,7 @@
     <div class="joystick-controller"></div>
   </div>-->
 
-  <div id="joystick"></div>
+  <div id="joystick" ></div>
 </template>
 <script>
 import nipplejs from "nipplejs";
@@ -53,27 +53,15 @@ export default {
     };
     this.static = nipplejs.create(this.options);
 
-    console.log(this.static);
-    this.static.on("plain:up", (evt, nipple) => {
-      console.log("up");
-      self.io.emit("move up");
-    });
-    this.static.on("plain:right", (evt, nipple) => {
-      console.log("right");
-      self.io.emit("move right");
-    });
-    this.static.on("plain:down", (evt, nipple) => {
-      console.log("down");
-      self.io.emit("move down");
-    });
-    this.static.on("plain:left", (evt, nipple) => {
-      console.log("left");
-      self.io.emit("move left");
-    });
-    this.static.on("end", function (evt, nipple) {
-      console.log("left");
-      self.io.emit("end");
-    });
+     this.static.on('move', (evt, nipple) => {
+       console.log(nipple.vector);
+       self.io.emit('move sides', nipple.vector)
+    })
+      // self.io.emit("move up");
+   
+    this.static.on('end', (evt, nipple) => {
+            self.io.emit("end");
+    })
   },
   methods: {},
 };
