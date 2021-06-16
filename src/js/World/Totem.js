@@ -3,6 +3,7 @@ import { Object3D, Mesh, MeshBasicMaterial, Vector3, TextureLoader, TorusGeometr
 import gsap from 'gsap'
 import { MODELS } from './utils'
 import Pattern from './Pattern'
+import TotemScreen from './TotemScreen'
 
 export default class Totem {
   constructor(options) {
@@ -16,13 +17,13 @@ export default class Totem {
     this.socket = options.socket
     this.listener = options.listener
     this.steps = {
-      first:3, // play drums
-      second: 2, // play chord
-      third: 1 // play melody
+      first:5, // play drums
+      second: 3.5, // play chord
+      third: 2// play melody
   }
     this.near = false
     this.pattern = null
-
+    this.completed = false
     // Set up
     this.container = new Object3D()
     this.container.name = 'Totem ' + options.name
@@ -39,8 +40,10 @@ export default class Totem {
   init() {
     switch (this.name) {
       case MODELS.totems[0]: // sagesse
-      
-      
+      this.screen = new TotemScreen({
+        name:'wisdom',
+        description:'nature shows by its behaviour how wisdom and time are important to survive.'
+      })
 
         break;
       case MODELS.totems[1]: // force
@@ -71,16 +74,19 @@ export default class Totem {
     this.totemDebugger = document.createElement('span')
     this.totemDebugger.classList.add('debugger')
     this.totemDebugger.setAttribute('id', this.name)
-    document.querySelector('.app').append(this.totemDebugger)
+    // document.querySelector('.app').append(this.totemDebugger)
   }
   watch() {
       this.totemDebugger.innerText = 'totem: '+this.name+ ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:'+this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
       if(this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
         this.near = true;
+        if(this.screen) this.screen.show()
         console.log('[Totem] Approaching ' + this.name);
       } 
       if(this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
         this.near = false;
+        if(this.screen) this.screen.hide()
+
         console.log('[Totem] Leaving ' + this.name);
 
       }  

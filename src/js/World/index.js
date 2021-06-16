@@ -42,6 +42,7 @@ export default class World {
     this.setLoader()
   }
   init() {
+    this.camera.camera.add(this.listener)
     this.bloomLayer.set(this.BLOOM_SCENE)
     if (this.debug) {
       const color = {

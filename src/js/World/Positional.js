@@ -9,6 +9,8 @@ export default class Positional {
         this.position = params.position
         this.distance = params.distance
 
+        this.positional = null;
+
         this.container = new Object3D()
         this.container.name = "Sound for : " + params.name
         this.create()
@@ -20,27 +22,30 @@ export default class Positional {
             wireframe:true,
         wireframeLinewidth:3
         })
-        const geometry = new SphereGeometry(0.5,10,10)
+        const geometry = new SphereGeometry(this.distance,10,10)
 
         const emmiter = new Mesh(geometry,material)
         // move this object according to passed position
         emmiter.position.copy(this.position)
         // init PositionalAudio
-        const positional = new PositionalAudio(this.listener)
+        this.positional = new PositionalAudio(this.listener)
 
         // apply AudioBuffer from template loaded assets
-        positional.setBuffer(this.sound)
+        this.positional.setBuffer(this.sound)
         // set radius around PositionalAudio where sounds starts to fade
-        positional.setRefDistance(this.distance)
+        this.positional.setRefDistance(this.distance+1)
+        this.positional.setDistanceModel('exponential')
         // set speed at which the volume is reduced or augmented based on distance
-        positional.setRolloffFactor(100)
+        this.positional.setRolloffFactor(80)
         // set loop
-        positional.setLoop(true)
+        this.positional.setLoop(true)
         // add positionnal to emmiter and emmiter to container
-        positional.play()
-        const analyser = new AudioAnalyser(positional, 32);
-        console.log(emmiter);
-        emmiter.add(positional)
+        const analyser = new AudioAnalyser(this.positional, 32);
+
+        emmiter.add(this.positional)
         this.container.add(emmiter)
+    }
+    play() {
+        this.positional.play()
     }
 }
