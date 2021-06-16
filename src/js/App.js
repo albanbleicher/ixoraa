@@ -5,12 +5,12 @@ import Time from '@tools/Time'
 import Assets from '@tools/Loader'
 import Camera from './Camera'
 import World from '@world/index'
-
+import io from 'socket.io-client'
 export default class App {
   constructor(options) {
     // Set options
     this.canvas = options.canvas
-
+    this.socket = options.socket
     // Set up
     this.time = new Time()
     this.sizes = new Sizes()
@@ -78,14 +78,16 @@ export default class App {
       assets: this.assets,
       camera:this.camera,
       renderer: this.renderer,
-      scene: this.scene
+      scene: this.scene,
+      socket:this.socket
     })
     // Add world to scene
     this.scene.add(this.world.container)
   }
   setConfig() {
-    if (window.location.hash === '#debug') {
+    if (window.location.hash.includes('#debug')) {
       this.debug = new dat.GUI({ width: 450 })
     }
+    
   }
 }

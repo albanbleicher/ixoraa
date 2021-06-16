@@ -19,10 +19,9 @@ export default class Vegetation {
 
         this.surface.updateMatrixWorld()
         const groundGeometry = this.surface.geometry.toNonIndexed()
-    
-        const groundMesh = new Mesh(groundGeometry, this.material)
+        const groundMesh = new Mesh(groundGeometry, new MeshNormalMaterial())
         const dummy = new Object3D()
-        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute()
+        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute('position')
         this.mesh = new InstancedMesh(this.model.geometry, this.material, this.count);
         const _position = new Vector3()
         const _normal = new Vector3();
@@ -31,7 +30,6 @@ export default class Vegetation {
             this.mesh.layers.enable(1)
         }
         sampler.build()
-    
         for (let i = 0; i < this.count; i++) {
           sampler.sample(_position, _normal);
           // _normal.add(_position)

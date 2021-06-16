@@ -15,6 +15,7 @@ export default class Player {
 
         this.velocity = new Vector3();
         this.direction = new Vector3();
+        this.position = new Vector3()
         // Set up
         this.container = new Object3D()
         this.container.name = 'Player'
@@ -40,6 +41,7 @@ export default class Player {
         this.camera.camera.position.z = 1
         this.time.on('tick', () => {
             this.camera.camera.lookAt(this.player.mesh.position)
+            this.position.copy(this.player.mesh.position)
         })
         if (this.debug) {
             this.debugFolder = this.debug.addFolder('Player')

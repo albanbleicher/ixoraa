@@ -1,7 +1,6 @@
 import { clearConfigCache } from "prettier";
 import { Clock } from "three";
 import { Octree } from "three/examples/jsm/math/Octree";
-import { io } from "socket.io-client"
 
 import EventEmitter from '../Tools/EventEmitter'
 
@@ -14,6 +13,7 @@ export default class Physics {
         this.planet = params.planet
         this.player = params.player
         this.camera = params.camera
+        this.socket = params.socket
 
         this.world = new Octree()
 
@@ -29,34 +29,37 @@ export default class Physics {
 
         this.gravity = params.gravity
 
-        this.io = io("http://localhost:3000");
         this.init()
+        if(this.socket) this.handleSocket()
     }
-    init() {
-        this.world.fromGraphNode(this.planet.mesh)
-
-        this.io.on('strength', () => {
+    handleSocket() {
+        this.socket.on('strength', () => {
             this.commandsReversed = true;
             setTimeout(() => {
                 this.commandsReversed = false;
             }, 10000)
         });
 
-        this.io.on('move up', () => {
+        this.socket.on('move up', () => {
             this.move('up')
         })
-        this.io.on('move right', () => {
+        this.socket.on('move right', () => {
             this.move('right')
         })
-        this.io.on('move down', () => {
+        this.socket.on('move down', () => {
             this.move('down')
         })
-        this.io.on('move left', () => {
+        this.socket.on('move left', () => {
             this.move('left')
         })
-        this.io.on('end', () => {
+        this.socket.on('end', () => {
             this.still()
         })
+    }
+    init() {
+        this.world.fromGraphNode(this.planet.physics)
+
+        
         window.addEventListener('keydown', (e) => this.moveKeyboard(e))
         window.addEventListener('keyup', (e) => this.stillKeyboard(e))
 
@@ -146,7 +149,6 @@ export default class Physics {
 
             if (this.moving.left) {
 
-                // this.player.velocity.add( this.getSideVector().multiplyScalar( - speed * delta ) );
                 this.player.mesh.rotation.y += 0.05
 
 
@@ -246,9 +248,6 @@ export default class Physics {
                         this.moving.right = false;
 
                         break;
-                    // case 'Space':
-                    //     this.moving.jump = true
-                    //     break;
                 }
                 break;
             case false:
@@ -274,9 +273,6 @@ export default class Physics {
                         this.moving.right = true;
                         this.moving.left = false;
                         break;
-                    // case 'Space':
-                    //     this.moving.jump = true
-                    //     break;
                 }
                 break;
         }
