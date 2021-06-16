@@ -207,7 +207,6 @@ strengthEnvironment.forEach(element => {
     folderFoliage.add(this.foliage, 'count').min(0).max(10000).step(1).name('Quantité').onChange((count) => {
       const material = self.foliage.mesh.material
       self.foliage.destroy()
-
       self.foliage = new Vegetation({
         surface: self.foret,
         model: self.assets.models.foliage.scene.children[0],
