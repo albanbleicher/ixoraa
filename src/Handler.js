@@ -5,7 +5,6 @@ const { ROOMS_EVENTS } = require('./const.events')
 const movements = require('./Movements').default
 const musictime = require('./MusicTime').default
 const obstacles = require('./Obstacles').default
-const messages = require('./Messages').default
 const dotenv = require('dotenv');
 const Rooms = require('./Rooms').default
 dotenv.config();
@@ -15,7 +14,7 @@ class Handler {
     constructor(http) {
         this.io = require('socket.io')(http, {
             cors: {
-                origin: ["http://localhost:8080", "localhost:8080", "http://localhost:8081", "localhost:8081"],
+                origin: ["http://game.ixoraa.albchr.dev","http://localhost:8080", "localhost:8080", "http://localhost:8081", "localhost:8081"],
                 methods: ["GET", "POST"],
             }
         });
@@ -38,9 +37,7 @@ class Handler {
     }
     listen(socket) {
         const self = this;
-        socket.on(MOVEMENTS.UP, () => movements.up(this.io))
-        socket.on(MOVEMENTS.DOWN, () => movements.down(this.io))
-        socket.on(MOVEMENTS.SIDES, (angle) => movements.sides(this.io, angle))
+        socket.on(MOVEMENTS.MOVING, (vector) => movements.moving(this.io, vector))
         socket.on(MOVEMENTS.END, () => movements.end(this.io))
         
         socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))

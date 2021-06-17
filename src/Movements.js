@@ -1,19 +1,9 @@
 const { MOVEMENTS } = require('./const.events')
 exports.default = {
-    sides(socket, angle) {
-        console.log('sides')
-        socket.emit(MOVEMENTS.SIDES, angle)
-    },
-    up(socket) {
-        console.log('up')
-        socket.emit(MOVEMENTS.UP)
-    },
-    down(socket) {
-        console.log('down')
-        socket.emit(MOVEMENTS.DOWN)
+    moving(socket, vector) {
+        socket.emit(MOVEMENTS.MOVING, vector)
     },
     end(socket) {
-        console.log('end')
         socket.emit(MOVEMENTS.END)
     }
 }

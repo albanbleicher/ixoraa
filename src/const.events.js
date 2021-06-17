@@ -12,10 +12,8 @@ exports.ROOMS_EVENTS = {
 }
 
 exports.MOVEMENTS = {
-    UP: 'move up',
-    DOWN: 'move down',
-    SIDES:'move sides',
-    END: 'end'
+    MOVING:'move moving',
+    END: 'move end'
 }
 
 exports.MUSICTIME = {
