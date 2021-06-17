@@ -19,7 +19,7 @@ export default class Player {
         // Set up
         this.container = new Object3D()
         this.container.name = 'Player'
-        this.container.collected = []
+        this.container.collected = [];
 
         this.init()
         this.createCollected()
@@ -43,6 +43,8 @@ export default class Player {
         // place camera
         this.container.add(this.player.mesh)
         this.player.mesh.add(this.camera.camera)
+        //this.player.mesh.rotation.y += 0.005
+        //this.player.mesh.rotation.y += 0.005
         this.camera.camera.position.y = 0
         this.camera.camera.position.z = 2
         this.time.on('tick', () => {
@@ -58,19 +60,21 @@ export default class Player {
     }
 
     createCollected() {
-        const radiusContainer = 2;
-
+        const radiusContainer = 0;
+        let t = 0
         this.time.on('tick', () => {
+            t += 0.01
             for (let i = 0; i < this.container.collected.length; i++) {
                 console.log(this.container.collected)
                 this.container.collected[i].posTarget.set(
-                    Math.cos(Math.PI * 2 / this.container.collected.length * i) * radiusContainer,
-                    Math.sin(Math.PI * 2 / this.container.collected.length * i) * radiusContainer,
-                    0
+                    this.player.collider.start.x + Math.cos(t + Math.PI * 2 / this.container.collected.length * i) * radiusContainer,
+                    this.player.collider.start.y,
+                    this.player.collider.start.z + Math.sin(t + Math.PI * 2 / this.container.collected.length * i) * radiusContainer
                 )
 
-                console.log(Math.cos(Math.PI * 2 / this.container.collected.length * i) * radiusContainer)
-                this.container.collected[i].position.lerp(this.container.collected[i].posTarget, 0.5)
+                if (i == 0)
+                    console.log(this.container.collected[i].posTarget.distanceTo(this.container.collected[i].position))
+                this.container.collected[i].position.lerp(this.container.collected[i].posTarget, 0.2)
             }
         })
     }
