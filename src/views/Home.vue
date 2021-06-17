@@ -1,71 +1,56 @@
 <template>
-  <main>
-    <h1>Computer</h1>
-    <div class="controller" v-if="!waveTime">
-      <button @click="handleMove('up')">up</button>
-      <div class="aside">
-        <button @click="handleMove('left')">left</button>
-        <button @click="handleMove('right')">right</button>
-      </div>
-      <button @click="handleMove('down')">down</button>
-    </div>
-    <div class="musicontroller">
-      <button class="musicbutton red" id="red" ref="red"></button>
-    </div>
-  </main>
+  <div class="landing">
+    <h1>Renseigne ton code pour connecter ton téléphone</h1>
+    <InputCode v-model="code" @change="sync" />
+    <!-- <span>{{status_message}}</span> -->
+  </div>
 </template>
 <script>
-import io from "socket.io-client";
-import gsap from "gsap";
-
+import InputCode from "../components/InputCode.vue";
+import { mapGetters } from 'vuex'
 export default {
+  components: { InputCode },
   data() {
     return {
+      idRoom: "",
       io: null,
-      musicPatern: null,
-      //melodyPlayed: [],
-      //musicState: "",
+      status: 0,
       waveTime: "",
+      code: "",
     };
   },
-  created() {
-    //localStorage.debug = '*';
-    //this.io = io("http://ixoraa-api.herokuapp.com/");
-    this.io = io("http://localhost:3000");
+
+  computed: {
+    ...mapGetters(['socket']),
+    status_message() {
+      let message = "";
+      switch (this.status) {
+        case 0:
+          message = "Vous n'êtes pas connecté.e !";
+          break;
+        case 1:
+          message = "Vous êtes connecté.e !";
+          break;
+        case 2:
+          message = "Une erreur est survenue, veuillez réessayer.";
+          break;
+      }
+      return message;
+    },
   },
   mounted() {
-    this.io.on("musictime begin", (time) => {
-      this.waveTime = time;
-      this.handleMusicTimeBegin();
+    this.socket.on("room is_synced", (test) => {
+      this.status = 1;
+      this.$router.push("/play");
+    });
+    this.socket.on("room error", (test) => {
+      this.status = 2;
     });
   },
   methods: {
-    handleMove(direction) {
-      switch (direction) {
-        case "up":
-          this.io.emit("move up");
-          break;
-        case "down":
-          this.io.emit("move down");
-          break;
-        case "left":
-          this.io.emit("move left");
-          break;
-        case "right":
-          this.io.emit("move right");
-          break;
-      }
-    },
-    handleMusic(color) {
-      /*if (this.melodyPlayed.length === 5) {
-        if (
-          JSON.stringify(this.melodyPlayed) === JSON.stringify(this.waveTime)
-        )
-          this.musicState = "Correct !";
-        else this.musicState = "Oh boy, no";
-      }*/
+    sync() {
+      this.socket.emit("room join", parseInt(this.code));
     },
   },
 };
 </script>
-

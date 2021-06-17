@@ -13,9 +13,8 @@
 import JoystickDisplacement from "@/components/JoystickDisplacement";
 import JoystickDirection from "@/components/JoystickDirection";
 import MusicTime from "@/components/MusicTime";
-import io from "socket.io-client";
 import gsap from "gsap";
-
+import { mapGetters } from 'vuex'
 export default {
   components: {
     JoystickDisplacement,
@@ -29,9 +28,8 @@ export default {
       lines: null,
     };
   },
-  created() {
-    this.io = io("http://localhost:3000");
-    console.log(this.io);
+  computed: {
+    ...mapGetters(['socket'])
   },
   mounted() {
     console.log("mounted");
@@ -39,7 +37,7 @@ export default {
     const joystickController = document.querySelector(".joystickController");
     const musicalController = document.querySelector(".musicalController");
 
-    this.io.on("near totem", () => {
+    this.socket.on("near totem", () => {
       console.log("near totem");
       gsap.to(joystickController, {
         opacity: 0,
@@ -58,18 +56,18 @@ export default {
             .to(musicalController, { opacity: 1, duration: 1, delay: 1 })
             .then(() => {
               console.log("near totem is ok");
-              this.io.emit("near totem is ok");
+              this.socket.emit("near totem is ok");
             });
         });
     });
-    this.io.on("musictime begin", async (time, lines) => {
+    this.socket.on("musictime begin", async (time, lines) => {
       console.log("it started");
       //const result = await this.returnsPromise(time, lines);
       //console.log(result);
       //console.log("musicTime Begin");
     });
 
-    this.io.on("winned", () => {
+    this.socket.on("winned", () => {
       console.log("winned");
       setTimeout(() => {
         gsap.to(musicalController, {

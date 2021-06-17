@@ -54,13 +54,11 @@ export default {
     this.static = nipplejs.create(this.options);
 
      this.static.on('move', (evt, nipple) => {
-       console.log(nipple.vector);
-       self.io.emit('move sides', nipple.vector)
+       self.io.emit('move moving', nipple.vector)
     })
-      // self.io.emit("move up");
    
     this.static.on('end', (evt, nipple) => {
-            self.io.emit("end");
+            self.io.emit("move end");
     })
   },
   methods: {},
