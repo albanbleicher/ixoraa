@@ -41,8 +41,12 @@ export default class Totem {
   init() {
     console.log(this.totem);
 
+    // On modifie quelques propriétés du mesh lorsqu'il est collecté
     this.totem.posTarget = new Vector3();
-    this.player.container.collected.push(this.totem);
+    this.totem.scale.set(0.1, 0.1, 0.1);
+    this.totem.material.opacity = 0;
+    console.log(this.totem.children[0]);
+    this.player.container.boolsContainer.collected.push(this.totem);
 
     switch (this.name) {
       case MODELS.totems[0]: // sagesse

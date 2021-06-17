@@ -20,7 +20,8 @@ export default class Player {
         // Set up
         this.container = new Object3D()
         this.container.name = 'Player'
-        this.container.collected = [];
+        this.container.boolsContainer = new Object3D()
+        this.container.boolsContainer.collected = [];
 
         this.init()
         this.createCollected()
@@ -64,22 +65,29 @@ export default class Player {
     }
 
     createCollected() {
-        const radiusContainer = 0;
+        const radiusContainer = [
+            0.1,
+            0.2,
+            0.3,
+            0.4,
+        ]
         let t = 0
         this.time.on('tick', () => {
-            t += 0.01
-            for (let i = 0; i < this.container.collected.length; i++) {
-                console.log(this.container.collected)
-                this.container.collected[i].posTarget.set(
-                    this.player.collider.start.x + Math.cos(t + Math.PI * 2 / this.container.collected.length * i) * radiusContainer,
-                    this.player.collider.start.y,
-                    this.player.collider.start.z + Math.sin(t + Math.PI * 2 / this.container.collected.length * i) * radiusContainer
+            t += 0.05
+            for (let i = 0; i < this.container.boolsContainer.collected.length; i++) {
+                console.log(this.container.boolsContainer.collected)
+                this.container.boolsContainer.collected[i].posTarget.set(
+                    this.player.collider.start.x + Math.cos(t + Math.PI * 2 / this.container.boolsContainer.collected.length * i) * radiusContainer[i],
+                    this.player.collider.end.y - 0.01,
+                    this.player.collider.start.z + Math.sin(t + Math.PI * 2 / this.container.boolsContainer.collected.length * i) * radiusContainer[i]
                 )
 
                 if (i == 0)
-                    console.log(this.container.collected[i].posTarget.distanceTo(this.container.collected[i].position))
-                this.container.collected[i].position.lerp(this.container.collected[i].posTarget, 0.2)
+                    console.log(this.container.boolsContainer.collected[i].posTarget.distanceTo(this.container.boolsContainer.collected[i].position))
+                this.container.boolsContainer.collected[i].position.lerp(this.container.boolsContainer.collected[i].posTarget, 0.2)
             }
+
+            this.container.boolsContainer.rotation.set(0.5, 1, 1.57);
         })
     }
 

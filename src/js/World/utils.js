@@ -6,14 +6,14 @@ export const MODELS = {
                 'aura_beaute',
         ],
         planet: {
-                physics:'physics',
-                ground:'map',
-                bigMonolithe:'monolithe_grand',
-                rocks:'rochers',
+                physics: 'physics',
+                ground: 'map',
+                bigMonolithe: 'monolithe_grand',
+                rocks: 'rochers',
                 smallMonolithes: 'monolithes_petits',
                 bigTree: 'tronc',
                 water: 'eau',
-                hopeTree:'arbre_espoir',
-                spirits:'aura',
+                hopeTree: 'arbre_espoir',
+                spirits: 'aura',
         }
 }
