@@ -74,9 +74,8 @@ export default class Planet {
         assets: this.assets,
         camera: this.camera,
         name: totemMesh.name,
-        totemList: this.totemList,
-        waveemit: this.waveemit,
-        listener: this.listener
+        listener: this.listener,
+        totem: totemMesh
       })
       this.container.add(totem.container)
     })

@@ -16,6 +16,7 @@ export default class Totem {
     this.name = options.name
     this.socket = options.socket
     this.listener = options.listener
+    this.totem = options.totem
     this.steps = {
       first: 5, // play drums
       second: 3.5, // play chord
