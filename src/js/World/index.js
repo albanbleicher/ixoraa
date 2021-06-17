@@ -54,14 +54,14 @@ export default class World {
       })
     }
 
-      this.setPlayer()
-      this.setPlanet()
-      this.setPhysics()
-      this.setAmbientLight()
-      this.setPointLight()
-      this.setCiel()
-      this.setFog()
-      this.setEffects()
+    this.setPlayer()
+    this.setPlanet()
+    this.setPhysics()
+    this.setAmbientLight()
+    this.setPointLight()
+    this.setCiel()
+    this.setFog()
+    this.setEffects()
 
 
   }
@@ -100,7 +100,7 @@ export default class World {
       player: this.player.player,
       planet: this.planet,
       camera: this.camera.camera,
-      socket:this.socket
+      socket: this.socket
     })
   }
   setFog() {
@@ -143,7 +143,7 @@ export default class World {
       camera: this.camera,
       physics: this.physics,
       player: this.player,
-      listener:this.listener,
+      listener: this.listener,
       waveemit: this.waveemit
     })
     this.container.add(this.planet.container)
@@ -153,7 +153,8 @@ export default class World {
       physics: this.physics,
       time: this.time,
       camera: this.camera,
-      debug: this.debug
+      debug: this.debug,
+      assets: this.assets
     })
     this.container.add(this.player.container)
   }

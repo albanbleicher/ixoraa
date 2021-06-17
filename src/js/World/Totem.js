@@ -17,10 +17,10 @@ export default class Totem {
     this.socket = options.socket
     this.listener = options.listener
     this.steps = {
-      first:5, // play drums
+      first: 5, // play drums
       second: 3.5, // play chord
       third: 2// play melody
-  }
+    }
     this.near = false
     this.pattern = null
     this.completed = false
@@ -32,109 +32,114 @@ export default class Totem {
 
     setTimeout(() => {
       this.init()
-    this.time.on('tick', this.watch.bind(this))
-    if(options.socket) this.handleSocket()
+      this.time.on('tick', this.watch.bind(this))
+      if (options.socket) this.handleSocket()
     }, 300)
 
   }
   init() {
+    console.log(this.totem);
+
+    this.totem.posTarget = new Vector3();
+    this.player.container.collected.push(this.totem);
+
     switch (this.name) {
       case MODELS.totems[0]: // sagesse
-      this.screen = new TotemScreen({
-        name:'Sagesse',
-        description:'La nature montre par son comportement, combien la sagesse et la patience sont des valeurs importante pour la survie de chaque être.'
-      })
-      this.pattern = new Pattern({
-        drums: this.assets.sounds.totems.strength.drums,
-        patterns: [
-          {
-            chord:this.assets.sounds.totems.strength.firstChord,
-            melody:this.assets.sounds.totems.strength.firstMelody,
-          },
-          {
-            chord:this.assets.sounds.totems.strength.secondChord,
-            melody:this.assets.sounds.totems.strength.secondMelody,
-          }
-        ],
-        steps:this.steps,
-        player:this.player,
-        position: this.position,
-        listener: this.listener
-      })
-    this.container.add(this.pattern.container)
+        this.screen = new TotemScreen({
+          name: 'Sagesse',
+          description: 'La nature montre par son comportement, combien la sagesse et la patience sont des valeurs importante pour la survie de chaque être.'
+        })
+        this.pattern = new Pattern({
+          drums: this.assets.sounds.totems.strength.drums,
+          patterns: [
+            {
+              chord: this.assets.sounds.totems.strength.firstChord,
+              melody: this.assets.sounds.totems.strength.firstMelody,
+            },
+            {
+              chord: this.assets.sounds.totems.strength.secondChord,
+              melody: this.assets.sounds.totems.strength.secondMelody,
+            }
+          ],
+          steps: this.steps,
+          player: this.player,
+          position: this.position,
+          listener: this.listener
+        })
+        this.container.add(this.pattern.container)
 
         break;
       case MODELS.totems[1]: // force
-      this.screen = new TotemScreen({
-        name:'Force',
-        description:'La nature est puissante, forte. Elle exprime toute son énergie à travers différents phénomènes.'
-      })
-      this.pattern = new Pattern({
-        drums: this.assets.sounds.totems.wisdom.drums,
-        patterns: [
-          {
-            chord:this.assets.sounds.totems.wisdom.firstChord,
-            melody:this.assets.sounds.totems.wisdom.firstMelody,
-          },
-          {
-            chord:this.assets.sounds.totems.wisdom.secondChord,
-            melody:this.assets.sounds.totems.wisdom.secondMelody,
-          }
-        ],
-        steps:this.steps,
-        player:this.player,
-        position: this.position,
-        listener: this.listener
-      })
-    this.container.add(this.pattern.container)
+        this.screen = new TotemScreen({
+          name: 'Force',
+          description: 'La nature est puissante, forte. Elle exprime toute son énergie à travers différents phénomènes.'
+        })
+        this.pattern = new Pattern({
+          drums: this.assets.sounds.totems.wisdom.drums,
+          patterns: [
+            {
+              chord: this.assets.sounds.totems.wisdom.firstChord,
+              melody: this.assets.sounds.totems.wisdom.firstMelody,
+            },
+            {
+              chord: this.assets.sounds.totems.wisdom.secondChord,
+              melody: this.assets.sounds.totems.wisdom.secondMelody,
+            }
+          ],
+          steps: this.steps,
+          player: this.player,
+          position: this.position,
+          listener: this.listener
+        })
+        this.container.add(this.pattern.container)
         break;
       case MODELS.totems[2]: // espoir
-      this.pattern = new Pattern({
-        drums: this.assets.sounds.totems.hope.drums,
-        patterns: [
-          {
-            chord:this.assets.sounds.totems.hope.firstChord,
-            melody:this.assets.sounds.totems.hope.firstMelody,
-          },
-          {
-            chord:this.assets.sounds.totems.hope.secondChord,
-            melody:this.assets.sounds.totems.hope.secondMelody,
-          }
-        ],
-        steps:this.steps,
-        player:this.player,
-        position: this.position,
-        listener: this.listener
-      })
-    this.container.add(this.pattern.container)
-      this.screen = new TotemScreen({
-        name:'Espoir',
-        description:'Porteuse d\'espoir, la nature ...'
-      })
+        this.pattern = new Pattern({
+          drums: this.assets.sounds.totems.hope.drums,
+          patterns: [
+            {
+              chord: this.assets.sounds.totems.hope.firstChord,
+              melody: this.assets.sounds.totems.hope.firstMelody,
+            },
+            {
+              chord: this.assets.sounds.totems.hope.secondChord,
+              melody: this.assets.sounds.totems.hope.secondMelody,
+            }
+          ],
+          steps: this.steps,
+          player: this.player,
+          position: this.position,
+          listener: this.listener
+        })
+        this.container.add(this.pattern.container)
+        this.screen = new TotemScreen({
+          name: 'Espoir',
+          description: 'Porteuse d\'espoir, la nature ...'
+        })
         break;
       case MODELS.totems[3]: // beauté
-      this.pattern = new Pattern({
-        drums: this.assets.sounds.totems.beauty.drums,
-        patterns: [
-          {
-            chord:this.assets.sounds.totems.beauty.firstChord,
-            melody:this.assets.sounds.totems.beauty.firstMelody,
-          },
-          {
-            chord:this.assets.sounds.totems.beauty.secondChord,
-            melody:this.assets.sounds.totems.beauty.secondMelody,
-          }
-        ],
-        steps:this.steps,
-        player:this.player,
-        position: this.position,
-        listener: this.listener
-      })
-    this.container.add(this.pattern.container)
-      this.screen = new TotemScreen({
-        name:'Beauté',
-        description:'blablalbaaaa'
-      })
+        this.pattern = new Pattern({
+          drums: this.assets.sounds.totems.beauty.drums,
+          patterns: [
+            {
+              chord: this.assets.sounds.totems.beauty.firstChord,
+              melody: this.assets.sounds.totems.beauty.firstMelody,
+            },
+            {
+              chord: this.assets.sounds.totems.beauty.secondChord,
+              melody: this.assets.sounds.totems.beauty.secondMelody,
+            }
+          ],
+          steps: this.steps,
+          player: this.player,
+          position: this.position,
+          listener: this.listener
+        })
+        this.container.add(this.pattern.container)
+        this.screen = new TotemScreen({
+          name: 'Beauté',
+          description: 'blablalbaaaa'
+        })
         break;
     }
     this.totemDebugger = document.createElement('span')
@@ -143,20 +148,20 @@ export default class Totem {
     // document.querySelector('.app').append(this.totemDebugger)
   }
   watch() {
-      this.totemDebugger.innerText = 'totem: '+this.name+ ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:'+this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
-      if(this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
-        this.near = true;
-        if(this.screen) this.screen.show()
-        console.log('[Totem] Approaching ' + this.name);
-      } 
-      if(this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
-        this.near = false;
-        if(this.screen) this.screen.hide()
-
-        console.log('[Totem] Leaving ' + this.name);
-
-      }  
+    this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
+    if (this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
+      this.near = true;
+      if (this.screen) this.screen.show()
+      console.log('[Totem] Approaching ' + this.name);
     }
+    if (this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
+      this.near = false;
+      if (this.screen) this.screen.hide()
+
+      console.log('[Totem] Leaving ' + this.name);
+
+    }
+  }
   // Pour chaque totem, on check la position, emet near totem/musictime begin lorsqu'on est proche
   // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on créer les torus
   watchTotem() {
