@@ -23,12 +23,10 @@ export default class Physics {
         this.moving = {
             forward: false,
             backward: false,
-            sides:false,
-            rotateValue:0,
-            oldRotateValue:0,
             left:false,
             right:false,
-            jump: false
+            withJoystick:false,
+            directions:null
         }
         this.commandsReversed = false;
         this.lastCommand = [];
@@ -39,23 +37,10 @@ export default class Physics {
         if(this.socket) this.handleSocket()
     }
     handleSocket() {
-        this.socket.on('strength', () => {
-            this.commandsReversed = true;
-            setTimeout(() => {
-                this.commandsReversed = false;
-            }, 10000)
-        });
-
-        this.socket.on('move up', () => {
-            this.move('up')
+        this.socket.on('move moving', (vector) => {
+            this.move(vector)
         })
-        this.socket.on('move down', () => {
-            this.move('down')
-        })
-        this.socket.on('move sides', (rotateValue) => {
-            this.move('sides', rotateValue)
-        })
-        this.socket.on('end', () => {
+        this.socket.on('move end', () => {
             this.still()
         })
     }
@@ -144,15 +129,17 @@ export default class Physics {
 
             }
 
-            // if (this.moving.backward) {
+            if (this.moving.backward) {
 
-            //     this.player.velocity.add(this.getForwardVector().multiplyScalar(- speed * delta));
+                this.player.velocity.add(this.getForwardVector().multiplyScalar(- speed * delta));
 
-            // }
+            }
 
-            if (this.moving.sides) {
+            if (this.moving.withJoystick) {
 
-                this.player.mesh.rotation.y -= this.moving.rotateValue;
+                this.player.mesh.rotation.y -= this.moving.directions.x*0.1;
+                this.player.velocity.add(this.getForwardVector().multiplyScalar(speed * this.moving.directions.y * delta));
+
                 // this.player.mesh.position.z -= this.moving.walkValue;
 
 
@@ -180,49 +167,16 @@ export default class Physics {
         }
 
     }
-    move(e, vector) {
-        switch (this.commandsReversed) {
-            case true:
-                switch (e) {
-                    case 'up':
-                        this.moving.backward = true;
-                        this.moving.forward = false;
-                        break;
-                    case 'sides':
-                        this.moving.sides = true
-                        this.moving.rotateValue = vector.x * 0.01
-                        break;
-                    case 'down':
-                        this.moving.forward = true;
-                        this.moving.backward = false;
-                        break;
-               
-                }
-                break;
-            case false:
-                switch (e) {
-                    case 'up':
-                        this.moving.forward = true;
-                        this.moving.backward = false;
-                        break;
-                        case 'sides':
-                            this.moving.sides = true
-                            this.moving.oldRotateValue = this.player.mesh.rotation.y
-                            this.moving.rotateValue = vector.x * 0.01
-                            break;
-                    case 'down':
-                        this.moving.backward = true;
-                        this.moving.forward = false;
-                        break;
-                   
-                }
-                break;
-        }
+    move(vector) {
+        
+        this.moving.withJoystick = true;
+        this.moving.directions = vector;
     }
     still() {
-        this.moving.sides = false
+        this.moving.withJoystick = false
         this.moving.backward = false
         this.moving.forward = false
+        
     }
 
     moveKeyboard(e) {
