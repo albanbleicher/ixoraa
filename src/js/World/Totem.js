@@ -16,6 +16,7 @@ export default class Totem {
     this.name = options.name
     this.totemList = options.totemList
     this.waveemit = options.waveemit
+    this.totem = options.totem
 
     // Set up
     this.container = new Object3D()
@@ -44,6 +45,11 @@ export default class Totem {
 
   }
   init() {
+    console.log(this.totem);
+
+    this.totem.posTarget = new Vector3();
+    this.player.container.collected.push(this.totem);
+
     switch (this.name) {
       case MODELS.totems.sagesse:
         this.sounds.add({

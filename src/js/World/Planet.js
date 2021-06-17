@@ -129,6 +129,7 @@ export default class Planet {
         name: singleTotem.name,
         totemList: this.totemList,
         waveemit: this.waveemit,
+        totem: singleTotem
       })
       this.container.add(totem.container)
     })
