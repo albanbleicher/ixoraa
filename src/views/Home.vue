@@ -39,6 +39,7 @@ export default {
     },
   },
   mounted() {
+    // Go on the next page when sended code is good
     this.socket.on("room is_synced", (test) => {
       this.status = 1;
       this.$router.push("/play");
@@ -48,6 +49,7 @@ export default {
     });
   },
   methods: {
+    // For each code change, then the code to the server
     sync() {
       this.socket.emit("room join", parseInt(this.code));
     },

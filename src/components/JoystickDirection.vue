@@ -4,7 +4,7 @@
     <div class="joystick-controller"></div>
   </div>-->
 
-  <div id="joystick_dir" ></div>
+  <div id="joystick_dir"></div>
 </template>
 <script>
 import nipplejs from "nipplejs";
@@ -30,7 +30,8 @@ export default {
     this.io.on("musictime begin", (time, lines) => {
       console.log("musicTime Begin");
     });
-    
+
+    // Lorsque l'obstacle du totem de la force est lancé, on réalise un changement de couleur du joystick
     // Apparemment on ne peut pas changer les valeurs de options après avoir instancié le nipple, donc changement de couleur à la main
     this.io.on("strength", () => {
       console.log("strength");
@@ -44,6 +45,7 @@ export default {
       }, 10000);
     });
 
+    // On créer les options d'initialisation du joystick, puis on l'instancie avec
     this.options = {
       zone: document.getElementById("joystick_dir"),
       mode: "static",
@@ -53,16 +55,16 @@ export default {
     };
     this.static = nipplejs.create(this.options);
 
-     this.static.on('plain:left', (evt, nipple) => {
+    this.static.on("plain:left", (evt, nipple) => {
       self.io.emit("move left", nipple.angle.radian);
-    })
-    this.static.on('plain:right', (evt, nipple) => {
+    });
+    this.static.on("plain:right", (evt, nipple) => {
       self.io.emit("move right", nipple.angle.radian);
-    })
-   
-    this.static.on('end', (evt, nipple) => {
-            self.io.emit("end");
-    })
+    });
+
+    this.static.on("end", (evt, nipple) => {
+      self.io.emit("end");
+    });
   },
   methods: {},
 };

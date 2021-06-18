@@ -27,10 +27,12 @@ export default {
       code: "",
     };
   },
+  // Focus on the first number
   mounted() {
     this.$refs["input-0"][0].focus();
   },
   methods: {
+    // Each number is an array, which goes to the parent. When a number is entered, it focuses on the next one
     handleTyping(event, key) {
       this.code += event.target.value;
       if (event.inputType == "deleteContentBackward") {

@@ -37,6 +37,7 @@ export default {
     const joystickController = document.querySelector(".joystickController");
     const musicalController = document.querySelector(".musicalController");
 
+    // When the player get close to a totem, do a smooth switch between the joystick and the musicalButton
     this.socket.on("near totem", () => {
       console.log("near totem");
       gsap.to(joystickController, {
@@ -67,6 +68,7 @@ export default {
       //console.log("musicTime Begin");
     });
 
+  // And when an interaction is completed, do this switch back
     this.socket.on("winned", () => {
       console.log("winned");
       setTimeout(() => {

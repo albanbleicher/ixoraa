@@ -63,6 +63,7 @@ export default {
     this.io.on("phoneConnected", () => {
       this.connected = true;
     });
+    // Once a pattern is played in the desktop, it's send here, and then played
     this.io.on("musictime begin", async (lines) => {
       console.log("it started", lines);
       const result = await this.returnsPromise(lines);
@@ -146,6 +147,7 @@ export default {
         this.fadeOutOpacity();
       }
     },
+    // On vide simplement les informations du pattern
     restartMusicTime() {
       console.log("restart");
       console.log(this.lines);
@@ -154,6 +156,7 @@ export default {
       this.completedNotes = [];
       console.log(this.lines);
     },
+    // On fade out les lignes du pattern
     fadeOutOpacity() {
       this.lines.forEach((el, i) => {
         const line = this.$refs["line" + el[i]];
@@ -168,6 +171,7 @@ export default {
         });
       });
     },
+    // Le fait de le faire en async et promise permet de ne pas faire peter le composant lorsqu'il est monté
     returnsPromise(lines, time) {
       return new Promise((resolve) => {
         console.log(lines);
