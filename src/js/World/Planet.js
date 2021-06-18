@@ -63,6 +63,7 @@ export default class Planet {
 
       this.totemList.push(getMesh({ parent: this.mesh, name: totem, strict: true }))
     })
+    // Then instanciate each of them 
     this.totemList.forEach(totemMesh => {
       let position = new Vector3()
       totemMesh.getWorldPosition(position)
@@ -80,6 +81,8 @@ export default class Planet {
       this.container.add(totem.container)
     })
   }
+
+  // Pretty useful to get the monolithes Meshes, and place the HDRI texture as a material for each one
   setMaterials() {
     this.ground.material = new MeshStandardMaterial({
       color: '#15AB86',
@@ -100,6 +103,8 @@ export default class Planet {
 
 
   }
+
+  // Same idea, get the meshes, and add materials and layers for blooming
   setBloomingItems() {
     const bigTree = getMesh({ parent: this.mesh, name: MODELS.planet.bigTree, strict: true })
     const hopeTree = getMesh({ parent: this.mesh, name: MODELS.planet.hopeTree, strict: true })
@@ -120,6 +125,8 @@ export default class Planet {
     hopeTree.layers.enable(1)
     bigTree.layers.enable(1)
   }
+
+  //Instanciate the grass / grassMaterial with some parameters, like DoubleSide, number of them
   createVegetation() {
 
     const grassMaterial = new MeshStandardMaterial({

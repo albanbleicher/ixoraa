@@ -36,6 +36,7 @@ export default class Physics {
         this.init()
         if(this.socket) this.handleSocket()
     }
+    // Retrieve direction to go from server
     handleSocket() {
         this.socket.on('move moving', (vector) => {
             this.move(vector)
@@ -94,6 +95,7 @@ export default class Physics {
 
         this.playerCollitions();
 
+        // A little floating animation on the main character
         // this.player.mesh.position.copy(this.player.collider.end);
         this.player.mesh.position.set(
             this.player.collider.end.x,
@@ -120,6 +122,8 @@ export default class Physics {
         return this.player.direction;
 
     }
+
+    // With the direction parameter, make the character move
     controls(delta) {
         const speed = 15;
 

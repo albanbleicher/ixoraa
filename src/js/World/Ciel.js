@@ -15,9 +15,10 @@ export default class Ciel {
     this.container = new Object3D()
     this.container.name = 'Ciel'
 
-
     this.createCiel()
   }
+
+  // Petit HDRI
   createCiel() {
     const t = this.assets.textures.hdri
     const cubeMap = new CubeTexture()

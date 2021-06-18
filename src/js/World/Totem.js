@@ -48,6 +48,8 @@ export default class Totem {
     console.log(this.totem.children[0]);
     this.player.container.boolsContainer.collected.push(this.totem);
 
+    // For each totem, we instanciate some screen narration, and a song, composed of drums, chord, and melody, which are played sequencially
+    // when the player come closer to it
     switch (this.name) {
       case MODELS.totems[0]: // sagesse
         this.screen = new TotemScreen({
@@ -168,9 +170,10 @@ export default class Totem {
     }
   }
   // Pour chaque totem, on check la position, emet near totem/musictime begin lorsqu'on est proche
-  // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on créer les torus
+  // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on crééer les torus
   watchTotem() {
     this.waveemit.on('wave', () => {
+      // Avec performance, on va enregistrer dans un tableau les temps précis auquel la mélodie courante est jouée
       this.endTime = performance.mark('end');
       performance.measure("measure", 'start', 'end');
       var timeDiff = performance.getEntriesByName('measure'); //in ms 
@@ -249,6 +252,7 @@ export default class Totem {
     })
   }
 
+  // Create a wave, based on the note of the melody played
   createTorus() {
 
     const textureLoader = new TextureLoader()
@@ -295,6 +299,7 @@ export default class Totem {
     })
   }
 
+  // On fait baisser l'opacité d'un torus puis on le fait disparaitre
   removeTorus() {
     let opacitiesFactor = 1;
     this.time.on('tick', () => {
@@ -311,6 +316,8 @@ export default class Totem {
     });
   }
 
+  // Create an obstacle for the strength totem, which goes on the player way, and change a boolean that will inverse it's commands.
+  // An event is also send to the mobile to change a bit the joystick appearence 
   obstacleTotemForce() {
     this.obstacleEmitted = true;
 
@@ -362,12 +369,14 @@ export default class Totem {
 
   }
 
+  // Allow to do a good placement of the player when the world is loaded
   checkStaticPosition() {
     if (this.player.player.mesh.position.x !== 0) {
       this.isStatic = false
     }
   }
 
+  // Called to start the "record" of the pattern currently played
   startRecordTiming() {
     console.log('startRecord')
     this.startTime = performance.mark('start');
@@ -377,14 +386,15 @@ export default class Totem {
     // Emit the array when 2 secondes without earing note
   }
 
+  // A smooth displacement of the camera when the player is close to a totem
   startPanningCamera() {
     gsap.to(this.camera.position,
       { x: 2, y: 1, z: 4, ease: "power3.out", duration: 5 },
     )
     this.player.player.mesh.lookAt(this.position);
-
   }
 
+  // Same thing but reversed, when the player is far of it
   endPanningCamera() {
     gsap.to(this.camera.position,
       { x: 0, y: 0, z: 1, ease: "power3.out", duration: 5 },
