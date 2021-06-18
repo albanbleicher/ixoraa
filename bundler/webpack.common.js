@@ -34,6 +34,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Three Template',
       favicon: path.resolve(__dirname, '../static/favicon.ico'),
+      logo_animation: path.resolve(__dirname, '../static/animations/logo_animation.json'),
       template: path.resolve(__dirname, '../src/index.html'),
       minify: true,
     }),

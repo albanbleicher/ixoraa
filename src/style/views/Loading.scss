@@ -3,7 +3,6 @@
 	top: 0;
 	width: 100%;
 	height: 100%;
-	background-color: color('background');
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -54,4 +53,19 @@
 	height: 7px;
 	background-color: color('primary');
 	transition: 0.32s ease-out width;
+	animation-duration: 2s;
+	animation-direction: alternate-reverse;
+	animation-iteration-count: infinite;
+	animation-name: bloom;	
+}
+
+
+@keyframes bloom {
+    from {
+        filter: brightness(1);
+    }
+    to {
+        filter: brightness(2);
+
+    }
 }

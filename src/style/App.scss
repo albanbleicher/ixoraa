@@ -21,6 +21,13 @@ canvas {
 	height: 100%;
 	outline: none;
 }
+#anim_container {
+	width: 1000px;
+	height: 1000px;
+	z-index: 2000;
+	position: absolute;
+}
+
 .debugger {
 	background-color: color('primary');
 	color: white;
