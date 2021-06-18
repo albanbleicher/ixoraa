@@ -2,10 +2,12 @@
     position: fixed;
     top:0;
     display: flex;
+    color: white;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: color('background');
+    background: url('../images/shapes/hdri_jpeg.jpg');
+    background-size: cover;
     width: 100%;
     height: 100%;
 	transition: 0.55s opacity ease-out;

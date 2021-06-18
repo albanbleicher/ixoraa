@@ -11,8 +11,10 @@
     </div>
     <!--<span class="musicbutton line" id="line" ref="line"></span>-->
 
-    <div>
-      <button class="note" ref="note" @click="playNote()"></button>
+    <div class="noteContainer">
+      <button class="note" ref="note" @click="playNote()">
+        <span class="noteBorder" ref="noteBorder"></span>
+      </button>
     </div>
     <div style="position: absolute; left: 50px">
       <p
@@ -105,6 +107,7 @@ export default {
       const currentLineId = "line" + (this.completedNotes.length + 1);
       const line = this.$refs[currentLineId][0];
       const note = this.$refs["note"];
+      const noteBorder = this.$refs["noteBorder"];
       console.log(currentLineId);
       console.log(line);
 
@@ -127,6 +130,8 @@ export default {
       // Si elle est juste, on l'ajoute au tableau des lignes juste, sinon on active le fade out, et recommence le jeu
       // Lorsque le jeu est réussi, on en informe le serveur
       if (check) {
+        noteBorder.style.border = "5px solid green";
+
         this.attempts.push(currentLineId + " is correct !");
         this.completedNotes.push(currentLineId + " is correct !");
         console.log(this.completedNotes.length);
@@ -143,6 +148,7 @@ export default {
         }
       } else {
         this.attempts.push("False, noob");
+        noteBorder.style.border = "5px solid red";
         this.io.emit("wrong");
         this.fadeOutOpacity();
       }
