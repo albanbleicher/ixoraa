@@ -7,11 +7,15 @@
     <div class="musicalController">
       <MusicTime />
     </div>
+    <div class="test">
+      <Lottie />
+    </div>
   </div>
 </template>
 <script>
 import JoystickDisplacement from "@/components/JoystickDisplacement";
 import JoystickDirection from "@/components/JoystickDirection";
+import Lottie from "@/components/Lottie";
 import MusicTime from "@/components/MusicTime";
 import gsap from "gsap";
 import { mapGetters } from 'vuex'
@@ -20,6 +24,7 @@ export default {
     JoystickDisplacement,
     JoystickDirection,
     MusicTime,
+    Lottie
   },
   data() {
     return {
