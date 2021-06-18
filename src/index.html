@@ -9,7 +9,8 @@
 </head>
 
 <body>
-  <audio autoplay id="audio_intro" src="sounds/Drum2.mp3" style="position: absolute; z-index: 10000;">
+  <audio autoplay id="audio_intro" style="position: absolute; z-index: 10000;">
+    <source src="sounds/Drum2.mp3"></source>
   </audio>
   <div class="loading loadScreen">
     <div class="progressBar">
@@ -24,9 +25,9 @@
   </div>
   <div id="anim_container"></div>
 
-  <div class="landing">
-    <button class="play">jouer</button>
-  </div>
+  <button class="play">jouer</button>
+  <!--<div class="landing">
+  </div>-->
   <div class="app">
     <canvas id="_canvas"></canvas>
   </div>

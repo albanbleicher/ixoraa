@@ -5,17 +5,23 @@ import io from "socket.io-client"
 import lottie from "lottie-web"
 
 // Animation for the logo
-var container = document.getElementById('anim_container')
+let container = document.getElementById('anim_container')
 
 var animData = {
   container: container,
   renderer: 'svg',
   autoplay: true,
   loop: false,
-  path: './animations/logo_animation.json',
+  path: './animations/logo_animation.json'
 }
 
 var anim = lottie.loadAnimation(animData)
+
+const play = document.querySelector('.play')
+
+anim.addEventListener('complete', () => gsap.to(play, { opacity: 1 }))
+
+anim.setSpeed(8);
 
 
 let socket = false;
@@ -26,12 +32,15 @@ if (!window.location.hash.includes('#nosocket')) {
   document.addEventListener('DOMContentLoaded', () => {
     const landing = document.querySelector('.landing')
     const access = document.querySelector('.access')
-    const play = document.querySelector('.play')
     const code = document.querySelector('.code')
     play.addEventListener('click', () => {
       socket.emit("room create");
       socket.once("room code", (id) => {
         code.innerText = id;
+      });
+      gsap.to(play, { opacity: 0}).then(() => {
+      gsap.to(access, { opacity: 1});
+
       });
       socket.once('room is_synced', () => {
 

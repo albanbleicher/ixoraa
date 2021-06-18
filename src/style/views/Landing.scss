@@ -4,13 +4,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    background-image: url('@style/assets/hdri_jpeg.jpg');
     background-size: cover;
     width: 100%;
     height: 100%;
 	transition: 0.55s opacity ease-out;
-    &::after {
+    /*&::after {
         position: absolute;
         top: -100px;
         right: -200px;
@@ -31,9 +29,19 @@
         height: 450px;
         background-size: contain;
         background-repeat: no-repeat;
-    }
+    }*/
 
     svg {
         margin-bottom: 35px;
     }
+
+}
+
+.play{
+    opacity: 0;
+    position: absolute;
+    bottom: 20%;
+    left: 45%;
+    z-index: 100000;
+    left: 42.5%;
 }
