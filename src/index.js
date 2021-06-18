@@ -11,13 +11,11 @@ var animData = {
   container: container,
   renderer: 'svg',
   autoplay: true,
-  loop: true,
+  loop: false,
   path: './animations/logo_animation.json',
 }
 
-console.log(animData)
 var anim = lottie.loadAnimation(animData)
-anim.setSpeed(6);
 
 
 let socket = false;
