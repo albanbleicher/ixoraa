@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const webpack = require('webpack')
 const path = require('path')
 
 module.exports = {
@@ -35,6 +36,9 @@ module.exports = {
       favicon: path.resolve(__dirname, '../static/favicon.ico'),
       template: path.resolve(__dirname, '../src/index.html'),
       minify: true,
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
     }),
   ],
   module: {
