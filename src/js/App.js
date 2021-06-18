@@ -8,6 +8,7 @@ import World from '@world/index'
 import io from 'socket.io-client'
 export default class App {
   constructor(options) {
+    console.log('init app');
     // Set options
     this.canvas = options.canvas
     this.socket = options.socket

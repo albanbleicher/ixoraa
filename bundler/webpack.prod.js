@@ -9,7 +9,7 @@ module.exports = webpackMerge.merge(
     mode: 'production',
     plugins: [
       new CleanWebpackPlugin(),
-      new MiniCssExtractPlugin()
+      new MiniCssExtractPlugin(),
     ],
     module:
     {

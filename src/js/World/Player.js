@@ -32,7 +32,7 @@ export default class Player {
         this.player.mesh = this.assets.models.conscience_humaine.scene.children[0]
 
         this.player.mesh.material = new MeshBasicMaterial({
-            alphaMap: this.assets.textures.texture_alpha,
+            alphaMap: this.assets.textures.bake_alpha,
             transparent: true
         })
         // Set a collider, which give the actual position for the player, and init with a translate
