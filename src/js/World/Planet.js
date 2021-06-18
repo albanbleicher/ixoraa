@@ -46,23 +46,24 @@ export default class Planet {
     // Get global Mesh from Loader and define is as Planet's Mesh
     this.mesh = this.assets.models.map.scene
     this.mesh.traverse(obj => {
-      obj.castShadow=true
-      obj.receiveShadow=true
+      obj.castShadow = true
+      obj.receiveShadow = true
     })
     // Get Physics Mesh from previous Mesh and define it as Planet's Physics (=> see Physics.js)
-    this.physics = getMesh({ parent:this.mesh, name:MODELS.planet.physics, strict:true })
+    this.physics = getMesh({ parent: this.mesh, name: MODELS.planet.physics, strict: true })
     // Hiding Physics Mesh because we don't want to see it
     this.physics.visible = false
     // Get displayed Ground 
-    this.ground = getMesh({parent:this.mesh, name:MODELS.planet.ground, strict:true})
+    this.ground = getMesh({ parent: this.mesh, name: MODELS.planet.ground, strict: true })
     this.container.add(this.mesh)
   }
   setTotems() {
     // Retrieving each Totem's Mesh and set a list
     MODELS.totems.forEach(totem => {
 
-      this.totemList.push(getMesh({ parent:this.mesh, name: totem,strict:true }))
+      this.totemList.push(getMesh({ parent: this.mesh, name: totem, strict: true }))
     })
+    // Then instanciate each of them 
     this.totemList.forEach(totemMesh => {
       let position = new Vector3()
       totemMesh.getWorldPosition(position)
@@ -70,50 +71,53 @@ export default class Planet {
         player: this.player,
         position,
         time: this.time,
-        socket:this.socket,
+        socket: this.socket,
         assets: this.assets,
         camera: this.camera,
         name: totemMesh.name,
-        totemList: this.totemList,
-        waveemit: this.waveemit,
-        listener: this.listener
+        listener: this.listener,
+        totem: totemMesh
       })
       this.container.add(totem.container)
     })
   }
+
+  // Pretty useful to get the monolithes Meshes, and place the HDRI texture as a material for each one
   setMaterials() {
     this.ground.material = new MeshStandardMaterial({
       color: '#15AB86',
     })
 
-const strength = getMesh({parent: this.mesh, name:MODELS.planet.bigMonolithe, strict:true})
-const monolithes = getMesh({parent: this.mesh, name:MODELS.planet.smallMonolithes, strict:true})
-const rocks = getMesh({parent: this.mesh, name:MODELS.planet.rocks, strict:true})
-const strengthEnvironment = [strength, monolithes, rocks]
+    const strength = getMesh({ parent: this.mesh, name: MODELS.planet.bigMonolithe, strict: true })
+    const monolithes = getMesh({ parent: this.mesh, name: MODELS.planet.smallMonolithes, strict: true })
+    const rocks = getMesh({ parent: this.mesh, name: MODELS.planet.rocks, strict: true })
+    const strengthEnvironment = [strength, monolithes, rocks]
 
-strengthEnvironment.forEach(element => {
-  let material = strength.material;
-  material.envMap = this.assets.textures.hdri.full
-  material.envMapIntensity = 0.3
+    strengthEnvironment.forEach(element => {
+      let material = strength.material;
+      material.envMap = this.assets.textures.hdri.full
+      material.envMapIntensity = 0.3
 
-  element.material = material
-})
+      element.material = material
+    })
 
-    
+
   }
+
+  // Same idea, get the meshes, and add materials and layers for blooming
   setBloomingItems() {
-    const bigTree = getMesh({parent: this.mesh, name: MODELS.planet.bigTree, strict:true})
-    const hopeTree = getMesh({parent: this.mesh, name: MODELS.planet.hopeTree, strict:true})
+    const bigTree = getMesh({ parent: this.mesh, name: MODELS.planet.bigTree, strict: true })
+    const hopeTree = getMesh({ parent: this.mesh, name: MODELS.planet.hopeTree, strict: true })
     const spirits = []
     this.mesh.traverse(obj => {
-        if(obj.name.includes('energie')) spirits.push(obj)
-      })
+      if (obj.name.includes('energie')) spirits.push(obj)
+    })
 
 
     spirits.forEach(spirit => {
       const material = new MeshStandardMaterial({
-        color:new Color('orange'),
-        emissive:new Color('orange')
+        color: new Color('orange'),
+        emissive: new Color('orange')
       })
       spirit.material = material
       spirit.layers.enable(1)
@@ -121,6 +125,8 @@ strengthEnvironment.forEach(element => {
     hopeTree.layers.enable(1)
     bigTree.layers.enable(1)
   }
+
+  //Instanciate the grass / grassMaterial with some parameters, like DoubleSide, number of them
   createVegetation() {
 
     const grassMaterial = new MeshStandardMaterial({

@@ -1,5 +1,5 @@
 import { Vec3 } from "cannon-es"
-import { MeshNormalMaterial, Vector2, Vector3 } from "three"
+import { MeshNormalMaterial, Vector2, Vector3, MeshBasicMaterial } from "three"
 import { Spherical } from "three"
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 
@@ -12,6 +12,7 @@ export default class Player {
         this.camera = params.camera
         this.debug = params.debug
         this.player = {}
+        this.assets = params.assets
 
         this.velocity = new Vector3();
         this.direction = new Vector3();
@@ -19,15 +20,22 @@ export default class Player {
         // Set up
         this.container = new Object3D()
         this.container.name = 'Player'
+        this.container.totemContainer = new Object3D()
+        this.container.totemContainer.collected = [];
 
         this.init()
+        this.createCollected()
     }
     async init() {
-        // Add sphere to simulate player
-        const geometry = new SphereGeometry(0.05, 10, 10)
-        const material = new MeshNormalMaterial()
+        // Add the good Mesh and material for the player
 
-        this.player.mesh = new Mesh(geometry, material)
+        this.player.mesh = this.assets.models.conscience_humaine.scene.children[0]
+
+        this.player.mesh.material = new MeshBasicMaterial({
+            alphaMap: this.assets.textures.texture_alpha,
+            transparent: true
+        })
+        // Set a collider, which give the actual position for the player, and init with a translate
         this.player.collider = new Capsule(new Vector3(0, 0.35, 0), new Vector3(0, 0, 0), 0.35);
         this.player.collider.translate(new Vector3(-19.3, 0.8, 11.2))
         this.player.velocity = new Vector3()
@@ -37,8 +45,10 @@ export default class Player {
         // place camera
         this.container.add(this.player.mesh)
         this.player.mesh.add(this.camera.camera)
+        //this.player.mesh.rotation.y += 0.005
+        //this.player.mesh.rotation.y += 0.005
         this.camera.camera.position.y = 0
-        this.camera.camera.position.z = 1
+        this.camera.camera.position.z = 2
         this.time.on('tick', () => {
             this.camera.camera.lookAt(this.player.mesh.position)
             this.position.copy(this.player.mesh.position)
@@ -52,6 +62,36 @@ export default class Player {
             this.debugFolder.add(this.player.mesh.position, 'z').min(-1000).max(1000).step(0.1).listen()
             this.debugFolder.add(this.player.mesh.rotation, 'y').min(0).max(1).step(0.1).listen()
         }
+    }
+
+    // At each time, get all the collected totems balls. They are in a totemContainer, which shape is like an plate, divide this shape
+    // by the number of totem balls, then make it spine around the player's collider thanks to a lerp
+    createCollected() {
+        // Each totem get a different orbite distance from the player
+        const radiusContainer = [
+            0.1,
+            0.2,
+            0.3,
+            0.4,
+        ]
+        let t = 0
+        this.time.on('tick', () => {
+            t += 0.05
+            for (let i = 0; i < this.container.totemContainer.collected.length; i++) {
+                console.log(this.container.totemContainer.collected)
+                this.container.totemContainer.collected[i].posTarget.set(
+                    this.player.collider.start.x + Math.cos(t + Math.PI * 2 / this.container.totemContainer.collected.length * i) * radiusContainer[i],
+                    this.player.collider.end.y - 0.01,
+                    this.player.collider.start.z + Math.sin(t + Math.PI * 2 / this.container.totemContainer.collected.length * i) * radiusContainer[i]
+                )
+
+                if (i == 0)
+                    console.log(this.container.totemContainer.collected[i].posTarget.distanceTo(this.container.totemContainer.collected[i].position))
+                this.container.totemContainer.collected[i].position.lerp(this.container.totemContainer.collected[i].posTarget, 0.2)
+            }
+
+            //this.container.totemContainer.rotation.set(0.5, 1, 1.57);
+        })
     }
 
 }

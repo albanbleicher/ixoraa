@@ -6,6 +6,8 @@ export default class TotemScreen {
         this.container = null
         this.create()
     }
+
+    // Simple way to create screen text
     create() {
         const app = document.querySelector('.app')
         this.container = document.createElement('div')

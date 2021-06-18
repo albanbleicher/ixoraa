@@ -65,7 +65,6 @@
     "p5": "^1.3.1",
     "process": "^0.11.10",
     "socket.io-client": "^4.1.1",
-    "three-to-cannon": "^4.0.2",
-    "vue-p5": "^0.8.4"
+    "three-to-cannon": "^4.0.2"
   }
 }

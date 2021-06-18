@@ -17,6 +17,7 @@ export default class Vegetation {
         this.model.geometry.computeVertexNormals();
         this.model.geometry.scale( this.scaleFactor, this.scaleFactor, this.scaleFactor );
 
+        //create a lot of grass placed on a groundMesh
         this.surface.updateMatrixWorld()
         const groundGeometry = this.surface.geometry.toNonIndexed()
         const groundMesh = new Mesh(groundGeometry, new MeshNormalMaterial())
