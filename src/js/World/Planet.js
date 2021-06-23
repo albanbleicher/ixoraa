@@ -12,6 +12,8 @@ import Totem from './Totem'
 import { MODELS } from './utils'
 import Vegetation from './Vegetation'
 import { getMesh } from '@js/Tools/Functions.js'
+import TotemTuto from './TotemTuto'
+
 export default class Planet {
   constructor(params) {
     // params
@@ -40,6 +42,7 @@ export default class Planet {
     this.setBloomingItems()
     // if (params.debug) this.setDebug()
     this.setTotems()
+    this.showTuto()
 
   }
   init() {
@@ -155,6 +158,13 @@ export default class Planet {
     //   container: this.container,
     // })
 
+  }
+  showTuto() {
+    this.totemTuto = new TotemTuto({
+      assets: this.assets
+    })
+    this.totemTuto.show();
+    console.log('showtuto')
   }
   setDebug() {
     let self = this;

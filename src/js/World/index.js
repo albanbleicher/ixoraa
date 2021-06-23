@@ -10,6 +10,7 @@ import Fog from './Fog'
 import ColorGUIHelper from '../Tools/ColorGUIHelper'
 import Effects from './Effects'
 import WaveEmit from '../Tools/WaveEmit'
+import gsap from 'gsap/gsap-core'
 export default class World {
   constructor(options) {
     // Set options
@@ -83,10 +84,11 @@ export default class World {
       this.assets.on('ressourcesReady', () => {
         setTimeout(() => {
           this.init()
-          this.loadDiv.style.opacity = 0
+          //this.loadDiv.style.opacity = 0
+          gsap.to(this.loadDiv, { duration: 3, opacity: 0 })
           setTimeout(() => {
-            this.loadDiv.remove()
-          }, 550)
+            //this.loadDiv.remove()
+          }, 1550)
         }, 1000)
       })
     }
@@ -145,7 +147,7 @@ export default class World {
       player: this.player,
       listener: this.listener,
       waveemit: this.waveemit,
-      socket:this.socket
+      socket: this.socket
     })
     this.container.add(this.planet.container)
   }

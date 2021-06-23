@@ -21,7 +21,8 @@ const play = document.querySelector('.play')
 
 anim.addEventListener('complete', () => gsap.to(play, { opacity: 1 }))
 
-anim.setSpeed(8);
+//anim.setSpeed(3);
+anim.setSpeed(10);
 
 
 let socket = false;
@@ -43,14 +44,26 @@ if (!window.location.hash.includes('#nosocket')) {
 
       });
       socket.once('room is_synced', () => {
+        const app = document.querySelector('.app');
+        console.log(app);
+        const canvas = document.querySelector('#_canvas');
+        new App({
+          canvas,
+          socket
+        })
+        gsap.to(access, { opacity: 0, duration: 2 })
+        gsap.to(container, { opacity: 0, duration: 2 })
+        gsap.to(landing, { opacity: 0, duration: 2 }).then(() => {
+          gsap.to(access, { display: 'none', duration: 0 })
+          gsap.to(container, { display: 'none', duration: 0 })
+          gsap.to(landing, { display: 'none', duration: 0 }).then(() => {
+            gsap.to(app, { duration: 2, opacity: 1 })
+            gsap.to(canvas, { duration: 2, opacity: 1 }).then(() => {
+            })
 
-        gsap.to(access, { opacity: 0 }).then(() => {
-          gsap.to(container, { opacity: 0, display: 'none' })
-          gsap.to(access, { display: 'none' })
-          new App({
-            canvas: document.querySelector('#_canvas'),
-            socket
           })
+
+
         })
         musicFadeOut()
 
