@@ -7,12 +7,16 @@ exports.default = {
     leave(socket, totem) {
         socket.emit(TOTEMS.LEAVE, totem)
     },
-    begin(socket, totem) {
+    beginListen(socket, totem) {
         console.log('begin interaction on totem', totem);
-        socket.emit(TOTEMS.BEGIN, totem)
+        socket.emit(TOTEMS.BEGIN_LISTEN, totem)
     },
-    end(socket, totem) {
+    wave(socket, wave) {
+        console.log('received wave  @ ', wave);
+        socket.emit(TOTEMS.WAVE, wave)
+    },
+    endListen(socket, totem) {
         console.log('end interaction on totem', totem);
-        socket.emit(TOTEMS.END, totem)
+        socket.emit(TOTEMS.END_LISTEN, totem)
     }
 }

@@ -41,8 +41,9 @@ class Handler {
 
         socket.on(TOTEMS.APPROACH, (totem) => totems.approach(this.io, totem))
         socket.on(TOTEMS.LEAVE, (totem) => totems.leave(this.io, totem))
-        socket.on(TOTEMS.BEGIN, (totem) => totems.begin(this.io, totem))
-        socket.on(TOTEMS.END, (totem) => totems.end(this.io, totem))
+        socket.on(TOTEMS.BEGIN_LISTEN, (totem) => totems.beginListen(this.io, totem))
+        socket.on(TOTEMS.WAVE, (wave) => totems.wave(this.io, wave))
+        socket.on(TOTEMS.END_LISTEN, (totem) => totems.endListen(this.io, totem))
 
         
         // socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))

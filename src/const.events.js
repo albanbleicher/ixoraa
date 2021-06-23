@@ -18,8 +18,9 @@ exports.MOVEMENTS = {
 exports.TOTEMS = {
     APPROACH:'totem approach',
     LEAVE: 'totem leave',
-    BEGIN: 'totem begin',
-    END: 'totem end',
+    BEGIN_LISTEN: 'totem begin listen',
+    WAVE: 'totem wave',
+    END_LISTEN: 'totem end listen',
 }
 
 exports.MUSICTIME = {
