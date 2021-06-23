@@ -38,13 +38,14 @@ if (!window.location.hash.includes('#nosocket')) {
       socket.once("room code", (id) => {
         code.innerText = id;
       });
-      gsap.to(play, { opacity: 0}).then(() => {
-      gsap.to(access, { opacity: 1});
+      gsap.to(play, { opacity: 0, display: 'none' }).then(() => {
+        gsap.to(access, { opacity: 1 });
 
       });
       socket.once('room is_synced', () => {
 
         gsap.to(access, { opacity: 0 }).then(() => {
+          gsap.to(container, { opacity: 0, display: 'none' })
           gsap.to(access, { display: 'none' })
           new App({
             canvas: document.querySelector('#_canvas'),
@@ -90,12 +91,12 @@ function musicFadeOut() {
     if (vol > 0) {
       console.log(vol);
       console.log(audio)
-        vol -= 0.02;
-        audio.volume = vol;
-      }
-      else {
-        // Stop the setInterval when 0 is reached
-        clearInterval(fadeout);
-      }
-    }, interval);
+      vol -= 0.02;
+      audio.volume = vol;
+    }
+    else {
+      // Stop the setInterval when 0 is reached
+      clearInterval(fadeout);
+    }
+  }, interval);
 }

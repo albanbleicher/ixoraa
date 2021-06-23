@@ -46,7 +46,7 @@ export default class Totem {
     this.totem.scale.set(0.1, 0.1, 0.1);
     this.totem.material.opacity = 0;
     console.log(this.totem.children[0]);
-    this.player.container.boolsContainer.collected.push(this.totem);
+    this.player.container.totemContainer.collected.push(this.totem);
 
     // For each totem, we instanciate some screen narration, and a song, composed of drums, chord, and melody, which are played sequencially
     // when the player come closer to it
