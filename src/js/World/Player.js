@@ -49,7 +49,7 @@ export default class Player {
         this.container.add(this.player.mesh)
         this.player.mesh.add(this.camera.camera)
 
-        // 
+        // Set textures, rotation and bloom to the player
         this.player.mesh.material.transparent = true;
         this.player.mesh.material.map.wrapS = RepeatWrapping
         this.player.mesh.material.map.wrapT = RepeatWrapping

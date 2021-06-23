@@ -159,12 +159,12 @@ export default class Planet {
     // })
 
   }
+  // Create the tuto on first appearance
   showTuto() {
     this.totemTuto = new TotemTuto({
       assets: this.assets
     })
     this.totemTuto.show();
-    console.log('showtuto')
   }
   setDebug() {
     let self = this;

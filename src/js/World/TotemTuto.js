@@ -10,7 +10,7 @@ export default class TotemTuto {
         this.create()
     }
 
-    // Create Lottie animation
+    // Create Lottie animation and DOM nodes
     create() {
         const app = document.querySelector('.app')
         this.container = document.createElement('div')
@@ -43,6 +43,7 @@ export default class TotemTuto {
         });
 
     }
+    // Set the timeline to chain title and animation
     show() {
         gsap.to(this.title1, { opacity: 1, duration: 3 }).then(() => {
             gsap.to(this.title2, { opacity: 1, duration: 3 }).then(() => {
