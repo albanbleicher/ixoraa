@@ -54,9 +54,6 @@ export default {
   },
   created() {
     this.io = io("http://localhost:3000");
-    console.log(this.io);
-    //const result = await this.returnsPromise(time, lines);
-    //console.log(result)
   },
   mounted() {
     //this.handleMove();
