@@ -1,4 +1,4 @@
-import { Object3D, Mesh, MeshBasicMaterial, Vector3, TextureLoader,MeshStandardMaterial, TorusGeometry , Color} from 'three'
+import { Object3D, Mesh, MeshBasicMaterial, Vector3, TextureLoader, MeshStandardMaterial, TorusGeometry, Color } from 'three'
 
 import gsap from 'gsap'
 import { MODELS } from './utils'
@@ -17,6 +17,7 @@ export default class Totem {
     this.socket = options.socket
     this.listener = options.listener
     this.totem = options.totem
+    this.tuto = options.tuto
     this.steps = {
       first: 5, // play drums
       second: 3.5, // play chord
@@ -30,7 +31,7 @@ export default class Totem {
     this.container.name = 'Totem ' + options.name
 
     this.totemDebugger = null
-    if(options.socket) this.handleSocket()
+    if (options.socket) this.handleSocket()
     setTimeout(() => {
       this.init()
       this.time.on('tick', this.watch.bind(this))
@@ -59,15 +60,15 @@ export default class Totem {
             {
               chord: this.assets.sounds.totems.wisdom.firstChord,
               melody: {
-                asset:this.assets.sounds.totems.wisdom.firstMelody,
-                waveFrequency:180,
+                asset: this.assets.sounds.totems.wisdom.firstMelody,
+                waveFrequency: 180,
               },
             },
             {
               chord: this.assets.sounds.totems.wisdom.secondChord,
               melody: {
-                asset:this.assets.sounds.totems.wisdom.secondMelody,
-                waveFrequency:180,
+                asset: this.assets.sounds.totems.wisdom.secondMelody,
+                waveFrequency: 180,
               },
             }
           ],
@@ -75,7 +76,7 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time:this.time
+          time: this.time
         })
         this.container.add(this.pattern.container)
 
@@ -91,15 +92,15 @@ export default class Totem {
             {
               chord: this.assets.sounds.totems.strength.firstChord,
               melody: {
-                asset:this.assets.sounds.totems.strength.firstMelody,
-                waveFrequency:180,
+                asset: this.assets.sounds.totems.strength.firstMelody,
+                waveFrequency: 180,
               },
             },
             {
               chord: this.assets.sounds.totems.strength.secondChord,
               melody: {
-                asset:this.assets.sounds.totems.strength.secondMelody,
-                waveFrequency:180,
+                asset: this.assets.sounds.totems.strength.secondMelody,
+                waveFrequency: 180,
               },
             }
           ],
@@ -107,7 +108,7 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time:this.time
+          time: this.time
         })
         this.container.add(this.pattern.container)
         break;
@@ -118,15 +119,15 @@ export default class Totem {
             {
               chord: this.assets.sounds.totems.hope.firstChord,
               melody: {
-                asset:this.assets.sounds.totems.hope.firstMelody,
-                waveFrequency:205,
+                asset: this.assets.sounds.totems.hope.firstMelody,
+                waveFrequency: 205,
               },
             },
             {
               chord: this.assets.sounds.totems.hope.secondChord,
               melody: {
-                asset:this.assets.sounds.totems.beauty.secondMelody,
-                waveFrequency:205,
+                asset: this.assets.sounds.totems.beauty.secondMelody,
+                waveFrequency: 205,
               },
             }
           ],
@@ -134,7 +135,7 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time:this.time
+          time: this.time
 
         })
         this.container.add(this.pattern.container)
@@ -150,15 +151,15 @@ export default class Totem {
             {
               chord: this.assets.sounds.totems.beauty.firstChord,
               melody: {
-                asset:this.assets.sounds.totems.beauty.firstMelody,
-                waveFrequency:180,
+                asset: this.assets.sounds.totems.beauty.firstMelody,
+                waveFrequency: 180,
               },
             },
             {
               chord: this.assets.sounds.totems.beauty.secondChord,
               melody: {
-                asset:this.assets.sounds.totems.beauty.secondMelody,
-                waveFrequency:180,
+                asset: this.assets.sounds.totems.beauty.secondMelody,
+                waveFrequency: 180,
               },
             }
           ],
@@ -166,7 +167,7 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time:this.time
+          time: this.time
         })
         this.container.add(this.pattern.container)
         this.screen = new TotemScreen({
@@ -190,12 +191,12 @@ export default class Totem {
     this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
     if (this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
       this.near = true;
-      if(this.socket) this.socket.emit('totem approach', this.name)
-      
+      if (this.socket) this.socket.emit('totem approach', this.name)
+
       if (this.screen) this.screen.show()
       console.log('[Totem] Approaching ' + this.name);
     }
-    if(this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
+    if (this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
       this.nearThird = true
       console.log('entering melody zone');
       this.pattern.trigger('approach')
@@ -203,7 +204,7 @@ export default class Totem {
     if (this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
       this.near = false;
       this.pattern.trigger('leave')
-       if(this.socket) this.socket.emit('totem leave', this.name)
+      if (this.socket) this.socket.emit('totem leave', this.name)
       if (this.screen) this.screen.hide()
 
       console.log('[Totem] Leaving ' + this.name);
@@ -216,7 +217,7 @@ export default class Totem {
 
     let geometry = new TorusGeometry(1, 0.01, 16, 100);
     let material = new MeshStandardMaterial({
-      color:new Color('white')
+      color: new Color('white')
     })
 
     let torus = new Mesh(geometry, material);
@@ -353,7 +354,7 @@ export default class Totem {
   handleSocket() {
     const self = this;
     this.socket.on('totem begin', (totem) => {
-      if(totem === self.name) {
+      if (totem === self.name) {
         self.screen.hide()
         self.createTorus()
       }
