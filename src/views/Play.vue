@@ -3,10 +3,26 @@
       <Joystick  v-if='!nearTotem'  />
       <Sync v-else />
   </div>
+      <!-- <div class="joystickController">
+      <JoystickDisplacement />
+    </div>
+
+    <div class="musicalController">
+      <MusicTime />
+    </div>
+    <div class="test">
+      <Lottie />
+    </div>
+  </div> -->
 </template>
 <script>
 import Joystick from "@/components/Joystick";
 import Sync from "@/components/Sync";
+
+import JoystickDisplacement from "@/components/JoystickDisplacement";
+import JoystickDirection from "@/components/JoystickDirection";
+import Lottie from "@/components/Lottie";
+import MusicTime from "@/components/MusicTime";
 import gsap from "gsap";
 import { mapGetters, mapMutations } from 'vuex'
 export default {

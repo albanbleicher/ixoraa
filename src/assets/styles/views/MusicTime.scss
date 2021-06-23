@@ -14,13 +14,44 @@
 }
 .tap{
     background-color: #aeaeea;
+}
+.noteContainer{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    
+}
+
+.note {
     border-radius: 100px;
+    background-color: white;
+    width: 100px;
+    height: 100px;
     position: absolute;
     border:none;
     top: 45%;
     left: 47.5%;
-    height: 100px;
-    width: 100px;
+ }
+
+.noteBorder {
+    
+    border: 5px solid white;
+    border-radius: 100%;
+    display: flex;
+    height: 130px;
+    width: 130px;
+    margin-top: -20px;
+    margin-left: -24px;
+    transition-duration: 0.2s;
+    &:active {
+        transform: scale(0.75)
+    }
+}
+#anim_container {
+	width: 100%;
+	height: 100%;
+	z-index: 2000;
+	position: absolute;
 }
 
 .correct{

@@ -11,9 +11,15 @@
     </div>
     <!--<span class="musicbutton line" id="line" ref="line"></span>-->
 
-    <div>
-      <button class="note" ref="note" @click="playNote()"></button>
+    <div class="noteContainer">
+      <button class="note" ref="note" @click="playNote()">
+        <span class="noteBorder" ref="noteBorder"> </span>
+      </button>
     </div>
+    <lottie-animation
+    path="../assets/animations/contour_bouton_animation.json"
+/>
+    <div id="anim_container"></div>
     <div style="position: absolute; left: 50px">
       <p
         v-for="(attempt, index) in attempts"
@@ -28,6 +34,9 @@
 <script>
 import io from "socket.io-client";
 import gsap from "gsap";
+import lottie from "lottie-web";
+import test from '../assets/animations/contour_bouton_animation.json'
+
 export default {
   data() {
     return {
@@ -54,6 +63,11 @@ export default {
   },
   created() {
     this.io = io("http://localhost:3000");
+    console.log(this.io);
+    this.startLottie();
+
+    //const result = await this.returnsPromise(time, lines);
+    //console.log(result)
   },
   mounted() {
     //this.handleMove();
@@ -102,6 +116,7 @@ export default {
       const currentLineId = "line" + (this.completedNotes.length + 1);
       const line = this.$refs[currentLineId][0];
       const note = this.$refs["note"];
+      const noteBorder = this.$refs["noteBorder"];
       console.log(currentLineId);
       console.log(line);
 
@@ -124,6 +139,8 @@ export default {
       // Si elle est juste, on l'ajoute au tableau des lignes juste, sinon on active le fade out, et recommence le jeu
       // Lorsque le jeu est réussi, on en informe le serveur
       if (check) {
+        noteBorder.style.border = "5px solid green";
+
         this.attempts.push(currentLineId + " is correct !");
         this.completedNotes.push(currentLineId + " is correct !");
         console.log(this.completedNotes.length);
@@ -140,6 +157,7 @@ export default {
         }
       } else {
         this.attempts.push("False, noob");
+        noteBorder.style.border = "5px solid red";
         this.io.emit("wrong");
         this.fadeOutOpacity();
       }
@@ -175,6 +193,21 @@ export default {
         this.lines = lines;
         resolve();
       });
+    },
+    startLottie() {
+      console.log(test)
+      let container = document.getElementById("anim_container");
+
+      const JSONtest = JSON.stringify(test)
+      var animData = {
+        container: container,
+        renderer: "svg",
+        autoplay: true,
+        loop: false,
+        path: JSONtest,
+      };
+
+      var anim = lottie.loadAnimation(animData);
     },
   },
 };
