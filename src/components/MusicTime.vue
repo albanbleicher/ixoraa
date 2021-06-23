@@ -16,9 +16,6 @@
         <span class="noteBorder" ref="noteBorder"> </span>
       </button>
     </div>
-    <lottie-animation
-    path="../assets/animations/contour_bouton_animation.json"
-/>
     <div id="anim_container"></div>
     <div style="position: absolute; left: 50px">
       <p
@@ -35,7 +32,6 @@
 import io from "socket.io-client";
 import gsap from "gsap";
 import lottie from "lottie-web";
-import test from '../assets/animations/contour_bouton_animation.json'
 
 export default {
   data() {
@@ -64,12 +60,12 @@ export default {
   created() {
     this.io = io("http://localhost:3000");
     console.log(this.io);
-    this.startLottie();
 
     //const result = await this.returnsPromise(time, lines);
     //console.log(result)
   },
   mounted() {
+    this.startLottie();
     //this.handleMove();
     this.io.on("phoneConnected", () => {
       this.connected = true;
@@ -195,16 +191,13 @@ export default {
       });
     },
     startLottie() {
-      console.log(test)
-      let container = document.getElementById("anim_container");
-
-      const JSONtest = JSON.stringify(test)
+      //const JSONtest = JSON.stringify(test);
       var animData = {
-        container: container,
+        container: document.getElementById("anim_container"),
         renderer: "svg",
         autoplay: true,
-        loop: false,
-        path: JSONtest,
+        loop: true,
+        path: "assets/animations/contour_bouton_animation.json",
       };
 
       var anim = lottie.loadAnimation(animData);

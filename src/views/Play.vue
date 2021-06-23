@@ -7,24 +7,19 @@
     <div class="musicalController">
       <MusicTime />
     </div>
-    <div class="test">
-      <Lottie />
-    </div>
   </div>
 </template>
 <script>
 import JoystickDisplacement from "@/components/JoystickDisplacement";
 import JoystickDirection from "@/components/JoystickDirection";
-import Lottie from "@/components/Lottie";
 import MusicTime from "@/components/MusicTime";
 import gsap from "gsap";
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   components: {
     JoystickDisplacement,
     JoystickDirection,
     MusicTime,
-    Lottie
   },
   data() {
     return {
@@ -34,7 +29,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['socket'])
+    ...mapGetters(["socket"]),
   },
   mounted() {
     console.log("mounted");
@@ -73,7 +68,7 @@ export default {
       //console.log("musicTime Begin");
     });
 
-  // And when an interaction is completed, do this switch back
+    // And when an interaction is completed, do this switch back
     this.socket.on("winned", () => {
       console.log("winned");
       setTimeout(() => {

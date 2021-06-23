@@ -1,0 +1,27 @@
+.joystick {
+    background-color: transparentize(color('secondary'), 0.4);
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+
+    &.joystick-displacement {
+        position: relative;
+        .joystick-controller {
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            transform: translate(-50%,-50%);
+            width: 70%;
+            height: 70%;
+            border-radius: 100%;
+            background-color: color('secondary');
+        }
+    }
+
+}
+#joystick_dir {
+    margin-left: 300px;
+    width:150px;
+    height: 150px;
+    position: relative;
+}
