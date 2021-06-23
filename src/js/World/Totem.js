@@ -1,4 +1,4 @@
-import { Object3D, Mesh, MeshBasicMaterial, Vector3, TextureLoader, TorusGeometry, MeshMatcapMaterial } from 'three'
+import { Object3D, Mesh, MeshBasicMaterial, Vector3, TextureLoader,MeshStandardMaterial, TorusGeometry , Color} from 'three'
 
 import gsap from 'gsap'
 import { MODELS } from './utils'
@@ -30,23 +30,20 @@ export default class Totem {
     this.container.name = 'Totem ' + options.name
 
     this.totemDebugger = null
-
+    if(options.socket) this.handleSocket()
     setTimeout(() => {
       this.init()
       this.time.on('tick', this.watch.bind(this))
-      if (options.socket) this.handleSocket()
     }, 300)
 
   }
   init() {
-    console.log(this.totem);
-
     // On modifie quelques propriétés du mesh lorsqu'il est collecté
-    this.totem.posTarget = new Vector3();
-    this.totem.scale.set(0.1, 0.1, 0.1);
-    this.totem.material.opacity = 0;
-    console.log(this.totem.children[0]);
-    this.player.container.boolsContainer.collected.push(this.totem);
+    // this.totem.posTarget = new Vector3();
+    // this.totem.scale.set(0.1, 0.1, 0.1);
+    // this.totem.material.opacity = 0;
+    // console.log(this.totem.children[0]);
+    // this.player.container.boolsContainer.collected.push(this.totem);
 
     // For each totem, we instanciate some screen narration, and a song, composed of drums, chord, and melody, which are played sequencially
     // when the player come closer to it
@@ -57,21 +54,28 @@ export default class Totem {
           description: 'La nature montre par son comportement, combien la sagesse et la patience sont des valeurs importante pour la survie de chaque être.'
         })
         this.pattern = new Pattern({
-          drums: this.assets.sounds.totems.strength.drums,
+          drums: this.assets.sounds.totems.wisdom.drums,
           patterns: [
             {
-              chord: this.assets.sounds.totems.strength.firstChord,
-              melody: this.assets.sounds.totems.strength.firstMelody,
+              chord: this.assets.sounds.totems.wisdom.firstChord,
+              melody: {
+                asset:this.assets.sounds.totems.wisdom.firstMelody,
+                waveFrequency:180,
+              },
             },
             {
-              chord: this.assets.sounds.totems.strength.secondChord,
-              melody: this.assets.sounds.totems.strength.secondMelody,
+              chord: this.assets.sounds.totems.wisdom.secondChord,
+              melody: {
+                asset:this.assets.sounds.totems.wisdom.secondMelody,
+                waveFrequency:180,
+              },
             }
           ],
           steps: this.steps,
-          player: this.player,
+          near: this.near,
           position: this.position,
-          listener: this.listener
+          listener: this.listener,
+          time:this.time
         })
         this.container.add(this.pattern.container)
 
@@ -82,21 +86,28 @@ export default class Totem {
           description: 'La nature est puissante, forte. Elle exprime toute son énergie à travers différents phénomènes.'
         })
         this.pattern = new Pattern({
-          drums: this.assets.sounds.totems.wisdom.drums,
+          drums: this.assets.sounds.totems.strength.drums,
           patterns: [
             {
-              chord: this.assets.sounds.totems.wisdom.firstChord,
-              melody: this.assets.sounds.totems.wisdom.firstMelody,
+              chord: this.assets.sounds.totems.strength.firstChord,
+              melody: {
+                asset:this.assets.sounds.totems.strength.firstMelody,
+                waveFrequency:180,
+              },
             },
             {
-              chord: this.assets.sounds.totems.wisdom.secondChord,
-              melody: this.assets.sounds.totems.wisdom.secondMelody,
+              chord: this.assets.sounds.totems.strength.secondChord,
+              melody: {
+                asset:this.assets.sounds.totems.strength.secondMelody,
+                waveFrequency:180,
+              },
             }
           ],
           steps: this.steps,
-          player: this.player,
+          near: this.near,
           position: this.position,
-          listener: this.listener
+          listener: this.listener,
+          time:this.time
         })
         this.container.add(this.pattern.container)
         break;
@@ -106,17 +117,25 @@ export default class Totem {
           patterns: [
             {
               chord: this.assets.sounds.totems.hope.firstChord,
-              melody: this.assets.sounds.totems.hope.firstMelody,
+              melody: {
+                asset:this.assets.sounds.totems.hope.firstMelody,
+                waveFrequency:205,
+              },
             },
             {
               chord: this.assets.sounds.totems.hope.secondChord,
-              melody: this.assets.sounds.totems.hope.secondMelody,
+              melody: {
+                asset:this.assets.sounds.totems.beauty.secondMelody,
+                waveFrequency:205,
+              },
             }
           ],
           steps: this.steps,
-          player: this.player,
+          near: this.near,
           position: this.position,
-          listener: this.listener
+          listener: this.listener,
+          time:this.time
+
         })
         this.container.add(this.pattern.container)
         this.screen = new TotemScreen({
@@ -130,17 +149,24 @@ export default class Totem {
           patterns: [
             {
               chord: this.assets.sounds.totems.beauty.firstChord,
-              melody: this.assets.sounds.totems.beauty.firstMelody,
+              melody: {
+                asset:this.assets.sounds.totems.beauty.firstMelody,
+                waveFrequency:180,
+              },
             },
             {
               chord: this.assets.sounds.totems.beauty.secondChord,
-              melody: this.assets.sounds.totems.beauty.secondMelody,
+              melody: {
+                asset:this.assets.sounds.totems.beauty.secondMelody,
+                waveFrequency:180,
+              },
             }
           ],
           steps: this.steps,
-          player: this.player,
+          near: this.near,
           position: this.position,
-          listener: this.listener
+          listener: this.listener,
+          time:this.time
         })
         this.container.add(this.pattern.container)
         this.screen = new TotemScreen({
@@ -152,134 +178,61 @@ export default class Totem {
     this.totemDebugger = document.createElement('span')
     this.totemDebugger.classList.add('debugger')
     this.totemDebugger.setAttribute('id', this.name)
-    // document.querySelector('.app').append(this.totemDebugger)
+    document.querySelector('.app').append(this.totemDebugger)
+    this.pattern.on('wave', () => {
+      this.createTorus()
+    })
+    this.pattern.on('ended', (array) => {
+      console.log('waves array', array)
+    })
   }
   watch() {
     this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
     if (this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
       this.near = true;
+      if(this.socket) this.socket.emit('totem approach', this.name)
+      
       if (this.screen) this.screen.show()
       console.log('[Totem] Approaching ' + this.name);
     }
+    if(this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
+      this.nearThird = true
+      console.log('entering melody zone');
+      this.pattern.trigger('approach')
+    }
     if (this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
       this.near = false;
+      this.pattern.trigger('leave')
+       if(this.socket) this.socket.emit('totem leave', this.name)
       if (this.screen) this.screen.hide()
 
       console.log('[Totem] Leaving ' + this.name);
 
     }
   }
-  // Pour chaque totem, on check la position, emet near totem/musictime begin lorsqu'on est proche
-  // Le serveur renvoie ensuite un musictime begin, on récupère les infos relatifs à cette mélodie et on crééer les torus
-  watchTotem() {
-    this.waveemit.on('wave', () => {
-      // Avec performance, on va enregistrer dans un tableau les temps précis auquel la mélodie courante est jouée
-      this.endTime = performance.mark('end');
-      performance.measure("measure", 'start', 'end');
-      var timeDiff = performance.getEntriesByName('measure'); //in ms 
-      // strip the ms 
-      console.log(timeDiff.duration)
-
-      this.currentTiming.push({ time: timeDiff.duration / 1000, id: this.currentTiming.length + 1 });
-      performance.clearMarks('end');
-      console.log(this.currentTiming);
-
-      console.log(this.currentTiming.length)
-      if (this.currentTiming.length > 8) {
-
-        // Just for debug, should be delete then, the setTimeOut too
-        //this.io_client.emit("near totem")
-        setTimeout(() => {
-          this.io_client.emit("musictime begin", this.currentTiming);
-          this.currentTiming = [];
-        }, 2000)
-      }
-
-      this.createTorus()
-    })
-
-    this.time.on('tick', () => {
-      if (this.isStatic) {
-        this.checkStaticPosition()
-      }
-
-      if (!this.desactivatedTotem && !this.isStatic) {
-
-
-        // Le player n'est pas présent lors de l'instanciation de la classe, pour l'instant il est add ici
-        if (this.player) {
-          this.playerPos = this.player.player.mesh.position
-        }
-
-        // On check pour l'obstacle de la force
-        if (this.name === "gro_monolithe" && !this.obstacleEmitted && this.playerPos.distanceTo(this.position) < 10) {
-          this.obstacleTotemForce(this.position);
-        }
-        // Si on est pas déjà proche d'un totem, que le totem voulu est en activation, et que la position du totem courant est moins loin du perso que 2
-        if (!this.isActivated && this.playerPos.distanceTo(this.position) < 2) {
-          console.warn('enter : ' + this.name);
-          this.isActivated = true
-          this.sounds.add({
-            position: this.position,
-            distance: 1,
-            sound: this.assets.sounds.ActivationTotem,
-            loop: false,
-            name: 'ActivationTotem'
-          })
-
-          if (this.isActivated && !this.nearTotem) {
-            this.io_client.emit("near totem")
-            this.nearTotem = true;
-
-            this.startPanningCamera();
-            // Must be there soon
-            this.startRecordTiming();
-          }
-          // A remplacer ? En tout cas la fonction watchTotem semble toujours être appelé pour les totems enlevés du tableau
-          /*this.totemList.forEach(totem => {
-            if (totem.name === this.activatedTotem.name) {
-              this.io_client.emit("near totem")
-              this.io_client.emit("musictime begin")
-              //this.nearTotem = true;
-            }
-          })*/
-          return;
-        } else if (this.isActivated && this.playerPos.distanceTo(this.position) >= 2) {
-          this.isActivated = false;
-        }
-        return;
-      }
-    })
-  }
-
   // Create a wave, based on the note of the melody played
   createTorus() {
 
-    const textureLoader = new TextureLoader()
-    textureLoader.crossOrigin = "Anonymous"
 
-    const matCapTexture = textureLoader.load('https://makio135.com/matcaps/64/BD5345_460F11_732622_EDB7B1-64px.png')
-
-    //let geometry = new CylinderGeometry(0.2, 0.2, 0.2, 30, 30, true, 0, 2 * Math.PI);
-    let geometry = new TorusGeometry(1, 0.1, 16, 100);
-    //let material = new MeshBasicMaterial({ map: textureTorus });
-    let material = new MeshMatcapMaterial({ matcap: matCapTexture });
+    let geometry = new TorusGeometry(1, 0.01, 16, 100);
+    let material = new MeshStandardMaterial({
+      color:new Color('white')
+    })
 
     let torus = new Mesh(geometry, material);
     torus.material.needsUpdate = true
 
     this.container.add(torus);
-    this.torusList.push(torus);
 
-    torus.position.set(this.position.x, this.position.y + 2, this.position.z);
+    torus.position.set(this.position.x, this.position.y, this.position.z);
     torus.material.transparent = true;
 
     let scaleFactor = 1;
     let opacityFactor = 1;
 
-    /*gsap.to(torus.scale, { x: 10, y: 10, z: 10, duration: 5 }).then(() => {
+    gsap.to(torus.scale, { x: 10, y: 10, z: 10, duration: 5 }).then(() => {
       gsap.to(torus.material, { opacity: 0, duration: 2 })
-    })*/
+    })
     // La scale grandi, puis l'opacité diminue
     this.time.on('tick', () => {
       if (torus.scale.x < 10) {
@@ -291,10 +244,6 @@ export default class Totem {
         // Merge with remove Torus
         opacityFactor -= 0.1
         torus.material.opacity = opacityFactor
-        if (opacityFactor < 0 && this.torusList.length > 0) {
-          this.torusList.shift();
-          this.container.remove(torus);
-        }
       }
     })
   }
@@ -402,48 +351,56 @@ export default class Totem {
   }
 
   handleSocket() {
-    this.io_client.on("musictime begin", (timing, lines) => {
-      //Lorsque l'interaction se lance, on vérifie quel totem vient d'être activé, et on lance les torus à sa position
-      if (this.isActivated) {
-        this.timing = timing;
-        this.lines = lines;
+    const self = this;
+    this.socket.on('totem begin', (totem) => {
+      if(totem === self.name) {
+        self.screen.hide()
+        self.createTorus()
       }
-    });
-
-    // Si on se trompe, on remove les torus et on relance les torus (create torus plutôt que watchTotem ?)
-    this.io_client.on("wrong", () => {
-      if (this.isActivated) {
-        //this.nearTotem = false;
-        this.removeTorus()
-        //this.watchTotem()
-        //this.createTorus();
-        this.isActivated = false;
-      }
-    });
-
-    // Si on a réussi la manche, on passe à la suivante en créant de nouveaux torus
-    this.io_client.on("correct", () => {
-      if (this.isActivated) {
-        //this.removeTorus();
-        //this.createTorus();
-      }
-    });
-
-    // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
-    this.io_client.on("winned", () => {
-      //this.nearTotem = false;
-      //this.watchTotem();
-      this.endPanningCamera();
-      // C'était pas mal avant la refacto, maintenant le meilleur moyen de virer un totem de la liste lorsqu'il est gagné, c'est le désinstancier
-      if (this.isActivated) {
-
-        this.position = new Vector3(150, 150, 150);
-        this.desactivatedTotem = true;
-      }
-      /*const indexToRemove = (totem) => totem.name === this.activatedTotem;
-      const totemToRemove = this.totemList.findIndex(indexToRemove);
-      this.totemList.splice(totemToRemove, 1)*/
-    });
+    })
   }
+  //   this.io_client.on("musictime begin", (timing, lines) => {
+  //     //Lorsque l'interaction se lance, on vérifie quel totem vient d'être activé, et on lance les torus à sa position
+  //     if (this.isActivated) {
+  //       this.timing = timing;
+  //       this.lines = lines;
+  //     }
+  //   });
+
+  //   // Si on se trompe, on remove les torus et on relance les torus (create torus plutôt que watchTotem ?)
+  //   this.io_client.on("wrong", () => {
+  //     if (this.isActivated) {
+  //       //this.nearTotem = false;
+  //       this.removeTorus()
+  //       //this.watchTotem()
+  //       //this.createTorus();
+  //       this.isActivated = false;
+  //     }
+  //   });
+
+  //   // Si on a réussi la manche, on passe à la suivante en créant de nouveaux torus
+  //   this.io_client.on("correct", () => {
+  //     if (this.isActivated) {
+  //       //this.removeTorus();
+  //       //this.createTorus();
+  //     }
+  //   });
+
+  //   // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
+  //   this.io_client.on("winned", () => {
+  //     //this.nearTotem = false;
+  //     //this.watchTotem();
+  //     this.endPanningCamera();
+  //     // C'était pas mal avant la refacto, maintenant le meilleur moyen de virer un totem de la liste lorsqu'il est gagné, c'est le désinstancier
+  //     if (this.isActivated) {
+
+  //       this.position = new Vector3(150, 150, 150);
+  //       this.desactivatedTotem = true;
+  //     }
+  //     /*const indexToRemove = (totem) => totem.name === this.activatedTotem;
+  //     const totemToRemove = this.totemList.findIndex(indexToRemove);
+  //     this.totemList.splice(totemToRemove, 1)*/
+  //   });
+  // }
 
 }

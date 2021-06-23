@@ -1,21 +1,25 @@
+import EventEmitter from "../Tools/EventEmitter"
 import { Object3D, PositionalAudio, AudioAnalyser, MeshNormalMaterial, SphereGeometry, Mesh } from "three"
 
-export default class Positional {
+export default class Positional extends EventEmitter {
     constructor(params) {
+        super()
         this.listener = params.listener
         this.sound = params.sound
         this.playing = params.playing
         this.position = params.position
         this.distance = params.distance
-
+        this.time = params.time
+        this.near = params.near
+        this.loop=params.loop
         this.positional = null;
-
+        this.waveFrequency = params.waveFrequency
         this.container = new Object3D()
         this.container.name = "Sound for : " + params.name
         this.create()
+        params.time.on('tick', () => this.watch())
     }
     create() {
-
         // Create empty object 3D to place Positional
         const material = new MeshNormalMaterial({
             wireframe:true,
@@ -24,7 +28,7 @@ export default class Positional {
         const geometry = new SphereGeometry(this.distance,10,10)
 
         const emmiter = new Mesh(geometry,material)
-        emmiter.visible = false
+        // emmiter.visible = false
         // move this object according to passed position
         emmiter.position.copy(this.position)
         // init PositionalAudio
@@ -38,14 +42,22 @@ export default class Positional {
         // set speed at which the volume is reduced or augmented based on distance
         this.positional.setRolloffFactor(80)
         // set loop
-        this.positional.setLoop(true)
+        this.positional.setLoop(this.loop)
         // add positionnal to emmiter and emmiter to container
-        const analyser = new AudioAnalyser(this.positional, 32);
 
         emmiter.add(this.positional)
-        this.container.add(emmiter)
+        this.container.add(emmiter)    
+        this.analyser = new AudioAnalyser(this.positional, 32)
     }
     play() {
         this.positional.play()
+        this.positional.source.onended = () => {
+            this.trigger('ended')
+        }
+    } 
+    watch() {
+        if(this.near) {
+            if(this.analyser.getFrequencyData()[0] === this.waveFrequency) this.trigger('wave')
+        }
     }
 }

@@ -144,7 +144,8 @@ export default class World {
       physics: this.physics,
       player: this.player,
       listener: this.listener,
-      waveemit: this.waveemit
+      waveemit: this.waveemit,
+      socket:this.socket
     })
     this.container.add(this.planet.container)
   }
