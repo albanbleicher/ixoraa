@@ -1,5 +1,5 @@
 import { Vec3 } from "cannon-es"
-import { MeshNormalMaterial, Vector2, Vector3, MeshBasicMaterial } from "three"
+import { MeshNormalMaterial, Vector2, Vector3, MeshBasicMaterial, RepeatWrapping, MirroredRepeatWrapping } from "three"
 import { Spherical } from "three"
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 
@@ -20,6 +20,7 @@ export default class Player {
         // Set up
         this.container = new Object3D()
         this.container.name = 'Player'
+        this.container.playerContainer = new Object3D()
         this.container.totemContainer = new Object3D()
         this.container.totemContainer.collected = [];
 
@@ -31,10 +32,12 @@ export default class Player {
 
         this.player.mesh = this.assets.models.conscience_humaine.scene.children[0]
 
-        this.player.mesh.material = new MeshBasicMaterial({
+        console.log(this.player.mesh);
+        /*this.player.mesh.material = new MeshBasicMaterial({
             alphaMap: this.assets.textures.bake_alpha,
             transparent: true
-        })
+        })*/
+        console.log(this.player.mesh)
         // Set a collider, which give the actual position for the player, and init with a translate
         this.player.collider = new Capsule(new Vector3(0, 0.35, 0), new Vector3(0, 0, 0), 0.35);
         this.player.collider.translate(new Vector3(-19.3, 0.8, 11.2))
@@ -45,11 +48,18 @@ export default class Player {
         // place camera
         this.container.add(this.player.mesh)
         this.player.mesh.add(this.camera.camera)
-        //this.player.mesh.rotation.y += 0.005
-        //this.player.mesh.rotation.y += 0.005
+
+        // 
+        this.player.mesh.material.transparent = true;
+        this.player.mesh.material.map.wrapS = RepeatWrapping
+        this.player.mesh.material.map.wrapT = RepeatWrapping
+        this.player.mesh.material.map.offset.x = Math.PI / 2;
+        this.player.mesh.material.map.repeat.set(6, 6);
+        this.player.mesh.layers.enable(1);
         this.camera.camera.position.y = 0
         this.camera.camera.position.z = 2
         this.time.on('tick', () => {
+            this.player.mesh.material.map.rotation += 0.0025
             this.camera.camera.lookAt(this.player.mesh.position)
             this.position.copy(this.player.mesh.position)
         })
