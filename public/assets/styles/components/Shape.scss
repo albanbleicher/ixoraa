@@ -1,0 +1,10 @@
+.line {
+    position: absolute;
+    background-color: transparent;
+    border: 5px solid red;
+    height: 100px;
+    width: 100px;
+    transform-origin: center;
+    top: -50%;
+    border-radius: 100%;
+}

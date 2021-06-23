@@ -1,9 +1,9 @@
 <template>
   <div class="controller">
-      <Joystick  v-if='!nearTotem'  />
-      <Sync v-else />
+    <Joystick v-if="!nearTotem" />
+    <Sync v-else />
   </div>
-      <!-- <div class="joystickController">
+  <!-- <div class="joystickController">
       <JoystickDisplacement />
     </div>
 
@@ -18,11 +18,9 @@
 <script>
 import Joystick from "@/components/Joystick";
 import Sync from "@/components/Sync";
-
-import Lottie from "@/components/Lottie";
 import MusicTime from "@/components/MusicTime";
 import gsap from "gsap";
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     Joystick,
@@ -36,19 +34,18 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['socket'])
+    ...mapGetters(["socket"]),
   },
   mounted() {
-    this.socket.on('totem approach', (totem) => {
-      this.setTotem(totem)
-      this.nearTotem = true
-    })
-    this.socket.on('totem leave', (totem) => {
-      this.setTotem('')
-      this.nearTotem = false
-    })
-   
-   
+    this.socket.on("totem approach", (totem) => {
+      this.setTotem(totem);
+      this.nearTotem = true;
+    });
+    this.socket.on("totem leave", (totem) => {
+      this.setTotem("");
+      this.nearTotem = false;
+    });
+
     this.socket.on("musictime begin", async (time, lines) => {
       console.log("it started");
       //const result = await this.returnsPromise(time, lines);
@@ -56,7 +53,7 @@ export default {
       //console.log("musicTime Begin");
     });
 
-  // And when an interaction is completed, do this switch back
+    // And when an interaction is completed, do this switch back
     this.socket.on("winned", () => {
       console.log("winned");
       setTimeout(() => {
@@ -83,7 +80,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setTotem:'SET_CURRENT_TOTEM'
+      setTotem: "SET_CURRENT_TOTEM",
     }),
     returnsPromise(time, lines) {
       console.log("return promise", time, lines);

@@ -1,0 +1,28 @@
+.inputCode {
+
+    input {
+        outline: none;
+        background-color: transparent;
+        border:0;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: bold;
+        color:color('background');
+        width: 80px;
+        height: 80px;
+        text-align: center;
+        font-size: 40px;
+        user-select: none;
+        border-bottom: 5px solid color('background');
+        &:not(:last-child) {
+            margin-right: 15px;
+        }
+    }
+    input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+}
