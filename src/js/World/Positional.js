@@ -13,9 +13,11 @@ export default class Positional extends EventEmitter {
         this.near = params.near
         this.loop=params.loop
         this.positional = null;
+        this.isSuperierThanFq = false
         this.waveFrequency = params.waveFrequency
         this.container = new Object3D()
         this.container.name = "Sound for : " + params.name
+
         this.create()
         params.time.on('tick', () => this.watch())
     }
@@ -57,7 +59,13 @@ export default class Positional extends EventEmitter {
     } 
     watch() {
         if(this.near) {
-            if(this.analyser.getFrequencyData()[0] === this.waveFrequency) this.trigger('wave')
+            if(this.analyser.getFrequencyData()[0] >= this.waveFrequency && !this.isSuperierThanFq) {
+                this.isSuperierThanFq=true
+                this.trigger('wave')
+            }
+            if(this.analyser.getFrequencyData()[0] < this.waveFrequency) {
+                this.isSuperierThanFq=false
+            }
         }
     }
 }
