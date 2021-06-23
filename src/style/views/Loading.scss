@@ -3,7 +3,9 @@
 	top: 0;
 	width: 100%;
 	height: 100%;
-	background-color: color('background');
+	flex-direction: column;
+    background-image: url('@style/assets/hdri_jpeg.jpg');
+	background-size: cover;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -12,7 +14,7 @@
 	// opacity: 0;
 	user-select: none;
 	pointer-events: none;
-	&::after {
+	/*&::after {
         position: absolute;
         top: -100px;
         right: -200px;
@@ -33,7 +35,7 @@
         height: 450px;
         background-size: contain;
         background-repeat: no-repeat;
-    }
+    }*/
 
 }
 .load {
@@ -43,7 +45,7 @@
 	font-family: Montserrat;
 	user-select: none;
 }
-.progressBar {
+/*.progressBar {
 	border-radius: 8px;
 	width: 300px;
 	background-color: transparentize(color('primary'), 0.8)
@@ -54,4 +56,19 @@
 	height: 7px;
 	background-color: color('primary');
 	transition: 0.32s ease-out width;
+	animation-duration: 2s;
+	animation-direction: alternate-reverse;
+	animation-iteration-count: infinite;
+	animation-name: bloom;	
+}*/
+
+
+@keyframes bloom {
+    from {
+        filter: brightness(1);
+    }
+    to {
+        filter: brightness(2);
+
+    }
 }
