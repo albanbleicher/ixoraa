@@ -1,0 +1,13 @@
+.play {
+    background: url('../images/shapes/hdri_jpeg.jpg');
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+.lottie-float {
+    transform:scale(0.5,.5);
+    
+}

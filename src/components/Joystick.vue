@@ -1,6 +1,6 @@
 
 <template>
-  <div ref="joystick" class="joystickController"></div>
+  <div ref="joystick"></div>
 </template>
 <script>
 import nipplejs from "nipplejs";
@@ -38,8 +38,8 @@ export default {
       zone: this.$refs.joystick,
       mode: "static",
       position: { left: "50%", top: "50%" },
-      color: "red",
-      size: 150,
+      color: "white",
+      size: 250,
     });
 
     joystick.on("move", (evt, nipple) => {

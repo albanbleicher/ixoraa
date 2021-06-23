@@ -16,7 +16,6 @@
         <span class="noteBorder" ref="noteBorder"> </span>
       </button>
     </div>
-    <div id="anim_container"></div>
     <div style="position: absolute; left: 50px">
       <p
         v-for="(attempt, index) in attempts"
@@ -190,18 +189,7 @@ export default {
         resolve();
       });
     },
-    startLottie() {
-      //const JSONtest = JSON.stringify(test);
-      var animData = {
-        container: document.getElementById("anim_container"),
-        renderer: "svg",
-        autoplay: true,
-        loop: true,
-        path: "assets/animations/contour_bouton_animation.json",
-      };
-
-      var anim = lottie.loadAnimation(animData);
-    },
+  
   },
 };
 </script>

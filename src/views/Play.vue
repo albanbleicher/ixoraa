@@ -1,7 +1,9 @@
 <template>
-  <div class="controller">
+  <div class="play">
     <Joystick v-if="!nearTotem" />
     <Sync v-else />
+   
+    <div class='lottie-float' ref="lottie"></div>
   </div>
   <!-- <div class="joystickController">
       <JoystickDisplacement />
@@ -18,9 +20,10 @@
 <script>
 import Joystick from "@/components/Joystick";
 import Sync from "@/components/Sync";
-import MusicTime from "@/components/MusicTime";
 import gsap from "gsap";
 import { mapGetters, mapMutations } from "vuex";
+import lottie from "lottie-web"
+
 export default {
   components: {
     Joystick,
@@ -37,6 +40,7 @@ export default {
     ...mapGetters(["socket"]),
   },
   mounted() {
+    this.handleLottie()
     this.socket.on("totem approach", (totem) => {
       this.setTotem(totem);
       this.nearTotem = true;
@@ -82,14 +86,17 @@ export default {
     ...mapMutations({
       setTotem: "SET_CURRENT_TOTEM",
     }),
-    returnsPromise(time, lines) {
-      console.log("return promise", time, lines);
-      return new Promise((resolve) => {
-        this.time = time;
-        this.lines = lines;
-        resolve();
+       handleLottie() {
+            console.log('handleLottie')
+      var anim = lottie.loadAnimation({
+        container: this.$refs.lottie,
+        renderer: "svg",
+        autoplay: true,
+        loop: true,
+        path: "assets/animations/contour_bouton_animation.json",
       });
     },
+   
   },
 };
 </script>
