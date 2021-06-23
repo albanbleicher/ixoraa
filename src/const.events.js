@@ -15,6 +15,12 @@ exports.MOVEMENTS = {
     MOVING:'move moving',
     END: 'move end'
 }
+exports.TOTEMS = {
+    APPROACH:'totem approach',
+    LEAVE: 'totem leave',
+    BEGIN: 'totem begin',
+    END: 'totem end',
+}
 
 exports.MUSICTIME = {
     NEARTOTEM: 'near totem',

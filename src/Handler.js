@@ -1,9 +1,7 @@
-const { EVENTS, OBSTACLES } = require('./const.events')
-const { MOVEMENTS } = require('./const.events')
-const { MUSICTIME } = require('./const.events')
-const { ROOMS_EVENTS } = require('./const.events')
+const { EVENTS, OBSTACLES,ROOMS_EVENTS, MOVEMENTS, TOTEMS } = require('./const.events')
 const movements = require('./Movements').default
-const musictime = require('./MusicTime').default
+const totems = require('./Totems').default
+// const musictime = require('./MusicTime').default
 const obstacles = require('./Obstacles').default
 const dotenv = require('dotenv');
 const Rooms = require('./Rooms').default
@@ -39,16 +37,23 @@ class Handler {
         const self = this;
         socket.on(MOVEMENTS.MOVING, (vector) => movements.moving(this.io, vector))
         socket.on(MOVEMENTS.END, () => movements.end(this.io))
+
+
+        socket.on(TOTEMS.APPROACH, (totem) => totems.approach(this.io, totem))
+        socket.on(TOTEMS.LEAVE, (totem) => totems.leave(this.io, totem))
+        socket.on(TOTEMS.BEGIN, (totem) => totems.begin(this.io, totem))
+        socket.on(TOTEMS.END, (totem) => totems.end(this.io, totem))
+
         
-        socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))
-        socket.on(MUSICTIME.NEARTOTEM, () => { musictime.nearTotem(this.io, this.currentRoom); })
-        socket.on(MUSICTIME.NEARTOTEMISOK, () => { musictime.nearTotemIsOk(this.io, this.currentRoom); })
-        //old melody
-        socket.on(MUSICTIME.BEGIN, (melody) => { musictime.begin(this.io, this.currentRoom, melody); })
-        socket.on(MUSICTIME.PLAYNOTE, () => musictime.playNote(this.io, this.currentRoom))
-        socket.on(MUSICTIME.CORRECT, () => musictime.correct(this.io, this.melody, this.lines))
-        socket.on(MUSICTIME.WRONG, () => musictime.wrong(this.io))
-        socket.on(MUSICTIME.WINNED, () => musictime.winned(this.io))
+        // socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))
+        // socket.on(MUSICTIME.NEARTOTEM, () => { musictime.nearTotem(this.io, this.currentRoom); })
+        // socket.on(MUSICTIME.NEARTOTEMISOK, () => { musictime.nearTotemIsOk(this.io, this.currentRoom); })
+        // //old melody
+        // socket.on(MUSICTIME.BEGIN, (melody) => { musictime.begin(this.io, this.currentRoom, melody); })
+        // socket.on(MUSICTIME.PLAYNOTE, () => musictime.playNote(this.io, this.currentRoom))
+        // socket.on(MUSICTIME.CORRECT, () => musictime.correct(this.io, this.melody, this.lines))
+        // socket.on(MUSICTIME.WRONG, () => musictime.wrong(this.io))
+        // socket.on(MUSICTIME.WINNED, () => musictime.winned(this.io))
 
 
         socket.on(ROOMS_EVENTS.CREATE, () => self.rooms.create(), console.log('hmmm'))
