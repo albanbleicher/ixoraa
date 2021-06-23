@@ -3847,6 +3847,11 @@ loglevel@^1.6.8:
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.7.1.tgz#005fde2f5e6e47068f935ff28573e125ef72f197"
   integrity sha512-Hesni4s5UkWkwCGJMQGAh71PaLUmKFM60dHvq0zi/vDhhrzuk+4GgNbTXJ12YYQJn6ZKBDNIjYcuQGKudvqrIw==
 
+lottie-web@^5.7.11:
+  version "5.7.11"
+  resolved "https://registry.yarnpkg.com/lottie-web/-/lottie-web-5.7.11.tgz#4ba74e8a629f76d3c0a0062ddc37d2b96e13765c"
+  integrity sha512-Jvz3PQqwrDj1rXGqfeQtipH/WNtM/Y4l8t8NIQXe1xUI0nVooH2bTYJGef0UkdBcWUx1s3miKsRhyP196g9tvQ==
+
 lower-case@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-2.0.2.tgz#6fa237c63dbdc4a82ca0fd882e4722dc5e634e28"
@@ -4364,11 +4369,6 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
-
-p5@^0.10.2:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/p5/-/p5-0.10.2.tgz#9437b28e803b9c8a94383c6b5f4d05b13603e1cc"
-  integrity sha512-kZnC7JllCEnEUTB3sv2iETUg1ulNvB60h3MHb63u7W/nCJc3XIlMGXcKk28cuezdQ7TOlKScm0qmWCsol+302Q==
 
 p5@^1.3.1:
   version "1.3.1"
@@ -5869,13 +5869,6 @@ vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
-
-vue-p5@^0.8.4:
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/vue-p5/-/vue-p5-0.8.4.tgz#bdee6eefca7e1985d6ed1124e6d5d9e4a005004e"
-  integrity sha512-hYwOAICez8F5ojj12E6xJzCrQ+W/Dcc6DJF3FCyI1wVGXZDireckWUmQramzsAMggoE2SHKOzy7kh8gQ46A0IQ==
-  dependencies:
-    p5 "^0.10.2"
 
 watchpack@^2.0.0:
   version "2.1.1"

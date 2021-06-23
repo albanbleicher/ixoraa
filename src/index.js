@@ -102,8 +102,6 @@ function musicFadeOut() {
     // Reduce volume by 0.05 as long as it is above 0
     // This works as long as you start with a multiple of 0.05!
     if (vol > 0) {
-      console.log(vol);
-      console.log(audio)
       vol -= 0.02;
       audio.volume = vol;
     }

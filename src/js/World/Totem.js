@@ -60,15 +60,15 @@ export default class Totem {
             {
               chord: this.assets.sounds.totems.wisdom.firstChord,
               melody: {
-                asset: this.assets.sounds.totems.wisdom.firstMelody,
-                waveFrequency: 180,
+                asset:this.assets.sounds.totems.wisdom.firstMelody,
+                waveFrequency:165,
               },
             },
             {
               chord: this.assets.sounds.totems.wisdom.secondChord,
               melody: {
-                asset: this.assets.sounds.totems.wisdom.secondMelody,
-                waveFrequency: 180,
+                asset:this.assets.sounds.totems.wisdom.secondMelody,
+                waveFrequency:165,
               },
             }
           ],
@@ -92,15 +92,15 @@ export default class Totem {
             {
               chord: this.assets.sounds.totems.strength.firstChord,
               melody: {
-                asset: this.assets.sounds.totems.strength.firstMelody,
-                waveFrequency: 180,
+                asset:this.assets.sounds.totems.strength.firstMelody,
+                waveFrequency:165,
               },
             },
             {
               chord: this.assets.sounds.totems.strength.secondChord,
               melody: {
-                asset: this.assets.sounds.totems.strength.secondMelody,
-                waveFrequency: 180,
+                asset:this.assets.sounds.totems.strength.secondMelody,
+                waveFrequency:165,
               },
             }
           ],
@@ -180,25 +180,28 @@ export default class Totem {
     this.totemDebugger.classList.add('debugger')
     this.totemDebugger.setAttribute('id', this.name)
     document.querySelector('.app').append(this.totemDebugger)
-    this.pattern.on('wave', () => {
+    this.pattern.on('wave', (wave) => {
       this.createTorus()
+      console.log('pattern emmited wave @ ', wave)
+      if(this.socket) this.socket.emit('totem wave',wave)
     })
-    this.pattern.on('ended', (array) => {
-      console.log('waves array', array)
+    this.pattern.on('ended', () => {
+      if(this.socket) this.socket.emit('totem end listen')
     })
   }
   watch() {
     this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
     if (this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
       this.near = true;
-      if (this.socket) this.socket.emit('totem approach', this.name)
-
+      
       if (this.screen) this.screen.show()
       console.log('[Totem] Approaching ' + this.name);
     }
     if (this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
       this.nearThird = true
       console.log('entering melody zone');
+      if(this.socket) this.socket.emit('totem approach', this.name)
+
       this.pattern.trigger('approach')
     }
     if (this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
@@ -353,9 +356,10 @@ export default class Totem {
 
   handleSocket() {
     const self = this;
-    this.socket.on('totem begin', (totem) => {
-      if (totem === self.name) {
+    this.socket.on('totem begin listen', (totem) => {
+      if(totem === self.name) {
         self.screen.hide()
+        this.pattern.trigger('begin listen')
         self.createTorus()
       }
     })

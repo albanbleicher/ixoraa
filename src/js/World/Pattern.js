@@ -54,7 +54,7 @@ export default class Pattern extends EventEmitter {
         this.container.add(drumsPositional.container)
         this.container.add(firstChord.container)
         this.container.add(firstMelody.container)
-        this.on('approach', () => {
+        this.on('begin listen', () => {
             console.log('[Pattern] Playing melody...')
             firstMelody.play()
             performance.mark('start')
@@ -63,21 +63,23 @@ export default class Pattern extends EventEmitter {
         })
         this.on('leave', () => firstMelody.near = false)
         firstMelody.on('wave', () => {
-            this.trigger('wave')
             performance.mark('end')
             performance.measure('measure', 'start', 'end')
         })
-        firstMelody.on('ended', () => {
+        firstMelody.on('ended', async () => {
             const waves = performance.getEntriesByName('measure')
             let cleanArray = []
             console.log('[Pattern] Melody finished playing')
             console.log('[Pattern] Recoreded ' + waves.length + ' waves.')
+            let promises = []
             waves.forEach((wave,i) => {
-                console.log('Wave #'+i + ' played at ' + wave.duration + ' ms ('  + wave.duration/1000 + ' s)')
-                cleanArray.push(wave.duration)
+                    console.log('Wave #'+i + ' played at ' + wave.duration + ' ms ('  + wave.duration.toPrecision(2)/1000 + ' s)')
+                    console.log(wave.duration)
+                    this.trigger('wave', [wave.duration])
             })
-           setTimeout(() => this.trigger('ended', cleanArray), 300)
-
+            setTimeout(() => {
+                this.trigger('ended')
+            },1000)
 
         })
 
