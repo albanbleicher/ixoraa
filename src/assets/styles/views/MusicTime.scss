@@ -12,8 +12,15 @@
     display: flex;
     justify-content: center;
 }
-.tap{
+.tap {
+    width:50px;
+    height: 50px;
+    border-radius:100%;
     background-color: #aeaeea;
+    &:active {
+    background-color: #545474;
+
+    }
 }
 .noteContainer{
     position: absolute;

@@ -19,8 +19,6 @@
 import Joystick from "@/components/Joystick";
 import Sync from "@/components/Sync";
 
-import JoystickDisplacement from "@/components/JoystickDisplacement";
-import JoystickDirection from "@/components/JoystickDirection";
 import Lottie from "@/components/Lottie";
 import MusicTime from "@/components/MusicTime";
 import gsap from "gsap";
