@@ -12,6 +12,9 @@
     display: flex;
     justify-content: center;
 }
+.tap{
+    background-color: #aeaeea;
+}
 .noteContainer{
     position: absolute;
     height: 100%;
@@ -25,6 +28,7 @@
     width: 100px;
     height: 100px;
     position: absolute;
+    border:none;
     top: 45%;
     left: 47.5%;
  }
