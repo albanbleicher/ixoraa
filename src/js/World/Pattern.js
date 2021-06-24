@@ -67,6 +67,8 @@ export default class Pattern extends EventEmitter {
         // Save a first wave
         this.on('leave', () => firstMelody.near = false)
         firstMelody.on('wave', () => {
+            console.log('waved');
+
             performance.mark('end')
             performance.measure('measure', 'start', 'end')
         })

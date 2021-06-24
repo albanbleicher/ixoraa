@@ -17,13 +17,14 @@ export default class Totem {
     this.socket = options.socket
     this.listener = options.listener
     this.totem = options.totem
-    this.tuto = options.tuto
+    this.introTuto = options.introTuto
     this.steps = {
       first: 5, // play drums
       second: 3.5, // play chord
       third: 2// play melody
     }
     this.near = false
+    this.firstTuto = false;
     this.pattern = null
     this.completed = false
     // Set up
@@ -44,7 +45,6 @@ export default class Totem {
     // this.totem.scale.set(0.1, 0.1, 0.1);
     // this.totem.material.opacity = 0;
     // console.log(this.totem.children[0]);
-    // this.player.container.boolsContainer.collected.push(this.totem);
 
     // For each totem, we instanciate some screen narration, and a song, composed of drums, chord, and melody, which are played sequencially
     // when the player come closer to it
@@ -60,15 +60,15 @@ export default class Totem {
             {
               chord: this.assets.sounds.totems.wisdom.firstChord,
               melody: {
-                asset:this.assets.sounds.totems.wisdom.firstMelody,
-                waveFrequency:165,
+                asset: this.assets.sounds.totems.wisdom.firstMelody,
+                waveFrequency: 130,
               },
             },
             {
               chord: this.assets.sounds.totems.wisdom.secondChord,
               melody: {
-                asset:this.assets.sounds.totems.wisdom.secondMelody,
-                waveFrequency:165,
+                asset: this.assets.sounds.totems.wisdom.secondMelody,
+                waveFrequency: 130,
               },
             }
           ],
@@ -92,15 +92,15 @@ export default class Totem {
             {
               chord: this.assets.sounds.totems.strength.firstChord,
               melody: {
-                asset:this.assets.sounds.totems.strength.firstMelody,
-                waveFrequency:165,
+                asset: this.assets.sounds.totems.strength.firstMelody,
+                waveFrequency: 130,
               },
             },
             {
               chord: this.assets.sounds.totems.strength.secondChord,
               melody: {
-                asset:this.assets.sounds.totems.strength.secondMelody,
-                waveFrequency:165,
+                asset: this.assets.sounds.totems.strength.secondMelody,
+                waveFrequency: 130,
               },
             }
           ],
@@ -120,14 +120,14 @@ export default class Totem {
               chord: this.assets.sounds.totems.hope.firstChord,
               melody: {
                 asset: this.assets.sounds.totems.hope.firstMelody,
-                waveFrequency: 205,
+                waveFrequency: 130,
               },
             },
             {
               chord: this.assets.sounds.totems.hope.secondChord,
               melody: {
-                asset: this.assets.sounds.totems.beauty.secondMelody,
-                waveFrequency: 205,
+                asset: this.assets.sounds.totems.hope.secondMelody,
+                waveFrequency: 130,
               },
             }
           ],
@@ -152,14 +152,14 @@ export default class Totem {
               chord: this.assets.sounds.totems.beauty.firstChord,
               melody: {
                 asset: this.assets.sounds.totems.beauty.firstMelody,
-                waveFrequency: 180,
+                waveFrequency: 130,
               },
             },
             {
               chord: this.assets.sounds.totems.beauty.secondChord,
               melody: {
                 asset: this.assets.sounds.totems.beauty.secondMelody,
-                waveFrequency: 180,
+                waveFrequency: 130,
               },
             }
           ],
@@ -176,39 +176,49 @@ export default class Totem {
         })
         break;
     }
-    if(this.debug) {
+    if (this.debug) {
       this.totemDebugger = document.createElement('span')
-    this.totemDebugger.classList.add('debugger')
-    this.totemDebugger.setAttribute('id', this.name)
-    document.querySelector('.app').append(this.totemDebugger)
+      this.totemDebugger.classList.add('debugger')
+      this.totemDebugger.setAttribute('id', this.name)
+      document.querySelector('.app').append(this.totemDebugger)
     }
     this.pattern.on('wave', (wave) => {
       this.createTorus()
       console.log('pattern emmited wave @ ', wave)
-      if(this.socket) this.socket.emit('totem wave',wave)
+      if (this.socket) this.socket.emit('totem wave', wave)
     })
     this.pattern.on('ended', () => {
-      if(this.socket) this.socket.emit('totem end listen')
+      if (this.socket) this.socket.emit('totem end listen')
     })
   }
   watch() {
-    if(this.debug) this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
+    if (this.debug) this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
     if (this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
       this.near = true;
-      
+
       if (this.screen) this.screen.show()
       console.log('[Totem] Approaching ' + this.name);
+
+      if (!this.firstTuto) {
+        console.log(this.introTuto);
+        this.introTuto.showTotemTuto()
+        this.firstTuto = true
+      }
     }
     if (this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
       this.nearThird = true
+
+      this.totem.layers.enable(1);
+      this.startPanningCamera();
       console.log('entering melody zone');
-      if(this.socket) this.socket.emit('totem approach', this.name)
+      if (this.socket) this.socket.emit('totem approach', this.name)
 
       this.pattern.trigger('approach')
     }
     if (this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
       this.near = false;
       this.pattern.trigger('leave')
+      this.endPanningCamera();
       if (this.socket) this.socket.emit('totem leave', this.name)
       if (this.screen) this.screen.hide()
 
@@ -218,6 +228,7 @@ export default class Totem {
   }
   // Create a wave, based on the note of the melody played
   createTorus() {
+    console.log('createTorus')
 
 
     let geometry = new TorusGeometry(1, 0.01, 16, 100);
@@ -344,22 +355,22 @@ export default class Totem {
   // A smooth displacement of the camera when the player is close to a totem
   startPanningCamera() {
     gsap.to(this.camera.position,
-      { x: 2, y: 1, z: 4, ease: "power3.out", duration: 5 },
+      { x: 2, y: 2, z: 5, ease: "power3.out", duration: 5 },
     )
-    this.player.player.mesh.lookAt(this.position);
+    //this.player.player.mesh.lookAt(this.position);
   }
 
   // Same thing but reversed, when the player is far of it
   endPanningCamera() {
     gsap.to(this.camera.position,
-      { x: 0, y: 0, z: 1, ease: "power3.out", duration: 5 },
+      { x: 0, y: 0, z: 2, ease: "power3.out", duration: 5 },
     )
   }
 
   handleSocket() {
     const self = this;
     this.socket.on('totem begin listen', (totem) => {
-      if(totem === self.name) {
+      if (totem === self.name) {
         self.screen.hide()
         this.pattern.trigger('begin listen')
         self.createTorus()

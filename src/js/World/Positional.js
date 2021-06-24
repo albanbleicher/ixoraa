@@ -11,7 +11,7 @@ export default class Positional extends EventEmitter {
         this.distance = params.distance
         this.time = params.time
         this.near = params.near
-        this.loop=params.loop
+        this.loop = params.loop
         this.positional = null;
         this.isSuperierThanFq = false
         this.waveFrequency = params.waveFrequency
@@ -22,14 +22,15 @@ export default class Positional extends EventEmitter {
         params.time.on('tick', () => this.watch())
     }
     create() {
+        console.log('la musique : ' + this.sound)
         // Create empty object 3D to place Positional
         const material = new MeshNormalMaterial({
-            wireframe:true,
-        wireframeLinewidth:3
+            wireframe: true,
+            wireframeLinewidth: 3
         })
-        const geometry = new SphereGeometry(this.distance,10,10)
+        const geometry = new SphereGeometry(this.distance, 10, 10)
 
-        const emmiter = new Mesh(geometry,material)
+        const emmiter = new Mesh(geometry, material)
         emmiter.visible = false
         // move this object according to passed position
         emmiter.position.copy(this.position)
@@ -39,7 +40,7 @@ export default class Positional extends EventEmitter {
         // apply AudioBuffer from template loaded assets
         this.positional.setBuffer(this.sound)
         // set radius around PositionalAudio where sounds starts to fade
-        this.positional.setRefDistance(this.distance+1)
+        this.positional.setRefDistance(this.distance + 1)
         this.positional.setDistanceModel('exponential')
         // set speed at which the volume is reduced or augmented based on distance
         this.positional.setRolloffFactor(80)
@@ -48,7 +49,7 @@ export default class Positional extends EventEmitter {
         // add positionnal to emmiter and emmiter to container
 
         emmiter.add(this.positional)
-        this.container.add(emmiter)    
+        this.container.add(emmiter)
         this.analyser = new AudioAnalyser(this.positional, 32)
     }
     play() {
@@ -56,16 +57,18 @@ export default class Positional extends EventEmitter {
         this.positional.source.onended = () => {
             this.trigger('ended')
         }
-    } 
+    }
     watch() {
-        if(this.near) {
-            if(this.analyser.getFrequencyData()[0] >= this.waveFrequency && !this.isSuperierThanFq) {
-                this.isSuperierThanFq=true
+        if (this.near && this.analyser) {
+            let freqIndex = 0
+            if (!this.isSuperierThanFq && this.analyser.getFrequencyData()[freqIndex] > 130) {
+                this.isSuperierThanFq = true
                 this.trigger('wave')
             }
-            if(this.analyser.getFrequencyData()[0] < this.waveFrequency) {
-                this.isSuperierThanFq=false
+            else if (this.isSuperierThanFq && this.analyser.getFrequencyData()[freqIndex] < 130) {
+                this.isSuperierThanFq = false
             }
+
         }
     }
 }
