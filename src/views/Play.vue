@@ -5,17 +5,7 @@
    
     <div class='lottie-float' ref="lottie"></div>
   </div>
-  <!-- <div class="joystickController">
-      <JoystickDisplacement />
-    </div>
-
-    <div class="musicalController">
-      <MusicTime />
-    </div>
-    <div class="test">
-      <Lottie />
-    </div>
-  </div> -->
+ 
 </template>
 <script>
 import Joystick from "@/components/Joystick";
