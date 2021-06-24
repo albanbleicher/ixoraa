@@ -19,6 +19,10 @@ export default class IntroTuto {
         this.textContainer.classList.add('textContainer')
         this.container.setAttribute('id', 'introTuto')
 
+        this.title1 = document.createElement('h2')
+        this.title1.innerText = "Suivez l'appel des totems";
+        this.title2 = document.createElement('h2')
+        this.title2.innerText = "Puis apprenez leur savoir \nen reproduisant leur chants";
         this.animationElement = document.createElement('div')
         this.animationElement.setAttribute('id', 'introTutoAnimation')
 
@@ -36,6 +40,20 @@ export default class IntroTuto {
 
     }
     // Set the timeline to chain title and animation
+    showIntroTuto() {
+
+        this.textContainer.append(this.title1);
+        this.textContainer.append(this.title2);
+        this.container.append(this.textContainer);
+        gsap.to(this.title1, { opacity: 1, duration: 3 }).then(() => {
+            gsap.to(this.title2, { opacity: 1, duration: 3 }).then(() => {
+                gsap.to(this.title1, { opacity: 0, duration: 3 })
+                gsap.to(this.title2, { opacity: 0, duration: 3 })
+            })
+        })
+
+    }
+
     showTotemTuto() {
         gsap.to(this.animationElement, { opacity: 1, duration: 3 }).then(() => {
             gsap.to(this.animationElement, { opacity: 0, duration: 3, delay: 5 })

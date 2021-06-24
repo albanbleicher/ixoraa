@@ -12,7 +12,7 @@ import Totem from './Totem'
 import { MODELS } from './utils'
 import Vegetation from './Vegetation'
 import { getMesh } from '@js/Tools/Functions.js'
-import TotemTuto from './TotemTuto'
+import IntroTuto from './IntroTuto'
 
 export default class Planet {
   constructor(params) {
@@ -41,8 +41,8 @@ export default class Planet {
     this.setMaterials()
     this.setBloomingItems()
     // if (params.debug) this.setDebug()
-    this.setTotems()
     this.showTuto()
+    this.setTotems()
 
   }
   init() {
@@ -80,7 +80,8 @@ export default class Planet {
         camera: this.camera,
         name: totemMesh.name,
         listener: this.listener,
-        totem: totemMesh
+        totem: totemMesh,
+        introTuto: this.introTuto
       })
       this.container.add(totem.container)
     })
@@ -163,10 +164,11 @@ export default class Planet {
   }
   // Create the tuto on first appearance
   showTuto() {
-    this.totemTuto = new TotemTuto({
+    this.introTuto = new IntroTuto({
       assets: this.assets
     })
-    this.totemTuto.show();
+    console.log(this.introTuto)
+    this.introTuto.showIntroTuto();
   }
   setDebug() {
     let self = this;

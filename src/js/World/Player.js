@@ -30,7 +30,7 @@ export default class Player {
     async init() {
         // Add the good Mesh and material for the player
 
-        this.player.mesh = this.assets.models.conscience_humaine.scene.children[0]
+        this.player.mesh = this.assets.models.conscience_humaine_glow.scene.children[0]
 
         console.log(this.player.mesh);
         /*this.player.mesh.material = new MeshBasicMaterial({
@@ -53,7 +53,7 @@ export default class Player {
         this.player.mesh.material.transparent = true;
         this.player.mesh.material.map.wrapS = RepeatWrapping
         this.player.mesh.material.map.wrapT = RepeatWrapping
-        this.player.mesh.material.map.offset.x = Math.PI / 2;
+        this.player.mesh.material.map.offset.x = Math.PI;
         this.player.mesh.material.map.repeat.set(6, 6);
         this.player.mesh.layers.enable(1);
         this.camera.camera.position.y = 0
