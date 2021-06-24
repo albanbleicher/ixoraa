@@ -26,23 +26,15 @@ export default {
         this.socket.on('totem wave', (wave) => {
             if(self.hasBegun) {
                 self.waves.push(wave)
-            console.log('wave', wave/1000 + 's')
-
             }
         })
         this.socket.on('totem end listen', (wave) => {
-            console.log('end listen')
-             console.log(this.$refs.waves)
-        console.log(this.waves)
         gsap.to(this.$refs.waves.children, {
             width:'250vh',
             height:'250vh',
             stagger:1,
             duration:2
         })
-            setTimeout(() => {
-
-            },2000)
         })
        
     },
