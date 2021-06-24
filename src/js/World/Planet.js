@@ -158,14 +158,7 @@ export default class Planet {
       material: foliageMaterial,
       container: this.container,
     })
-    this.foliage = new Vegetation({
-      surface: this.ground,
-      model: this.assets.models.grass.scene.children[0],
-      count: 6000,
-      scaleFactor: 1,
-      material: grassMaterial,
-      container: this.container,
-    })
+  
 
   }
   // Create the tuto on first appearance

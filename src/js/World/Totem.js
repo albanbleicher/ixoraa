@@ -189,6 +189,7 @@ export default class Totem {
     })
     this.pattern.on('ended', () => {
       if(this.socket) this.socket.emit('totem end listen')
+      
     })
   }
   watch() {
@@ -203,6 +204,7 @@ export default class Totem {
       this.nearThird = true
       console.log('entering melody zone');
       if(this.socket) this.socket.emit('totem approach', this.name)
+      this.startPanningCamera()
 
       this.pattern.trigger('approach')
     }
@@ -362,7 +364,6 @@ export default class Totem {
       if(totem === self.name) {
         self.screen.hide()
         this.pattern.trigger('begin listen')
-        self.createTorus()
       }
     })
   }

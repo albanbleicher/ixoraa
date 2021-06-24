@@ -1,6 +1,7 @@
 import EventEmitter from "../Tools/EventEmitter"
 import { Object3D, PositionalAudio, AudioAnalyser } from 'three'
 import Positional from "./Positional"
+import Melody from "./Melody"
 export default class Pattern extends EventEmitter {
     constructor(params) {
         super()
@@ -26,7 +27,7 @@ export default class Pattern extends EventEmitter {
             time: this.time,
             loop: true
         })
-        drumsPositional.play()
+        // drumsPositional.play()
         const firstChord = new Positional({
             sound: this.patterns[0].chord,
             listener: this.listener,
@@ -37,57 +38,56 @@ export default class Pattern extends EventEmitter {
 
 
         })
-        firstChord.play()
+        // firstChord.play()
 
-        const firstMelody = new Positional({
-            sound: this.patterns[0].melody.asset,
-            waveFrequency: this.patterns[0].melody.waveFrequency,
-            listener: this.listener,
-            position: this.position,
-            distance: this.steps.third,
-            near: this.near,
-            time: this.time,
-            loop: false
-
-        })
 
         this.container.add(drumsPositional.container)
         this.container.add(firstChord.container)
-        this.container.add(firstMelody.container)
 
-        // Start to record the first melody
-        this.on('begin listen', () => {
-            console.log('[Pattern] Playing melody...')
-            firstMelody.play()
-            performance.mark('start')
-            console.log('[Pattern] Start recording as approaching totem')
-            firstMelody.near = true
+        const firstMelody = new Melody({
+            notes:['C4','A3','D5', 'E6', 'G2']
         })
+
+        this.on('begin listen', () => {
+            firstMelody.play()
+        })
+
+        // // Start to record the first melody
+        // this.on('begin listen', () => {
+        //     console.log('[Pattern] Playing melody...')
+        //     firstMelody.play()
+        //     performance.mark('start')
+        //     console.log('[Pattern] Start recording as approaching totem')
+        //     firstMelody.near = true
+        // })
 
         // Save a first wave
-        this.on('leave', () => firstMelody.near = false)
-        firstMelody.on('wave', () => {
-            performance.mark('end')
-            performance.measure('measure', 'start', 'end')
+        firstMelody.on('wave', (timestamp) => {
+            console.log(this)
+            this.trigger('wave', [timestamp])
+        })
+        firstMelody.on('ended', () => {
+            console.log(this)
+            this.trigger('ended')
         })
 
-        // When the pattern is finished, send array of timings to the server
-        firstMelody.on('ended', async () => {
-            const waves = performance.getEntriesByName('measure')
-            let cleanArray = []
-            console.log('[Pattern] Melody finished playing')
-            console.log('[Pattern] Recoreded ' + waves.length + ' waves.')
-            let promises = []
-            waves.forEach((wave, i) => {
-                console.log('Wave #' + i + ' played at ' + wave.duration + ' ms (' + wave.duration.toPrecision(2) / 1000 + ' s)')
-                console.log(wave.duration)
-                this.trigger('wave', [wave.duration])
-            })
-            setTimeout(() => {
-                this.trigger('ended')
-            }, 1000)
+        // // When the pattern is finished, send array of timings to the server
+        // firstMelody.on('ended', async () => {
+        //     const waves = performance.getEntriesByName('measure')
+        //     let cleanArray = []
+        //     console.log('[Pattern] Melody finished playing')
+        //     console.log('[Pattern] Recoreded ' + waves.length + ' waves.')
+        //     let promises = []
+        //     waves.forEach((wave, i) => {
+        //         console.log('Wave #' + i + ' played at ' + wave.duration + ' ms (' + wave.duration.toPrecision(2) / 1000 + ' s)')
+        //         console.log(wave.duration)
+        //         this.trigger('wave', [wave.duration])
+        //     })
+        //     setTimeout(() => {
+        //         this.trigger('ended')
+        //     }, 1000)
 
-        })
+        // })
 
     }
 }
