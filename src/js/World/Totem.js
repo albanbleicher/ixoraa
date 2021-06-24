@@ -1,4 +1,6 @@
 import { Object3D, Mesh, MeshBasicMaterial, Vector3, TextureLoader, MeshStandardMaterial, TorusGeometry, Color } from 'three'
+import Toastify from 'toastify-js'
+import "toastify-js/src/toastify.css"
 
 import gsap from 'gsap'
 import { MODELS } from './utils'
@@ -51,8 +53,8 @@ export default class Totem {
     switch (this.name) {
       case MODELS.totems[0]: // sagesse
         this.screen = new TotemScreen({
-          name: 'Sagesse',
-          description: 'La nature montre par son comportement, combien la sagesse et la patience sont des valeurs importante pour la survie de chaque être.'
+          name: 'Hommage à la sagesse',
+          description: 'Par sa patience et son adaptabilité au fil du temps, la nature \'impose comme un temple de savoir.'
         })
         this.pattern = new Pattern({
           drums: this.assets.sounds.totems.wisdom.drums,
@@ -83,7 +85,7 @@ export default class Totem {
         break;
       case MODELS.totems[1]: // force
         this.screen = new TotemScreen({
-          name: 'Force',
+          name: 'Éloge de la force',
           description: 'La nature est puissante, forte. Elle exprime toute son énergie à travers différents phénomènes.'
         })
         this.pattern = new Pattern({
@@ -140,8 +142,8 @@ export default class Totem {
         })
         this.container.add(this.pattern.container)
         this.screen = new TotemScreen({
-          name: 'Espoir',
-          description: 'Porteuse d\'espoir, la nature ...'
+          name: 'Mélodie de l\'espoir',
+          description: 'Symbole maternel primaire, la nature incarne la lueur de nos rêves.'
         })
         break;
       case MODELS.totems[3]: // beauté
@@ -171,8 +173,8 @@ export default class Totem {
         })
         this.container.add(this.pattern.container)
         this.screen = new TotemScreen({
-          name: 'Beauté',
-          description: 'blablalbaaaa'
+          name: 'Ode à la beauté',
+          description: 'Observez l\'élégance organique de notre environnement.'
         })
         break;
     }
@@ -204,17 +206,27 @@ export default class Totem {
       this.nearThird = true
 
       this.totem.layers.enable(1);
-      this.startPanningCamera();
-      console.log('entering melody zone');
+      // this.startPanningCamera();
+      
+      Toastify({
+        text: "Lancez la mélodie du totem en appuyant sur votre téléphone, puis établissez la connexion entre votre conscience et le totem.",
+        duration: 10000,
+        gravity: "top", // `top` or `bottom`
+        position: "center", // `left`, `center` or `right`
+        className: "notice",
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        onClick: function(){} // Callback after click
+      }).showToast();
 
 
-      if (!this.firstTuto && this.name === MODELS.totems[0]) {
-        console.log(this.introTuto);
-        this.introTuto.showTotemTuto()
-        this.firstTuto = true
-      }
+      // if (!this.firstTuto && this.name === MODELS.totems[0]) {
+      //   console.log(this.introTuto);
+      //   this.introTuto.showTotemTuto()
+      //   this.firstTuto = true
+      // }
+
       // That was here before, but I set in the introTuto
-      // if (this.socket) this.socket.emit('totem approach', this.name)
+      if (this.socket) this.socket.emit('totem approach', this.name)
 
       this.pattern.trigger('approach')
     }
@@ -231,9 +243,6 @@ export default class Totem {
   }
   // Create a wave, based on the note of the melody played
   createTorus() {
-    console.log('createTorus')
-
-
     let geometry = new TorusGeometry(1, 0.01, 16, 100);
     let material = new MeshStandardMaterial({
       color: new Color('white')

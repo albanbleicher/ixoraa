@@ -125,7 +125,7 @@ import { Color } from 'three/build/three.module';
         this.params.scene.fog.color = new Color('black')
       this.params.scene.traverse(darkenNonBloomed);
   
-      this.bloom.render();
+      // this.bloom.render();
       // black the fog for rendering
       this.params.scene.fog.color = this.tempFogColor
         //

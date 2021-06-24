@@ -68,6 +68,7 @@
     "process": "^0.11.10",
     "socket.io-client": "^4.1.1",
     "three-to-cannon": "^4.0.2",
+    "toastify-js": "^1.11.0",
     "tone": "^14.7.77",
     "webmidi": "^2.5.2"
   }

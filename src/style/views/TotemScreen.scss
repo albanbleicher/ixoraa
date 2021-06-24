@@ -10,18 +10,23 @@
     align-items: center;
     flex-direction: column;
     pointer-events: none;
+    backdrop-filter: blur(5px) brightness(70%);
     h2 {
         font-size: 3rem;
         margin:0;
         color:white;
         text-shadow: 1px 1px 40px #525252;
+        font-family: 'Faune';
+        font-weight: bold;
+        font-style: italic;
     }
     p {
-        font-size: 0.9rem;
-        text-transform: uppercase;
+        font-size: 1.4rem;
         margin-top: 15px;
         color:white;
         text-shadow: 1px 1px 40px #525252;
+        font-family: 'Faune';
+
 
     }
 }

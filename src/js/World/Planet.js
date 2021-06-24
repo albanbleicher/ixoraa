@@ -38,9 +38,9 @@ export default class Planet {
     this.container.name = 'Planet'
 
     this.init()
-    this.createVegetation()
+    // this.createVegetation()
     this.setMaterials()
-    this.setBloomingItems()
+    // this.setBloomingItems()
     // if (params.debug) this.setDebug()
     this.showTuto()
     this.setTotems()

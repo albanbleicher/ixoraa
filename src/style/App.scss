@@ -6,10 +6,10 @@ body {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-  height: 100%;
-  height: 100%;
-  font-family: 'Montserrat', sans-serif;
-  color:color('primary')
+	height: 100%;
+	height: 100%;
+	font-family: 'Montserrat', sans-serif;
+	color:color('primary')
 }
 .app {
 	width: 100%;
@@ -59,3 +59,8 @@ canvas {
 		top: 160px;
 	}
 } 
+.notice {
+	background: #F7F6E8 !important;
+	color: color('primary') !important;
+	box-shadow: none !important;
+}

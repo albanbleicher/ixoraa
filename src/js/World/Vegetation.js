@@ -14,7 +14,6 @@ export default class Vegetation {
         this.generate()
     }
     generate() {
-      
         this.model.geometry.computeVertexNormals(); // calculate vertex of model geometry
         this.model.geometry.scale( this.scaleFactor, this.scaleFactor, this.scaleFactor ); // scale
 
