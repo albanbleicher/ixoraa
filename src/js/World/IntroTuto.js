@@ -4,6 +4,7 @@ import lottie from 'lottie-web'
 export default class IntroTuto {
     constructor(params) {
         this.assets = params.assets
+        this.socket = params.socket
         this.name = params.name
         this.description = params.description
         this.container = null
@@ -12,7 +13,7 @@ export default class IntroTuto {
 
     // Create Lottie animation and DOM nodes
     create() {
-        const app = document.querySelector('.app')
+        this.app = document.querySelector('.app')
         this.container = document.createElement('div')
         this.textContainer = document.createElement('div')
         this.container.classList.add('introTuto')
@@ -28,15 +29,7 @@ export default class IntroTuto {
 
         this.container.append(this.animationElement)
 
-        app.append(this.container)
-
-        lottie.loadAnimation({
-            container: document.getElementById("introTutoAnimation"),
-            renderer: "svg",
-            autoplay: true,
-            loop: true,
-            path: './animations/espoir_script.json',
-        });
+        this.app.append(this.container)
 
     }
     // Set the timeline to chain title and animation
@@ -55,10 +48,37 @@ export default class IntroTuto {
     }
 
     showTotemTuto() {
+        lottie.loadAnimation({
+            container: document.getElementById("introTutoAnimation"),
+            renderer: "svg",
+            autoplay: true,
+            loop: true,
+            path: './animations/sagesse_script.json',
+        });
         gsap.to(this.animationElement, { opacity: 1, duration: 3 }).then(() => {
-            gsap.to(this.animationElement, { opacity: 0, duration: 3, delay: 5 })
+            gsap.to(this.animationElement, { opacity: 0, duration: 3, delay: 5 }).then(() => {
+                if (this.socket) { this.socket.emit('totem approach', this.name); console.log('yes') }
+            })
         })
     }
+
+    showOutro() {
+        var outro = lottie.loadAnimation({
+            container: document.getElementById("introTutoAnimation"),
+            renderer: "svg",
+            autoplay: true,
+            loop: false,
+            path: './animations/ecran_fin.json',
+        });
+        gsap.to(this.animationElement, { opacity: 1, duration: 3 }).then(() => {
+            gsap.to(this.animationElement, { opacity: 0, duration: 3, delay: 5 }).then(() => {
+                gsap.to(this.app, { opacity: 0, duration: 3 });
+            })
+        })
+
+        outro.setSpeed(0.5);
+    }
+
     hide() {
         gsap.to(this.container, { opacity: 0, duration: 1 })
     }

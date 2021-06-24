@@ -13,6 +13,7 @@ import { MODELS } from './utils'
 import Vegetation from './Vegetation'
 import { getMesh } from '@js/Tools/Functions.js'
 import IntroTuto from './IntroTuto'
+import gsap from 'gsap'
 
 export default class Planet {
   constructor(params) {
@@ -60,6 +61,18 @@ export default class Planet {
     this.ground = getMesh({ parent: this.mesh, name: MODELS.planet.ground, strict: true })
     this.foret = getMesh({ parent: this.mesh, name: 'forest', strict: true })
     this.container.add(this.mesh)
+
+
+    /*setTimeout(() => {
+      this.time.on('tick', () => {
+        this.camera.lookAt(this.ground.position)
+        //this.camera.far = 500;
+        gsap.to(this.camera.position,
+          { x: 0, y: 100, z: 0, ease: "power3.out", duration: 10 },
+        ).then(() => this.introTuto.showOutro())
+
+      }, 2000)
+    })*/
   }
   setTotems() {
     // Retrieving each Totem's Mesh and set a list
@@ -159,13 +172,14 @@ export default class Planet {
       material: foliageMaterial,
       container: this.container,
     })
-  
+
 
   }
   // Create the tuto on first appearance
   showTuto() {
     this.introTuto = new IntroTuto({
-      assets: this.assets
+      assets: this.assets,
+      socket: this.socket
     })
     console.log(this.introTuto)
     this.introTuto.showIntroTuto();

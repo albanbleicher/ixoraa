@@ -24,7 +24,7 @@ export default class Totem {
       third: 2// play melody
     }
     this.near = false
-    this.firstTuto = false;
+    this.firstTuto = null;
     this.pattern = null
     this.completed = false
     // Set up
@@ -188,8 +188,8 @@ export default class Totem {
       if (this.socket) this.socket.emit('totem wave', wave)
     })
     this.pattern.on('ended', () => {
-      if(this.socket) this.socket.emit('totem end listen')
-      
+      if (this.socket) this.socket.emit('totem end listen')
+
     })
   }
   watch() {
@@ -199,12 +199,6 @@ export default class Totem {
 
       if (this.screen) this.screen.show()
       console.log('[Totem] Approaching ' + this.name);
-
-      if (!this.firstTuto) {
-        console.log(this.introTuto);
-        this.introTuto.showTotemTuto()
-        this.firstTuto = true
-      }
     }
     if (this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
       this.nearThird = true
@@ -212,8 +206,15 @@ export default class Totem {
       this.totem.layers.enable(1);
       this.startPanningCamera();
       console.log('entering melody zone');
-      if(this.socket) this.socket.emit('totem approach', this.name)
-      this.startPanningCamera()
+
+
+      if (!this.firstTuto && this.name === MODELS.totems[0]) {
+        console.log(this.introTuto);
+        this.introTuto.showTotemTuto()
+        this.firstTuto = true
+      }
+      // That was here before, but I set in the introTuto
+      // if (this.socket) this.socket.emit('totem approach', this.name)
 
       this.pattern.trigger('approach')
     }
@@ -357,7 +358,7 @@ export default class Totem {
   // A smooth displacement of the camera when the player is close to a totem
   startPanningCamera() {
     gsap.to(this.camera.position,
-      { x: 2, y: 2, z: 5, ease: "power3.out", duration: 5 },
+      { x: 1, y: 2, z: 5, ease: "power3.out", duration: 5 },
     )
     //this.player.player.mesh.lookAt(this.position);
   }

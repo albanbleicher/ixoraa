@@ -60,7 +60,7 @@ export default class Player {
         this.camera.camera.position.z = 2
         this.time.on('tick', () => {
             this.player.mesh.material.map.rotation += 0.0025
-            this.camera.camera.lookAt(this.player.mesh.position)
+            //this.camera.camera.lookAt(this.player.mesh.position)
             this.position.copy(this.player.mesh.position)
         })
         if (this.debug) {
