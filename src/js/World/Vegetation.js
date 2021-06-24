@@ -22,8 +22,8 @@ export default class Vegetation {
         const groundGeometry = this.surface.geometry.toNonIndexed()
         const groundMesh = new Mesh(groundGeometry, new MeshNormalMaterial())
         const dummy = new Object3D()
-        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute('position')
-        this.mesh = new InstancedMesh(this.model.geometry, this.material, this.count);
+        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute()
+                this.mesh = new InstancedMesh(this.model.geometry, this.material, this.count);
         const _position = new Vector3()
         const _normal = new Vector3();
         this.mesh.name = 'GRASS'
