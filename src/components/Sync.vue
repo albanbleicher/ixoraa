@@ -31,8 +31,6 @@ export default {
             }
         })
         this.socket.on('totem end listen', (wave) => {
-            console.log('end listen')
-             console.log(this.$refs.waves)
         console.log(this.waves)
         gsap.to(this.$refs.waves.children, {
             width:'250vh',
