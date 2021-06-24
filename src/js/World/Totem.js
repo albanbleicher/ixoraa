@@ -176,10 +176,12 @@ export default class Totem {
         })
         break;
     }
-    this.totemDebugger = document.createElement('span')
+    if(this.debug) {
+      this.totemDebugger = document.createElement('span')
     this.totemDebugger.classList.add('debugger')
     this.totemDebugger.setAttribute('id', this.name)
     document.querySelector('.app').append(this.totemDebugger)
+    }
     this.pattern.on('wave', (wave) => {
       this.createTorus()
       console.log('pattern emmited wave @ ', wave)
@@ -190,7 +192,7 @@ export default class Totem {
     })
   }
   watch() {
-    this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
+    if(this.debug) this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
     if (this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
       this.near = true;
       

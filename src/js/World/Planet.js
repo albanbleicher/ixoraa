@@ -58,6 +58,7 @@ export default class Planet {
     this.physics.visible = false
     // Get displayed Ground 
     this.ground = getMesh({ parent: this.mesh, name: MODELS.planet.ground, strict: true })
+    this.foret = getMesh({ parent: this.mesh, name: 'forest', strict: true })
     this.container.add(this.mesh)
   }
   setTotems() {
@@ -145,18 +146,26 @@ export default class Planet {
       material: grassMaterial,
       container: this.container
     })
-    // const foliageMaterial = new MeshStandardMaterial({
-    //   color: 'red',
-    //   emissive: 'red',
-    // })
-    // this.foliage = new Vegetation({
-    //   surface: this.foret,
-    //   model: this.assets.models.foliage.scene.children[0],
-    //   count: 6000,
-    //   scaleFactor: 1,
-    //   material: foliageMaterial,
-    //   container: this.container,
-    // })
+    const foliageMaterial = new MeshStandardMaterial({
+      color: 'red',
+      emissive: 'red',
+    })
+    this.foliage = new Vegetation({
+      surface: this.ground,
+      model: this.assets.models.foliage.scene.children[0],
+      count: 600,
+      scaleFactor: 1,
+      material: foliageMaterial,
+      container: this.container,
+    })
+    this.foliage = new Vegetation({
+      surface: this.ground,
+      model: this.assets.models.grass.scene.children[0],
+      count: 6000,
+      scaleFactor: 1,
+      material: grassMaterial,
+      container: this.container,
+    })
 
   }
   // Create the tuto on first appearance

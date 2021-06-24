@@ -7,7 +7,12 @@
     z-index: 9999;
     pointer-events: none;
     opacity: 1;
-
+    h2{
+        color: white;
+        font-size: 36px;
+        opacity: 0;
+        text-align: center;
+    }
     .textContainer{
         display: flex;
         justify-content: space-evenly;
@@ -17,12 +22,7 @@
         width: 100%;
     }
 }
-h2{
-    color: white;
-    font-size: 36px;
-    opacity: 0;
-    text-align: center;
-}
+
 #totemTutoAnimation{
     opacity: 0;
 }
