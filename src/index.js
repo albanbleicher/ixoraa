@@ -27,7 +27,7 @@ anim.setSpeed(10);
 
 let socket = false;
 if (!window.location.hash.includes('#nosocket')) {
-  socket = io("ws://localhost:3000");
+  socket = io("https://ixoraa-api.herokuapp.com/");
   console.log('[Socket] Enabled.');
   socket.emit("room create");
   document.addEventListener('DOMContentLoaded', () => {
