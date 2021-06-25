@@ -12,7 +12,7 @@ class Handler {
     constructor(http) {
         this.io = require('socket.io')(http, {
             cors: {
-                origin: ["http://game.ixoraa.albchr.dev","http://localhost:8080", "localhost:8080", "http://localhost:8081", "localhost:8081"],
+                origin: ["http://new-map.ixoraa.albchr.dev","http://game.ixoraa.albchr.dev","http://localhost:8080", "localhost:8080", "http://localhost:8081", "localhost:8081"],
                 methods: ["GET", "POST"],
             }
         });
