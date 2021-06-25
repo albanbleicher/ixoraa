@@ -48,18 +48,13 @@ export default class Pattern extends EventEmitter {
             notes:['C4','A3','D5', 'E6', 'G2']
         })
 
-        this.on('begin listen', () => {
+        this.on('begin_listen', () => {
+            firstMelody.playWithEmit()
+        })
+        this.on('begin_sync', () => {
+            // console.log('received sync')
             firstMelody.play()
         })
-
-        // // Start to record the first melody
-        // this.on('begin listen', () => {
-        //     console.log('[Pattern] Playing melody...')
-        //     firstMelody.play()
-        //     performance.mark('start')
-        //     console.log('[Pattern] Start recording as approaching totem')
-        //     firstMelody.near = true
-        // })
 
         // Save a first wave
         firstMelody.on('wave', (timestamp) => {
@@ -69,6 +64,10 @@ export default class Pattern extends EventEmitter {
         firstMelody.on('ended', () => {
             console.log(this)
             this.trigger('ended')
+        })
+        firstMelody.on('ended_sync', () => {
+            console.log(this)
+            this.trigger('ended_sync')
         })
 
         // // When the pattern is finished, send array of timings to the server

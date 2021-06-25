@@ -193,6 +193,10 @@ export default class Totem {
       if (this.socket) this.socket.emit('totem end listen')
 
     })
+    this.pattern.on('ended_sync', () => {
+      if (this.socket) this.socket.emit('totem end sync')
+
+    })
   }
   watch() {
     if (this.debug) this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
@@ -384,7 +388,12 @@ export default class Totem {
     this.socket.on('totem begin listen', (totem) => {
       if (totem === self.name) {
         self.screen.hide()
-        this.pattern.trigger('begin listen')
+        this.pattern.trigger('begin_listen')
+      }
+    })
+    this.socket.on('totem begin sync', (totem) => {
+      if (totem === self.name) {
+        this.pattern.trigger('begin_sync')
       }
     })
   }

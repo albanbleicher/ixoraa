@@ -17,7 +17,7 @@ export default class Melody extends EventEmitter {
         })
        
     }
-    play() {
+    playWithEmit() {
         let currentNote=0;
         const player = setInterval(() => {
             if(currentNote < (this.notes.length - 1) ) {
@@ -30,6 +30,24 @@ export default class Melody extends EventEmitter {
             else if(currentNote <  this.notes.length) {
                 this.trigger('ended')
                 clearInterval(player)
+            }
+            currentNote++
+
+        },1000)
+    }
+    play() {
+        console.log('playing without emiit')
+        let currentNote=0;
+        const player = setInterval(() => {
+            if(currentNote < (this.notes.length - 1) ) {
+                console.log('current note is ', this.notes[currentNote])
+                this.piano.keyDown({note:this.notes[currentNote]})
+                this.piano.keyUp({note:this.notes[currentNote], time:'+1'})
+            }
+            else if(currentNote <  this.notes.length) {
+                clearInterval(player)
+                this.trigger('ended_sync')
+
             }
             currentNote++
 
