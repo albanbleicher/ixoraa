@@ -9,10 +9,6 @@ module.exports = webpackMerge.merge(
     devtool: 'source-map',
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
-      new webpack.EnvironmentPlugin({
-        NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
-        DEBUG: false,
-      })
     ],
     devServer: {
       host: '0.0.0.0',

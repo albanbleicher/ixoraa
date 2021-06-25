@@ -38,9 +38,6 @@ module.exports = {
       template: path.resolve(__dirname, '../src/index.html'),
       minify: true,
     }),
-    new webpack.ProvidePlugin({
-      process: 'process/browser',
-    }),
   ],
   module: {
     rules: [

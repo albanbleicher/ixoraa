@@ -1,4 +1,3 @@
-import { Vec3 } from "cannon-es"
 import { MeshNormalMaterial, Vector2, Vector3, MeshBasicMaterial, RepeatWrapping, MirroredRepeatWrapping } from "three"
 import { Spherical } from "three"
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
