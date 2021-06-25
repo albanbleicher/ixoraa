@@ -40,6 +40,7 @@ export default {
       position: { left: "50%", top: "50%" },
       color: "white",
       size: 250,
+      dynamicPage:true
     });
 
     joystick.on("move", (evt, nipple) => {
