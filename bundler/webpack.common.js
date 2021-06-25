@@ -24,7 +24,7 @@ module.exports = {
     }
   },
   plugins: [
-    new CopyWebpackPlugin({ 
+    new CopyWebpackPlugin({
       patterns: [
         { from: 'static', to: '' },
         { from: '*.json', to: 'assets/fonts', context: "src/fonts", noErrorOnMissing: true },
@@ -34,6 +34,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Three Template',
       favicon: path.resolve(__dirname, '../static/favicon.ico'),
+      headphones: path.resolve(__dirname, '../static/headphones.svg'),
       logo_animation: path.resolve(__dirname, '../static/animations/logo_animation.json'),
       template: path.resolve(__dirname, '../src/index.html'),
       minify: true,

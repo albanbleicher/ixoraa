@@ -62,23 +62,6 @@ export default class IntroTuto {
         })
     }
 
-    showOutro() {
-        var outro = lottie.loadAnimation({
-            container: document.getElementById("introTutoAnimation"),
-            renderer: "svg",
-            autoplay: true,
-            loop: false,
-            path: './animations/ecran_fin.json',
-        });
-        gsap.to(this.animationElement, { opacity: 1, duration: 3 }).then(() => {
-            gsap.to(this.animationElement, { opacity: 0, duration: 3, delay: 5 }).then(() => {
-                gsap.to(this.app, { opacity: 0, duration: 3 });
-            })
-        })
-
-        outro.setSpeed(0.5);
-    }
-
     hide() {
         gsap.to(this.container, { opacity: 0, duration: 1 })
     }

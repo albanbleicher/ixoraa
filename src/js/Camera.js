@@ -13,14 +13,20 @@ export default class Camera {
     this.container = new Object3D()
     this.container.name = 'Camera'
 
-    this.setCamera()
-    this.setOrbitControls()
+    this.initialCamera;
+    this.finalCamera;
+    this.currentCamera = null;
+
+
+    this.setInitialCamera()
+    this.setFinalCamera()
+    //this.setOrbitControls()
     this.setPosition()
 
   }
-  setCamera() {
+  setInitialCamera() {
     // Create camera
-    this.camera = new PerspectiveCamera(
+    this.initialCamera = new PerspectiveCamera(
       75,
       this.sizes.viewport.width / this.sizes.viewport.height,
       0.1,
@@ -32,12 +38,34 @@ export default class Camera {
     // this.container.add(this.controls.getObject())
     // Change camera aspect on resize
     this.sizes.on('resize', () => {
-      this.camera.aspect =
+      this.initialCamera.aspect =
         this.sizes.viewport.width / this.sizes.viewport.height
       // Call this method because of the above change
-      this.camera.updateProjectionMatrix()
+      this.initialCamera.updateProjectionMatrix()
 
     })
+    console.log(this.initialCamera.name);
+    this.initialCamera.name = 'initialCamera'
+    this.currentCamera = this.initialCamera;
+  }
+
+  setFinalCamera() {
+    // Create camera
+    this.finalCamera = new PerspectiveCamera(
+      75,
+      this.sizes.viewport.width / this.sizes.viewport.height,
+      0.1,
+      80
+    )
+    // Change camera aspect on resize
+    this.sizes.on('resize', () => {
+      this.finalCamera.aspect =
+        this.sizes.viewport.width / this.sizes.viewport.height
+      // Call this method because of the above change
+      this.finalCamera.updateProjectionMatrix()
+
+    })
+    this.finalCamera.name = 'finalCamera'
   }
   setPosition() {
     // Set camera position
@@ -47,7 +75,7 @@ export default class Camera {
   }
   setOrbitControls() {
     this.orbitControls = new OrbitControls(
-      this.camera,
+      this.currentCamera,
       this.renderer.domElement
     )
     this.orbitControls.enabled = false

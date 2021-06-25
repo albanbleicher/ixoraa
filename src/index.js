@@ -18,6 +18,7 @@ var animData = {
 var anim = lottie.loadAnimation(animData)
 
 const play = document.querySelector('.play')
+const headphones = document.querySelector('.headphones')
 
 anim.addEventListener('complete', () => gsap.to(play, { opacity: 1 }))
 
@@ -37,13 +38,17 @@ if (!window.location.hash.includes('#nosocket')) {
     play.addEventListener('click', () => {
       socket.emit("room create");
       socket.once("room code", (id) => {
+        console.log('room code');
+
         code.innerText = id;
       });
       gsap.to(play, { opacity: 0, display: 'none' }).then(() => {
+        gsap.to(headphones, { opacity: 0, display: 'none' });
         gsap.to(access, { opacity: 1 });
 
       });
       socket.once('room is_synced', () => {
+        console.log('room');
         const app = document.querySelector('.app');
         console.log(app);
         const canvas = document.querySelector('#_canvas');

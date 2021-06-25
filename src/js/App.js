@@ -29,8 +29,8 @@ export default class App {
     this.renderer = new WebGLRenderer({
       canvas: this.canvas,
       antialias: true,
-      powerPreference: 'high-performance',     
-      shadowMap:{enabled:true}
+      powerPreference: 'high-performance',
+      shadowMap: { enabled: true }
     })
     this.renderer.gammaFactor = 2.2
     // Set renderer pixel ratio & sizes
@@ -48,8 +48,8 @@ export default class App {
       // When tab is not visible (tab is not active or window is minimized), browser stops requesting animation frames. Thus, this does not work
       // if the window is only in the background without focus (for example, if you select another window without minimizing the browser one), 
       // which might cause some performance or batteries issues when testing on multiple browsers
-      if (!(this.renderOnBlur?.activated && !document.hasFocus() ) ) {
-        // this.renderer.render(this.scene, this.camera.camera)
+      if (!(this.renderOnBlur?.activated && !document.hasFocus())) {
+        // this.renderer.render(this.scene, this.camera.currentCamera)
       }
     })
 
@@ -78,10 +78,10 @@ export default class App {
       time: this.time,
       debug: this.debug,
       assets: this.assets,
-      camera:this.camera,
+      camera: this.camera,
       renderer: this.renderer,
       scene: this.scene,
-      socket:this.socket
+      socket: this.socket
     })
     // Add world to scene
     this.scene.add(this.world.container)
@@ -90,6 +90,6 @@ export default class App {
     if (window.location.hash.includes('#debug')) {
       this.debug = new dat.GUI({ width: 450 })
     }
-    
+
   }
 }

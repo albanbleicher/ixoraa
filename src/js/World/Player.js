@@ -46,7 +46,9 @@ export default class Player {
 
         // place camera
         this.container.add(this.player.mesh)
-        this.player.mesh.add(this.camera.camera)
+        console.log(this.camera.currentCamera);
+        if (this.camera.currentCamera.name === 'initialCamera')
+            this.player.mesh.add(this.camera.currentCamera)
 
         // Set textures, rotation and bloom to the player
         this.player.mesh.material.transparent = true;
@@ -55,11 +57,11 @@ export default class Player {
         this.player.mesh.material.map.offset.x = Math.PI;
         this.player.mesh.material.map.repeat.set(6, 6);
         this.player.mesh.layers.enable(1);
-        this.camera.camera.position.y = 0
-        this.camera.camera.position.z = 2
+        this.camera.currentCamera.position.y = 0
+        this.camera.currentCamera.position.z = 2
         this.time.on('tick', () => {
             this.player.mesh.material.map.rotation += 0.0025
-            //this.camera.camera.lookAt(this.player.mesh.position)
+            //this.camera.currentCamera.lookAt(this.player.mesh.position)
             this.position.copy(this.player.mesh.position)
         })
         if (this.debug) {

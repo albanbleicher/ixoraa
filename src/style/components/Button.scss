@@ -1,9 +1,9 @@
 button {
-    padding: 15px 30px;
-    background-color: color('secondary');
-    border:2px solid color('secondary');
+    padding: 20px 50px;
+    background-color: transparent;
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
+    border: none;
     color: color('background');
     font-size: 20px;
     min-width: 200px;
@@ -16,7 +16,7 @@ button {
     &:hover {
         opacity: 0.8;
     }
-    &:before {
+    /*&:before {
         content: " ";
         position: absolute;
         z-index: 1;
@@ -26,5 +26,36 @@ button {
         bottom: 5px;
         border-radius: 100px;
         border: 2px solid color('background');
+      }*/
+
+      &::after {
+        content: " ";
+        position: absolute;
+        z-index: 1;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border-radius: 100px;
+        border: 2px solid color('background');
+        animation: wave 1s;
+        animation-iteration-count: infinite;
+
+
+        &:hover{
+            animation: wave 1s;
+            animation-iteration-count: infinite;
+        }
       }
+}
+
+@keyframes wave {
+    0% {
+        transform: scale3d(1, 1, 1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale3d(1.5, 1.5, 1.5);
+        opacity: 0;
+    }
 }

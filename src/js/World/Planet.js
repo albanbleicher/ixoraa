@@ -21,10 +21,11 @@ export default class Planet {
     this.time = params.time
     this.assets = params.assets
     this.debug = params.debug
-    this.camera = params.camera.camera
+    this.camera = params.camera
     this.player = params.player
     this.listener = params.listener
     this.waveemit = params.waveemit
+    this.effects = params.effects
     this.gui = null
     this.mesh = null
 
@@ -42,6 +43,7 @@ export default class Planet {
     this.setMaterials()
     // this.setBloomingItems()
     // if (params.debug) this.setDebug()
+    if (params.debug) this.setCameraDebug()
     this.showTuto()
     this.setTotems()
 
@@ -61,18 +63,6 @@ export default class Planet {
     this.ground = getMesh({ parent: this.mesh, name: MODELS.planet.ground, strict: true })
     this.foret = getMesh({ parent: this.mesh, name: 'forest', strict: true })
     this.container.add(this.mesh)
-
-
-    /*setTimeout(() => {
-      this.time.on('tick', () => {
-        this.camera.lookAt(this.ground.position)
-        //this.camera.far = 500;
-        gsap.to(this.camera.position,
-          { x: 0, y: 100, z: 0, ease: "power3.out", duration: 10 },
-        ).then(() => this.introTuto.showOutro())
-
-      }, 2000)
-    })*/
   }
   setTotems() {
     // Retrieving each Totem's Mesh and set a list
@@ -90,7 +80,7 @@ export default class Planet {
         time: this.time,
         socket: this.socket,
         assets: this.assets,
-        camera: this.camera,
+        camera: this.camera.currentCamera,
         name: totemMesh.name,
         listener: this.listener,
         totem: totemMesh,
@@ -184,6 +174,15 @@ export default class Planet {
     console.log(this.introTuto)
     this.introTuto.showIntroTuto();
   }
+
+  setCameraDebug() {
+    const folderCamera = this.debug.addFolder('Camera')
+    //folderCamera.add(this.camera.position, 'x', -100, 100, 0.1).name('X').listen()
+    //folderCamera.add(this.camera.position, 'y', -100, 100, 0.1).name('Y').listen()
+    //folderCamera.add(this.camera.position, 'z', -100, 100, 0.1).name('Z').listen()
+    //folderCamera.add(this.camera, 'near', 0, 500, 0.1).name('Near').listen()
+    //folderCamera.add(this.camera, 'far', 0, 500, 0.1).name('Far').listen()
+  }
   setDebug() {
     let self = this;
     const monolithes = this.mesh.children.find(item => item.name === MODELS.planet.monolithes)
@@ -214,6 +213,7 @@ export default class Planet {
         aura.material.emissiveIntensity = intensity
       })
     })
+
     folderMonolithes.addColor(new ColorGUIHelper(monolithes.material, 'color'), 'value').name('Couleur des monolithes')
     folderMonolithes.add(monolithes.material, 'envMapIntensity').min(0).max(10).step(0.1).name('Intensité du reflet')
     folderMonolithes.add(monolithes.material, 'metalness').min(0).max(1).step(0.01).name('Effet métal')
