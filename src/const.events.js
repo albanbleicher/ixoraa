@@ -21,6 +21,8 @@ exports.TOTEMS = {
     BEGIN_LISTEN: 'totem begin listen',
     WAVE: 'totem wave',
     END_LISTEN: 'totem end listen',
+    BEGIN_SYNC: 'totem begin sync',
+    END_SYNC: 'totem end sync',
 }
 
 exports.MUSICTIME = {

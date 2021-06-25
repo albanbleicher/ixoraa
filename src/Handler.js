@@ -44,17 +44,10 @@ class Handler {
         socket.on(TOTEMS.BEGIN_LISTEN, (totem) => totems.beginListen(this.io, totem))
         socket.on(TOTEMS.WAVE, (wave) => totems.wave(this.io, wave))
         socket.on(TOTEMS.END_LISTEN, (totem) => totems.endListen(this.io, totem))
-
-        
-        // socket.on(MUSICTIME.TAP, () => musictime.tapped(this.io))
-        // socket.on(MUSICTIME.NEARTOTEM, () => { musictime.nearTotem(this.io, this.currentRoom); })
-        // socket.on(MUSICTIME.NEARTOTEMISOK, () => { musictime.nearTotemIsOk(this.io, this.currentRoom); })
-        // //old melody
-        // socket.on(MUSICTIME.BEGIN, (melody) => { musictime.begin(this.io, this.currentRoom, melody); })
-        // socket.on(MUSICTIME.PLAYNOTE, () => musictime.playNote(this.io, this.currentRoom))
-        // socket.on(MUSICTIME.CORRECT, () => musictime.correct(this.io, this.melody, this.lines))
-        // socket.on(MUSICTIME.WRONG, () => musictime.wrong(this.io))
-        // socket.on(MUSICTIME.WINNED, () => musictime.winned(this.io))
+        socket.on(TOTEMS.BEGIN_SYNC, (totem) => {
+            console.log('okkk?');
+            totems.beginSync(this.io, totem)})
+        socket.on(TOTEMS.END_SYNC, (totem) => totems.endSync(this.io, totem))
 
 
         socket.on(ROOMS_EVENTS.CREATE, () => self.rooms.create(), console.log('hmmm'))
