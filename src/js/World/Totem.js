@@ -1,6 +1,4 @@
 import { Object3D, Mesh, MeshBasicMaterial, Vector3, TextureLoader, MeshStandardMaterial, TorusGeometry, Color } from 'three'
-import Toastify from 'toastify-js'
-import "toastify-js/src/toastify.css"
 
 import gsap from 'gsap'
 import { MODELS } from './utils'
@@ -212,15 +210,15 @@ export default class Totem {
       this.totem.layers.enable(1);
       // this.startPanningCamera();
       
-      Toastify({
-        text: "Lancez la mélodie du totem en appuyant sur votre téléphone, puis établissez la connexion entre votre conscience et le totem.",
-        duration: 10000,
-        gravity: "top", // `top` or `bottom`
-        position: "center", // `left`, `center` or `right`
-        className: "notice",
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        onClick: function(){} // Callback after click
-      }).showToast();
+      // Toastify({
+      //   text: "Lancez la mélodie du totem en appuyant sur votre téléphone, puis établissez la connexion entre votre conscience et le totem.",
+      //   duration: 10000,
+      //   gravity: "top", // `top` or `bottom`
+      //   position: "center", // `left`, `center` or `right`
+      //   className: "notice",
+      //   stopOnFocus: true, // Prevents dismissing of toast on hover
+      //   onClick: function(){} // Callback after click
+      // }).showToast();
 
 
       // if (!this.firstTuto && this.name === MODELS.totems[0]) {
