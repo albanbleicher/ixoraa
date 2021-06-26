@@ -1,6 +1,5 @@
 .play {
-    background: url('../images/shapes/hdri_jpeg.jpg');
-    background-size: cover;
+    background-color: rgba(color('primary'),0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,6 +7,6 @@
     width: 100%;
 }
 .lottie-float {
-    transform:scale(0.5,.5);
+    transform:scale(.5,.5);
     
 }

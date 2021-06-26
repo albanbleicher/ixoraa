@@ -9,24 +9,25 @@
     top: 0;
     left: 0;
     z-index: 999;
-}
-.waves {
-    position: fixed;
-    top: -10px;
-    left: 50%;
-    transform: translate(-50%, 0);
-    .wave {
-        width:10px;
-        height: 10px;
-        border:5px solid white;
-        border-radius: 100%;
-        animation:shadow 1s infinite alternate-reverse;
-        position: absolute;
-        top: -50%;
+    .waves {
+        position: fixed;
+        top: -10px;
         left: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%, 0);
+        .wave {
+            width:10px;
+            height: 10px;
+            border:5px solid white;
+            border-radius: 100%;
+            animation:shadow 1s infinite alternate-reverse;
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
     }
 }
+
 @keyframes shadow {
     0% {
         box-shadow: 1px 1px 30px rgba(255, 255, 255, 0.104);

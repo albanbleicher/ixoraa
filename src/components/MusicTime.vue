@@ -57,7 +57,7 @@ export default {
     };
   },
   created() {
-    this.io = io("http://localhost:3000");
+    this.io = io("http://192.168.1.17:3000/");
     console.log(this.io);
 
     //const result = await this.returnsPromise(time, lines);

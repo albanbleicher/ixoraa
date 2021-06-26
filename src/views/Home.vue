@@ -1,13 +1,34 @@
 <template>
-  <div class="landing">
-    <h1>Renseigne ton code pour connecter ton téléphone</h1>
+  <div v-if='status===0' class="home">
+    <h1>Entre ton code</h1>
     <InputCode v-model="code" @change="sync" />
-    <!-- <span>{{status_message}}</span> -->
+  </div>
+  <div v-else class="loading">
+    <span>Chargement...</span>
+    <div ref='waves' class="waves">
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+    </div>
   </div>
 </template>
 <script>
 import InputCode from "../components/InputCode.vue";
 import { mapGetters } from 'vuex'
+import gsap from 'gsap';
 export default {
   components: { InputCode },
   data() {
@@ -39,20 +60,33 @@ export default {
     },
   },
   mounted() {
-    // Go on the next page when sended code is good
     this.socket.on("room is_synced", (test) => {
       this.status = 1;
-      this.$router.push("/play");
+        this.$nextTick(()=> {
+          this.loading()
+        })
+
+    });
+    this.socket.on("user loaded", (test) => {
+      this.status = 2;
+        this.$router.push('play')
+
     });
     this.socket.on("room error", (test) => {
       this.status = 2;
+      console.log('error')
     });
   },
   methods: {
     // For each code change, then the code to the server
     sync() {
+      console.log('try sync');
       this.socket.emit("room join", parseInt(this.code));
     },
+    loading() {
+      gsap.to(this.$refs.waves.children, {opacity:0.6, duration:0.5, stagger:2})
+      gsap.to(this.$refs.waves.children, {width:'250vh', height:'250vh', duration:8, ease:"slow(0.70.7, 0.70.7, false)", stagger:2})
+    } 
   },
 };
 </script>

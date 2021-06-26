@@ -46,6 +46,7 @@ export default {
                setTimeout(() => {
                 this.showTap=false;
             this.endSync=true
+            this.socket.emit('totem success')
            },1500)
            }
            else {

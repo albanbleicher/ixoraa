@@ -5,7 +5,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     currentTotem:null,
-    socket:io(process.env.VUE_APP_WEBSOCKET_URL)
+    socket:io(process.env.VUE_APP_WEBSOCKET_URL, {transports: ['websocket', 'polling', 'flashsocket']})
   },
   getters:{
     socket(state) {
