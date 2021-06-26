@@ -2,9 +2,30 @@
     @include landing;
     position: relative;
     z-index: 10;
+
     .title {
         svg {
             width: 40% !important;
         }
+    }
+}
+
+.headphones {
+    text-align: center;
+    opacity: 0;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    bottom: 5%;
+    position: absolute;
+
+    svg {
+        fill: white;
+        width: 40px;
+        height: 40px;
+        margin-top: 15px;
+
     }
 }

@@ -19,9 +19,13 @@ const audio = new Audio('./loading.mp3')
 const landing = document.querySelector('.landing')
 const access = document.querySelector('.access')
 const code = document.querySelector('.code')
+const headphones = document.querySelector('.headphones')
+
+
+
 
 anim.setSpeed(10);
-anim.addEventListener('complete', () => gsap.to(play, { opacity: 1 }))
+anim.addEventListener('complete', () => gsap.to([play, headphones], { opacity: 1 }))
 
 let socket = false;
 
@@ -39,7 +43,8 @@ if (!window.location.hash.includes('#nosocket')) {
       socket.once("room code", (id) => {
         code.innerText = id;
       });
-      gsap.to(home, { opacity: 0, duration:1 }).then(() => {
+      gsap.to([home, headphones], { opacity: 0, duration:1 }).then(() => {
+
         home.remove()
         gsap.to(access, { opacity: 1 });
       });
