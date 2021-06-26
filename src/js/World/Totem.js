@@ -26,7 +26,7 @@ export default class Totem {
     this.near = false
     this.firstTuto = null;
     this.pattern = null
-    this.completed = false
+    this.collected = false
     // Set up
     this.container = new Object3D()
     this.container.name = 'Totem ' + options.name
@@ -198,13 +198,13 @@ export default class Totem {
   }
   watch() {
     if (this.debug) this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
-    if (this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
+    if (!this.collected && this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
       this.near = true;
 
       if (this.screen) this.screen.show()
       console.log('[Totem] Approaching ' + this.name);
     }
-    if (this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
+    if (!this.collected && this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
       this.nearThird = true
 
       this.totem.layers.enable(1);
@@ -232,7 +232,7 @@ export default class Totem {
 
       this.pattern.trigger('approach')
     }
-    if (this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
+    if (!this.collected && this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
       this.near = false;
       this.pattern.trigger('leave')
       this.endPanningCamera();
@@ -393,6 +393,11 @@ export default class Totem {
       if (totem === self.name) {
         this.pattern.trigger('begin_sync')
       }
+    })
+    this.socket.on('totem success', (totem) => {
+      this.collected = true;
+      this.near=false;
+      this.socket.emit('totem leave', this.name)
     })
   }
   //   this.io_client.on("musictime begin", (timing, lines) => {

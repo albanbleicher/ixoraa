@@ -1,30 +1,16 @@
 button {
-    padding: 15px 30px;
-    background-color: color('secondary');
-    border:2px solid color('secondary');
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
-    color: color('background');
-    font-size: 20px;
-    min-width: 200px;
+    opacity: 0;
+    background-color:white;
+    border:none;
+    padding: 20px 30px;
     border-radius: 100px;
-    position: relative;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: opacity 0.5s;
-    outline: 0;
+    font-family: 'Montserrat';
+    font-weight: bold;
+    color:color('primary');
+    letter-spacing:1px;
+    transition: box-shadow 1s;
+    cursor:pointer;
     &:hover {
-        opacity: 0.8;
+        box-shadow: 1px 1px 40px rgba(black,0.2);
     }
-    &:before {
-        content: " ";
-        position: absolute;
-        z-index: 1;
-        top: 5px;
-        left: 5px;
-        right: 5px;
-        bottom: 5px;
-        border-radius: 100px;
-        border: 2px solid color('background');
-      }
 }

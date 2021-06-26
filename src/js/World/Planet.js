@@ -12,7 +12,7 @@ import Totem from './Totem'
 import { MODELS } from './utils'
 import Vegetation from './Vegetation'
 import { getMesh } from '@js/Tools/Functions.js'
-import IntroTuto from './IntroTuto'
+// import IntroTuto from './IntroTuto'
 import gsap from 'gsap'
 
 export default class Planet {
@@ -42,7 +42,7 @@ export default class Planet {
     this.setMaterials()
     // this.setBloomingItems()
     // if (params.debug) this.setDebug()
-    this.showTuto()
+    // this.showTuto()
     this.setTotems()
 
   }
@@ -94,7 +94,7 @@ export default class Planet {
         name: totemMesh.name,
         listener: this.listener,
         totem: totemMesh,
-        introTuto: this.introTuto
+        // introTuto: this.introTuto
       })
       this.container.add(totem.container)
     })
@@ -172,17 +172,6 @@ export default class Planet {
       material: foliageMaterial,
       container: this.container,
     })
-
-
-  }
-  // Create the tuto on first appearance
-  showTuto() {
-    this.introTuto = new IntroTuto({
-      assets: this.assets,
-      socket: this.socket
-    })
-    console.log(this.introTuto)
-    this.introTuto.showIntroTuto();
   }
   setDebug() {
     let self = this;

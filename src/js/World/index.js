@@ -67,29 +67,16 @@ export default class World {
 
   }
   setLoader() {
-    this.loadDiv = document.querySelector('.loadScreen')
+    this.loadDiv = document.querySelector('.loading')
     this.loadModels = this.loadDiv.querySelector('.load')
     this.progress = this.loadDiv.querySelector('.progress')
 
     if (this.assets.total === 0) {
       this.init()
-      this.loadDiv.remove()
     } else {
-      this.assets.on('ressourceLoad', () => {
-        this.progress.style.width = `${Math.floor((this.assets.done / this.assets.total) * 100) +
-          Math.floor((1 / this.assets.total) * this.assets.currentPercent)
-          }%`
-      })
-
       this.assets.on('ressourcesReady', () => {
-        setTimeout(() => {
-          this.init()
-          //this.loadDiv.style.opacity = 0
-          gsap.to(this.loadDiv, { duration: 3, opacity: 0 })
-          setTimeout(() => {
-            //this.loadDiv.remove()
-          }, 1550)
-        }, 1000)
+        this.init() 
+        // const removables = document.querySelectorAll('.access, .loading, .title, .play')
       })
     }
   }

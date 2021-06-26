@@ -5,67 +5,103 @@ import io from "socket.io-client"
 import lottie from "lottie-web"
 
 // Animation for the logo
-let container = document.getElementById('anim_container')
-
-var animData = {
-  container: container,
+const anim = lottie.loadAnimation({
+  container: document.querySelector('.title'),
   renderer: 'svg',
   autoplay: true,
   loop: false,
   path: './animations/logo_animation.json'
-}
+})
+const play = document.querySelector('button')
+const home = document.querySelector('.home')
+const loading = document.querySelector('.loading')
+const audio = new Audio('./loading.mp3')
+const landing = document.querySelector('.landing')
+const access = document.querySelector('.access')
+const code = document.querySelector('.code')
 
-var anim = lottie.loadAnimation(animData)
-
-const play = document.querySelector('.play')
-
+anim.setSpeed(10);
 anim.addEventListener('complete', () => gsap.to(play, { opacity: 1 }))
 
-//anim.setSpeed(3);
-anim.setSpeed(10);
-
-
 let socket = false;
+
 if (!window.location.hash.includes('#nosocket')) {
-  socket = io("https://ixoraa-api.herokuapp.com/");
+  socket = io("ws://localhost:3000");
   console.log('[Socket] Enabled.');
   socket.emit("room create");
   document.addEventListener('DOMContentLoaded', () => {
-    const landing = document.querySelector('.landing')
-    const access = document.querySelector('.access')
-    const code = document.querySelector('.code')
+
     play.addEventListener('click', () => {
+      audio.play()
+      audio.pause()
+      audio.volume = 0
       socket.emit("room create");
       socket.once("room code", (id) => {
         code.innerText = id;
       });
-      gsap.to(play, { opacity: 0, display: 'none' }).then(() => {
+      gsap.to(home, { opacity: 0, duration:1 }).then(() => {
+        home.remove()
         gsap.to(access, { opacity: 1 });
-
       });
       socket.once('room is_synced', () => {
-        const app = document.querySelector('.app');
-        console.log(app);
         const canvas = document.querySelector('#_canvas');
         new App({
           canvas,
           socket
         })
-        gsap.to(access, { opacity: 0, duration: 2 })
-        gsap.to(container, { opacity: 0, duration: 2 })
-        gsap.to(landing, { opacity: 0, duration: 2 }).then(() => {
-          gsap.to(access, { display: 'none', duration: 0 })
-          gsap.to(container, { display: 'none', duration: 0 })
-          gsap.to(landing, { display: 'none', duration: 0 }).then(() => {
-            gsap.to(app, { duration: 2, opacity: 1 })
-            gsap.to(canvas, { duration: 2, opacity: 1 }).then(() => {
+        gsap.to(access, { opacity: 0, duration:1 }).then(() => {
+          access.remove()
+          gsap.to(loading, { opacity: 1 });
+          gsap.to(audio, { volume: 1, duration:4 });
+          audio.play()
+          setTimeout(() => {
+            gsap.to('.first', {opacity:1, duration:1.5})
+          },15000)
+          setTimeout(() => {
+            gsap.to('.first', {opacity:0, duration:1})
+          },17000)
+          setTimeout(() => {
+            gsap.to('.second', {opacity:1, duration:1.5})
+          },17500)
+          setTimeout(() => {
+            gsap.to('.second', {opacity:0, duration:1})
+          },20500)
+          setTimeout(() => {
+            gsap.to('.third', {opacity:1, duration:1.5})
+          },20500)
+          setTimeout(() => {
+            gsap.to('.third', {opacity:0, duration:1})
+          },23000)
+          setTimeout(() => {
+            gsap.to('.fourth', {opacity:1, duration:1.5})
+          },24000)
+          setTimeout(() => {
+            gsap.to('.fourth', {opacity:0, duration:1.5})
+          },25000)
+          setTimeout(() => {
+            gsap.to('.fifth', {opacity:1, duration:1.5})
+          },26000)
+          setTimeout(() => {
+            gsap.to('.fifth', {opacity:0, duration:1.5})
+          },27000)
+          setTimeout(() => {
+            gsap.to('.sixth', {opacity:1, duration:1.5})
+          },28000)
+          setTimeout(() => {
+            gsap.to('.sixth', {opacity:0, duration:1})
+            gsap.to(audio, {volume:0, duration:2})
+          },35000)
+          setTimeout(() => {
+            gsap.to(loading, {opacity:0, duration:2}).then(()=> {
+              loading.remove()
+              gsap.to(canvas, {opacity:1, duration:1})
             })
+          },37000)
+          
+          
 
-          })
-
-
-        })
-        musicFadeOut()
+        });
+    
 
       })
 

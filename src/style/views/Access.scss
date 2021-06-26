@@ -1,53 +1,26 @@
 .access {
-    position: fixed;
-    top:0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
     opacity: 0;
-    color: white;
-    margin-top: 15%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include landing;
     width: 100%;
-    height: 100%;
-	transition: 0.55s opacity ease-out;
-    /*&::after {
-        position: absolute;
-        top: -100px;
-        right: -200px;
-        background: url('@style/assets/shape.svg');
-        content:'';
-        width: 571px;
-        height: 550px;
-        background-size: contain;
-        background-repeat: no-repeat;
-    }
-    &::before {
-        position: absolute;
-        bottom: -100px;
-        left: -80px;
-        background: url('@style/assets/shape-two.svg');
-        content:'';
-        width: 371px;
-        height: 450px;
-        background-size: contain;
-        background-repeat: no-repeat;
-    }*/
-    p {
-        margin:0;
-        text-transform: uppercase;
-        font-size: 0.7rem;
-    }
+    color:white;
     h3 {
-        font-size: 80px;
-        letter-spacing: 20px;
-        margin:30px;
+        margin:0;
+        font-size: 100px;
+        letter-spacing: 50px;
+        margin-left: 50px;
     }
     span {
-        font-size: 0.9rem;
-        font-style: italic;
-    }
-    button {
-        margin-top: 35px;
+        background-color: white;
+        color:color('primary');
+        padding: 15px 30px;
+        border-radius: 100px;
+        position: absolute;
+        bottom: 50px;
+        left: 50%;
+        font-size: 12px;
+        transform: translate(-50%,0);
     }
 }

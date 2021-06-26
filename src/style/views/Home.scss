@@ -1,0 +1,10 @@
+.home {
+    @include landing;
+    position: relative;
+    z-index: 10;
+    .title {
+        svg {
+            width: 40% !important;
+        }
+    }
+}

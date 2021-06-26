@@ -30,13 +30,6 @@ export default class Player {
         // Add the good Mesh and material for the player
 
         this.player.mesh = this.assets.models.conscience_humaine_glow.scene.children[0]
-
-        console.log(this.player.mesh);
-        /*this.player.mesh.material = new MeshBasicMaterial({
-            alphaMap: this.assets.textures.bake_alpha,
-            transparent: true
-        })*/
-        console.log(this.player.mesh)
         // Set a collider, which give the actual position for the player, and init with a translate
         this.player.collider = new Capsule(new Vector3(0, 0.35, 0), new Vector3(0, 0, 0), 0.35);
         this.player.collider.translate(new Vector3(-19.3, 0.8, 11.2))

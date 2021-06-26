@@ -1,4 +1,3 @@
-import { clearConfigCache } from "prettier";
 import { Clock } from "three";
 import { Octree } from "three/examples/jsm/math/Octree";
 
@@ -141,7 +140,7 @@ export default class Physics {
 
             if (this.moving.withJoystick) {
 
-                this.player.mesh.rotation.y -= this.moving.directions.x*0.1;
+                this.player.mesh.rotation.y -= this.moving.directions.x*0.01;
                 this.player.velocity.add(this.getForwardVector().multiplyScalar(speed * this.moving.directions.y * delta));
 
                 // this.player.mesh.position.z -= this.moving.walkValue;

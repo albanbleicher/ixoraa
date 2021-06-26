@@ -22,7 +22,6 @@ export default class Positional extends EventEmitter {
         params.time.on('tick', () => this.watch())
     }
     create() {
-        console.log('la musique : ' + this.sound)
         // Create empty object 3D to place Positional
         const material = new MeshNormalMaterial({
             wireframe: true,
