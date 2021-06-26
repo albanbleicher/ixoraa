@@ -44,7 +44,7 @@ class Handler {
         socket.on(EVENTS.USER_LOADED, () => user.loaded(this.io))
 
 
-        socket.on(user.MOVING, (vector) => movements.moving(this.io, vector))
+        socket.on(MOVEMENTS.MOVING, (vector) => movements.moving(this.io, vector))
         socket.on(MOVEMENTS.END, () => movements.end(this.io))
 
 
