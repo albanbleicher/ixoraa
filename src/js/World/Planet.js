@@ -14,6 +14,7 @@ import Vegetation from './Vegetation'
 import { getMesh } from '@js/Tools/Functions.js'
 // import IntroTuto from './IntroTuto'
 import gsap from 'gsap'
+import Outro from './Outro'
 
 export default class Planet {
   constructor(params) {
@@ -37,6 +38,10 @@ export default class Planet {
     this.container = new Object3D()
     this.container.name = 'Planet'
 
+    this.outro = new Outro({
+      params: this.params,
+    });
+
     this.init()
     // this.createVegetation()
     this.setMaterials()
@@ -44,6 +49,7 @@ export default class Planet {
     // if (params.debug) this.setDebug()
     // this.showTuto()
     this.setTotems()
+    //this.launchEnd()
 
   }
   init() {
@@ -121,6 +127,27 @@ export default class Planet {
 
 
   }
+
+    launchEnd() {
+      console.log(this.camera.far);
+      this.time.on('tick', () => {
+        this.camera.lookAt(new Vector3(0, 0, 0))
+        this.camera.near = 0;
+        this.camera.far = 500;
+        this.camera.updateProjectionMatrix();
+        gsap.to(this.camera.position, {
+            x: 0,
+            y: 200,
+            z: 0,
+            ease: "power3.out",
+            duration: 10
+          }, )
+          .then(() => {
+            //this.params.time.stop();
+            this.outro.showOutro();
+          })
+      });
+    }
 
   // Same idea, get the meshes, and add materials and layers for blooming
   setBloomingItems() {
