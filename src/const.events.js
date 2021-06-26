@@ -1,6 +1,7 @@
 exports.EVENTS = {
     USER_CONNECT: 'connection',
     USER_DISCONNECT: 'disconect',
+    USER_LOADED:'user loaded'
 }
 
 exports.ROOMS_EVENTS = {
@@ -23,6 +24,7 @@ exports.TOTEMS = {
     END_LISTEN: 'totem end listen',
     BEGIN_SYNC: 'totem begin sync',
     END_SYNC: 'totem end sync',
+    SUCCESS:'totem success'
 }
 
 exports.MUSICTIME = {

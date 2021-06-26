@@ -1,6 +1,7 @@
 const { EVENTS, OBSTACLES,ROOMS_EVENTS, MOVEMENTS, TOTEMS } = require('./const.events')
 const movements = require('./Movements').default
 const totems = require('./Totems').default
+const user = require('./User').default
 // const musictime = require('./MusicTime').default
 const obstacles = require('./Obstacles').default
 const dotenv = require('dotenv');
@@ -12,10 +13,12 @@ class Handler {
     constructor(http) {
         this.io = require('socket.io')(http, {
             cors: {
-                origin: ["https://new-map.ixoraa.albchr.dev","https://game.ixoraa.albchr.dev","http://localhost:8080", "localhost:8080", "http://localhost:8081", "localhost:8081"],
+                origins: ["http://192.168.1.17:8081/","https://new-map.ixoraa.albchr.dev","https://game.ixoraa.albchr.dev","http://localhost:8080", "http://localhost:8081"],
                 methods: ["GET", "POST"],
-            }
+            },
+            rejectUnauthorized:false
         });
+        
     }
     init() {
         let self = this
@@ -28,6 +31,9 @@ class Handler {
             }
             self.listen(socket)
         });
+        this.io.on("connect_error", (err) => {
+            console.log(`connect_error due to ${err.message}`);
+          });
 
         // this.io.on(EVENTS.USER_DISCONNECT, (socket) => {
         //     socket.leave(this.currentRoom);
@@ -35,7 +41,10 @@ class Handler {
     }
     listen(socket) {
         const self = this;
-        socket.on(MOVEMENTS.MOVING, (vector) => movements.moving(this.io, vector))
+        socket.on(EVENTS.USER_LOADED, () => user.loaded(this.io))
+
+
+        socket.on(user.MOVING, (vector) => movements.moving(this.io, vector))
         socket.on(MOVEMENTS.END, () => movements.end(this.io))
 
 
