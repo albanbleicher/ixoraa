@@ -27,8 +27,6 @@ export default class World {
     this.player = null
     // Set up
     this.container = new Object3D()
-    this.waveemit = new WaveEmit()
-
     this.container.name = 'World'
 
     this.BLOOM_SCENE = 1
@@ -44,16 +42,6 @@ export default class World {
   init() {
     this.camera.camera.add(this.listener)
     this.bloomLayer.set(this.BLOOM_SCENE)
-    if (this.debug) {
-      const color = {
-        value: this.renderer.getClearColor()
-      }
-      const folder = this.debug.__folders.World
-      folder.addColor(new ColorGUIHelper(color, 'value'), 'value').name('Couleur de fond').listen().onChange((color) => {
-        this.renderer.setClearColor(color)
-      })
-    }
-
     this.setPlayer()
     this.setPlanet()
     this.setPhysics()

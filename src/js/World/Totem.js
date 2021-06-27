@@ -64,7 +64,7 @@ export default class Totem {
           name: 'Hommage à la sagesse',
           description: 'Par sa patience et son adaptabilité au fil du temps, la nature \'impose comme un temple de savoir.'
         })
-        pattern = new Pattern({
+        this.pattern = new Pattern({
           drums: this.assets.sounds.totems.wisdom.drums,
           patterns: [{
               chord: this.assets.sounds.totems.wisdom.firstChord,
@@ -94,7 +94,7 @@ export default class Totem {
           name: 'Éloge de la force',
           description: 'La nature est puissante, forte. Elle exprime toute son énergie à travers différents phénomènes.'
         })
-        pattern = new Pattern({
+        this.pattern = new Pattern({
           drums: this.assets.sounds.totems.strength.drums,
           patterns: [{
               chord: this.assets.sounds.totems.strength.firstChord,
@@ -121,7 +121,7 @@ export default class Totem {
         })
         break;
       case MODELS.totems[2]: // espoir
-        pattern = new Pattern({
+        this.pattern = new Pattern({
           drums: this.assets.sounds.totems.hope.drums,
           patterns: [{
               chord: this.assets.sounds.totems.hope.firstChord,
@@ -152,7 +152,7 @@ export default class Totem {
         })
         break;
       case MODELS.totems[3]: // beauté
-        pattern = new Pattern({
+        this.pattern = new Pattern({
           drums: this.assets.sounds.totems.beauty.drums,
           patterns: [{
               chord: this.assets.sounds.totems.beauty.firstChord,
@@ -183,8 +183,8 @@ export default class Totem {
         })
         break;
     }
-    this.pattern = pattern
     this.screen = screen
+    this.container.add(this.pattern.container)
 
     this.pattern.on('wave', (wave) => {
       this.createTorus()

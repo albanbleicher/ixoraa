@@ -15,7 +15,7 @@ const anim = lottie.loadAnimation({
 const play = document.querySelector('button')
 const home = document.querySelector('.home')
 const loading = document.querySelector('.loading')
-const audio = new Audio('./loading.mp3')
+// const audio = new Audio('./loading.mp3')
 const landing = document.querySelector('.landing')
 const access = document.querySelector('.access')
 const code = document.querySelector('.code')
@@ -39,9 +39,9 @@ if (!window.location.hash.includes('#nosocket')) {
   document.addEventListener('DOMContentLoaded', () => {
 
     play.addEventListener('click', () => {
-      audio.play()
-      audio.pause()
-      audio.volume = 0
+      // audio.play()
+      // audio.pause()
+      // audio.volume = 0
       socket.emit("room create");
       socket.once("room code", (id) => {
         code.innerText = id;
@@ -61,45 +61,45 @@ if (!window.location.hash.includes('#nosocket')) {
         gsap.to(access, { opacity: 0, duration:1 }).then(() => {
           access.remove()
           gsap.to(loading, { opacity: 1 });
-          gsap.to(audio, { volume: 1, duration:4 });
-          audio.play()
-          setTimeout(() => {
-            gsap.to('.first', {opacity:1, duration:1.5})
-          },15000)
-          setTimeout(() => {
-            gsap.to('.first', {opacity:0, duration:1})
-          },17000)
-          setTimeout(() => {
-            gsap.to('.second', {opacity:1, duration:1.5})
-          },17500)
-          setTimeout(() => {
-            gsap.to('.second', {opacity:0, duration:1})
-          },20500)
-          setTimeout(() => {
-            gsap.to('.third', {opacity:1, duration:1.5})
-          },20500)
-          setTimeout(() => {
-            gsap.to('.third', {opacity:0, duration:1})
-          },23000)
-          setTimeout(() => {
-            gsap.to('.fourth', {opacity:1, duration:1.5})
-          },24000)
-          setTimeout(() => {
-            gsap.to('.fourth', {opacity:0, duration:1.5})
-          },25000)
-          setTimeout(() => {
-            gsap.to('.fifth', {opacity:1, duration:1.5})
-          },26000)
-          setTimeout(() => {
-            gsap.to('.fifth', {opacity:0, duration:1.5})
-          },27000)
-          setTimeout(() => {
-            gsap.to('.sixth', {opacity:1, duration:1.5})
-          },28000)
-          setTimeout(() => {
-            gsap.to('.sixth', {opacity:0, duration:1})
-            gsap.to(audio, {volume:0, duration:2})
-          },35000)
+          // gsap.to(audio, { volume: 1, duration:4 });
+          // audio.play()
+          // setTimeout(() => {
+          //   gsap.to('.first', {opacity:1, duration:1.5})
+          // },15000)
+          // setTimeout(() => {
+          //   gsap.to('.first', {opacity:0, duration:1})
+          // },17000)
+          // setTimeout(() => {
+          //   gsap.to('.second', {opacity:1, duration:1.5})
+          // },17500)
+          // setTimeout(() => {
+          //   gsap.to('.second', {opacity:0, duration:1})
+          // },20500)
+          // setTimeout(() => {
+          //   gsap.to('.third', {opacity:1, duration:1.5})
+          // },20500)
+          // setTimeout(() => {
+          //   gsap.to('.third', {opacity:0, duration:1})
+          // },23000)
+          // setTimeout(() => {
+          //   gsap.to('.fourth', {opacity:1, duration:1.5})
+          // },24000)
+          // setTimeout(() => {
+          //   gsap.to('.fourth', {opacity:0, duration:1.5})
+          // },25000)
+          // setTimeout(() => {
+          //   gsap.to('.fifth', {opacity:1, duration:1.5})
+          // },26000)
+          // setTimeout(() => {
+          //   gsap.to('.fifth', {opacity:0, duration:1.5})
+          // },27000)
+          // setTimeout(() => {
+          //   gsap.to('.sixth', {opacity:1, duration:1.5})
+          // },28000)
+          // setTimeout(() => {
+          //   gsap.to('.sixth', {opacity:0, duration:1})
+          //   // gsap.to(audio, {volume:0, duration:2})
+          // },35000)
           setTimeout(() => {
             gsap.to(loading, {opacity:0, duration:2}).then(()=> {
               loading.remove()

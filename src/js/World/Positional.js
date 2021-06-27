@@ -19,7 +19,6 @@ export default class Positional extends EventEmitter {
         this.container.name = "Sound for : " + params.name
 
         this.create()
-        params.time.on('tick', () => this.watch())
     }
     create() {
         // Create empty object 3D to place Positional
@@ -30,7 +29,7 @@ export default class Positional extends EventEmitter {
         const geometry = new SphereGeometry(this.distance, 10, 10)
 
         const emmiter = new Mesh(geometry, material)
-        emmiter.visible = false
+        // emmiter.visible = false
         // move this object according to passed position
         emmiter.position.copy(this.position)
         // init PositionalAudio
@@ -39,7 +38,7 @@ export default class Positional extends EventEmitter {
         // apply AudioBuffer from template loaded assets
         this.positional.setBuffer(this.sound)
         // set radius around PositionalAudio where sounds starts to fade
-        this.positional.setRefDistance(this.distance + 4)
+        this.positional.setRefDistance(this.distance)
         this.positional.setDistanceModel('exponential')
         // set speed at which the volume is reduced or augmented based on distance
         this.positional.setRolloffFactor(80)
@@ -49,27 +48,14 @@ export default class Positional extends EventEmitter {
 
         emmiter.add(this.positional)
         this.container.add(emmiter)
-        this.analyser = new AudioAnalyser(this.positional, 32)
-        this.play();
+        // this.play();
     }
     play() {
         this.positional.play()
         console.log(this.positional.isPlaying)
+        console.log(this.positional)
         // this.positional.source.onended = () => {
         //     this.trigger('ended')
         // }
-    }
-    watch() {
-        if (this.near && this.analyser) {
-            let freqIndex = 0
-            if (!this.isSuperierThanFq && this.analyser.getFrequencyData()[freqIndex] > 130) {
-                this.isSuperierThanFq = true
-                this.trigger('wave')
-            }
-            else if (this.isSuperierThanFq && this.analyser.getFrequencyData()[freqIndex] < 130) {
-                this.isSuperierThanFq = false
-            }
-
-        }
     }
 }
