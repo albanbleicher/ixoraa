@@ -52,7 +52,6 @@ export default {
             this.hasBegun=false
             this.hasBegun=false
             this.$emit('ended')
-
             },5000)
            },1500)
            }
@@ -63,6 +62,7 @@ export default {
            }
             window.navigator.vibrate(200)
             })
+            
        
     },
     computed:{
