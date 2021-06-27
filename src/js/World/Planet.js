@@ -214,9 +214,8 @@ export default class Planet {
     folderGround.addColor(new ColorGUIHelper(bigTree.material, 'color'), 'value').name('Couleur du abre')
     folderGround.addColor(new ColorGUIHelper(bigTree.material, 'emissive'), 'value').name('Couleur du arbre')
     folderGround.addColor(new ColorGUIHelper(this.ground.material, 'color'), 'value').name('Couleur du sol')
-    folderGrass.addColor(new ColorGUIHelper(this.foliage.mesh.material, 'color'), 'value').name('Couleur de l\'foliage')
-    folderGrass.addColor(new ColorGUIHelper(this.foliage.mesh.material, 'emissive'), 'value').name('emissive de l\'foliage')
-    folderGrass.add(this.foliage.mesh.material, 'emissiveIntensity')
+    folderGrass.addColor(new ColorGUIHelper(this.grass.mesh.material, 'color'), 'value').name('Couleur de l\'herbe')
+    folderGrass.addColor(new ColorGUIHelper(this.grass.mesh.material, 'emissive'), 'value').name('emissive de l\'herbe')
 
   }
 }

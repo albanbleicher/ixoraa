@@ -28,7 +28,7 @@ anim.setSpeed(10);
 anim.addEventListener('complete', () => gsap.to([play, headphones], { opacity: 1 }))
 
 let socket = false;
-
+console.log(window.location)
 if (!window.location.hash.includes('#nosocket')) {
   // socket = io("https://ixoraa-api.herokuapp.com");
   socket = io("ws://localhost:3000");
