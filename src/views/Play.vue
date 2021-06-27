@@ -1,7 +1,7 @@
 <template>
   <div class="play">
     <Joystick v-if="!nearTotem" />
-    <Sync v-else />
+    <Sync v-else @ended='nearTotem=false'/>
    
     <div class='lottie-float' ref="lottie"></div>
   </div>

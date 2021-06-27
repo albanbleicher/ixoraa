@@ -51,7 +51,7 @@ export default {
             this.endSync=false
             this.hasBegun=false
             this.hasBegun=false
-
+            this.$emit('ended')
 
             },5000)
            },1500)
