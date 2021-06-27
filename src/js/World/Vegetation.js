@@ -28,7 +28,7 @@ export default class Vegetation {
         this.mesh.castShadow=true
         const _position = new Vector3()
         const _normal = new Vector3();
-        if(this.isBloom)    this.mesh.layers.enable(1) // add to bloom layer
+        // if(this.isBloom)    this.mesh.layers.enable(1) // add to bloom layer
         sampler.build()
         for (let i = 0; i < this.count; i++) {
           sampler.sample(_position, _normal); // get random sample coordinates to position our model

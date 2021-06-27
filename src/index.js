@@ -23,15 +23,15 @@ const headphones = document.querySelector('.headphones')
 
 
 
-
 anim.setSpeed(10);
 anim.addEventListener('complete', () => gsap.to([play, headphones], { opacity: 1 }))
 
 let socket = false;
 console.log(window.location)
 if (!window.location.hash.includes('#nosocket')) {
-  if(window.location.origin.includes('albchr.dev'))  socket = io("https://ixoraa-api.herokuapp.com");
-  else socket = io("ws://localhost:3000");
+/*  if(window.location.origin.includes('albchr.dev'))  */
+  socket = io("https://ixoraa-api.herokuapp.com");
+  // else socket = io("ws://localhost:3000");
 
   console.log('[Socket] Enabled.');
   socket.emit("room create");
@@ -106,20 +106,12 @@ if (!window.location.hash.includes('#nosocket')) {
               gsap.to(canvas, {opacity:1, duration:1})
             })
           },37000)
-          
-          
-
         });
-    
-
       })
-
       gsap.to(landing, { opacity: 0 }).then(() => {
         gsap.to(landing, { display: 'none' })
       })
     })
-
-
   })
 }
 else {

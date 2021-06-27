@@ -144,20 +144,9 @@ export default class Planet {
       attribute:'color',
       isBloom:true
     })
-    this.highGgrass = new Vegetation({
-      surface: this.ground,
-      model: this.assets.models.highGrass.scene.children[0],
-      count:5000,
-      scaleFactor: 1,
-      material: grassMaterial,
-      container: this.container,
-      attribute:'color_1',
-      isBloom:true
-    })
     const foliageMaterial = new MeshStandardMaterial({
-      color: 'red',
-      emissive: 'red',
-      emissiveIntensity:'5'
+      color: '#eba0a7',
+      emissive: '#eba0a7',
     })
     this.foliage = new Vegetation({
       surface: this.ground,
@@ -171,7 +160,6 @@ export default class Planet {
     })
   }
   setDebug() {
-    let self = this;
     const bigTree = getMesh({ parent: this.mesh, name: MODELS.planet.bigTree, strict: true })
 
     const monolithes = getMesh({parent:this.mesh, name:MODELS.planet.monolithes, strict:true})
