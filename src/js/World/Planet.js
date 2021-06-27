@@ -49,7 +49,6 @@ export default class Planet {
     // if (params.debug) this.setDebug()
     // this.showTuto()
     this.setTotems()
-    //this.launchEnd()
 
   }
   init() {
@@ -127,27 +126,6 @@ export default class Planet {
 
 
   }
-
-    launchEnd() {
-      console.log(this.camera.far);
-      this.time.on('tick', () => {
-        this.camera.lookAt(new Vector3(0, 0, 0))
-        this.camera.near = 0;
-        this.camera.far = 500;
-        this.camera.updateProjectionMatrix();
-        gsap.to(this.camera.position, {
-            x: 0,
-            y: 200,
-            z: 0,
-            ease: "power3.out",
-            duration: 10
-          }, )
-          .then(() => {
-            //this.params.time.stop();
-            this.outro.showOutro();
-          })
-      });
-    }
 
   // Same idea, get the meshes, and add materials and layers for blooming
   setBloomingItems() {
