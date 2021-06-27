@@ -1,10 +1,5 @@
-import { MeshNormalMaterial, Vector2, Vector3, MeshBasicMaterial, RepeatWrapping, MirroredRepeatWrapping } from "three"
-import { Spherical } from "three"
+import {  Vector3, RepeatWrapping, Object3D } from "three"
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
-
-import { Mesh, MeshStandardMaterial, SphereGeometry, Object3D } from "three"
-
-
 export default class Player {
     constructor(params) {
         this.time = params.time
@@ -55,15 +50,6 @@ export default class Player {
             //this.camera.camera.lookAt(this.player.mesh.position)
             this.position.copy(this.player.mesh.position)
         })
-        if (this.debug) {
-            this.debugFolder = this.debug.addFolder('Player')
-            this.debugFolder.open()
-            // this.debugFolder.open()
-            this.debugFolder.add(this.player.mesh.position, 'x').min(-1000).max(1000).step(0.1).listen()
-            this.debugFolder.add(this.player.mesh.position, 'y').min(-1000).max(1000).step(0.1).listen()
-            this.debugFolder.add(this.player.mesh.position, 'z').min(-1000).max(1000).step(0.1).listen()
-            this.debugFolder.add(this.player.mesh.rotation, 'y').min(0).max(1).step(0.1).listen()
-        }
     }
 
     // At each time, get all the collected totems balls. They are in a totemContainer, which shape is like an plate, divide this shape
@@ -80,7 +66,6 @@ export default class Player {
         this.time.on('tick', () => {
             t += 0.05
             for (let i = 0; i < this.container.totemContainer.collected.length; i++) {
-                console.log(this.container.totemContainer.collected)
                 this.container.totemContainer.collected[i].posTarget.set(
                     this.player.collider.start.x + Math.cos(t + Math.PI * 2 / this.container.totemContainer.collected.length * i) * radiusContainer[i],
                     this.player.collider.end.y - 0.01,
@@ -88,7 +73,6 @@ export default class Player {
                 )
 
                 if (i == 0)
-                    console.log(this.container.totemContainer.collected[i].posTarget.distanceTo(this.container.totemContainer.collected[i].position))
                 this.container.totemContainer.collected[i].position.lerp(this.container.totemContainer.collected[i].posTarget, 0.2)
             }
 
