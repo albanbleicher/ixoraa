@@ -1,5 +1,12 @@
 import EventEmitter from "../Tools/EventEmitter"
-import { Object3D, PositionalAudio, AudioAnalyser } from 'three'
+import {
+    Object3D,
+    PositionalAudio,
+    AudioAnalyser
+} from 'three'
+import {
+    MODELS
+} from './utils'
 import Positional from "./Positional"
 import Melody from "./Melody"
 export default class Pattern extends EventEmitter {
@@ -12,11 +19,13 @@ export default class Pattern extends EventEmitter {
         this.time = params.time
         this.position = params.position
         this.steps = params.steps
+        this.totemName = params.totemName
         this.container = new Object3D()
         this.container.name = 'Totem Pattern'
         this.create()
     }
     create() {
+        console.log('totem name:', this.totemName)
         // create Positional for each Totem's track
         // Drums
         const drumsPositional = new Positional({
@@ -44,28 +53,43 @@ export default class Pattern extends EventEmitter {
         this.container.add(drumsPositional.container)
         this.container.add(firstChord.container)
 
-        const firstMelody = new Melody({
-            notes:['C4','A3','D5', 'E6', 'G2']
-        })
+
+        if (this.totemName === MODELS.totems[0]) {
+            this.firstMelody = new Melody({
+                notes: ['C4', 'A3', 'D5', 'E6', 'G2']
+            })
+        } else if (this.totemName === MODELS.totems[1]) {
+            this.firstMelody = new Melody({
+                notes: ['B3', 'B4', 'A4', 'F#4', 'D4']
+            })
+        } else if (this.totemName === MODELS.totems[2]) {
+            this.firstMelody = new Melody({
+                notes: ['B3', 'B4', 'A4', 'F#4', 'D4']
+            })
+        } else if (this.totemName === MODELS.totems[3]) {
+            this.firstMelody = new Melody({
+                notes: ['C4', 'E4', 'E5', 'E4', 'G4']
+            })
+        }
 
         this.on('begin_listen', () => {
-            firstMelody.playWithEmit()
+            this.firstMelody.playWithEmit()
         })
         this.on('begin_sync', () => {
             // console.log('received sync')
-            firstMelody.play()
+            this.firstMelody.play()
         })
 
         // Save a first wave
-        firstMelody.on('wave', (timestamp) => {
+        this.firstMelody.on('wave', (timestamp) => {
             console.log(this)
             this.trigger('wave', [timestamp])
         })
-        firstMelody.on('ended', () => {
+        this.firstMelody.on('ended', () => {
             console.log(this)
             this.trigger('ended')
         })
-        firstMelody.on('ended_sync', () => {
+        this.firstMelody.on('ended_sync', () => {
             console.log(this)
             this.trigger('ended_sync')
         })

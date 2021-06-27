@@ -1,9 +1,21 @@
-import { Object3D, Mesh, MeshStandardMaterial, TorusGeometry, Color } from 'three'
+import {
+  Object3D,
+  Mesh,
+  MeshBasicMaterial,
+  Vector3,
+  TextureLoader,
+  MeshStandardMaterial,
+  TorusGeometry,
+  Color
+} from 'three'
 
 import gsap from 'gsap'
-import { MODELS } from './utils'
+import {
+  MODELS
+} from './utils'
 import Pattern from './Pattern'
 import TotemScreen from './TotemScreen'
+import { MeshMatcapMaterial } from 'three/build/three.module'
 
 export default class Totem {
   constructor(options) {
@@ -19,7 +31,7 @@ export default class Totem {
     this.steps = {
       first: 5, // play drums
       second: 3.5, // play chord
-      third: 2// play melody
+      third: 2 // play melody
     }
     this.near = false
     this.pattern = null
@@ -34,8 +46,16 @@ export default class Totem {
       this.time.on('tick', this.watch.bind(this))
     }, 300)
 
+    var loader = new TextureLoader();
+    loader.setCrossOrigin('');
+    this.matcap = loader.load('https://makio135.com/matcaps/64/EAEAEA_B6B6B6_CCCCCC_C4C4C4-64px.png');
+
+
   }
   init() {
+
+    // For each totem, we instanciate some screen narration, and a song, composed of drums, chord, and melody, which are played sequencially
+    // when the player come closer to it
     let pattern, screen = null;
     console.log(this.name)
     switch (this.name) {
@@ -46,8 +66,7 @@ export default class Totem {
         })
         pattern = new Pattern({
           drums: this.assets.sounds.totems.wisdom.drums,
-          patterns: [
-            {
+          patterns: [{
               chord: this.assets.sounds.totems.wisdom.firstChord,
               melody: {
                 asset: this.assets.sounds.totems.wisdom.firstMelody,
@@ -66,7 +85,8 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time: this.time
+          time: this.time,
+          totemName: this.name
         })
         break;
       case MODELS.totems[1]: // force
@@ -76,8 +96,7 @@ export default class Totem {
         })
         pattern = new Pattern({
           drums: this.assets.sounds.totems.strength.drums,
-          patterns: [
-            {
+          patterns: [{
               chord: this.assets.sounds.totems.strength.firstChord,
               melody: {
                 asset: this.assets.sounds.totems.strength.firstMelody,
@@ -96,14 +115,15 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time: this.time
+          time: this.time,
+          totemName: this.name
+
         })
         break;
       case MODELS.totems[2]: // espoir
         pattern = new Pattern({
           drums: this.assets.sounds.totems.hope.drums,
-          patterns: [
-            {
+          patterns: [{
               chord: this.assets.sounds.totems.hope.firstChord,
               melody: {
                 asset: this.assets.sounds.totems.hope.firstMelody,
@@ -122,7 +142,8 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time: this.time
+          time: this.time,
+          totemName: this.name
 
         })
         screen = new TotemScreen({
@@ -133,8 +154,7 @@ export default class Totem {
       case MODELS.totems[3]: // beauté
         pattern = new Pattern({
           drums: this.assets.sounds.totems.beauty.drums,
-          patterns: [
-            {
+          patterns: [{
               chord: this.assets.sounds.totems.beauty.firstChord,
               melody: {
                 asset: this.assets.sounds.totems.beauty.firstMelody,
@@ -153,7 +173,9 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time: this.time
+          time: this.time,
+          totemName: this.name
+
         })
         screen = new TotemScreen({
           name: 'Ode à la beauté',
@@ -174,7 +196,6 @@ export default class Totem {
     })
     this.pattern.on('ended_sync', () => {
       if (this.socket) this.socket.emit('totem end sync')
-
     })
   }
   watch() {
@@ -183,6 +204,28 @@ export default class Totem {
       if (this.screen) this.screen.show()
     } else if (!this.collected && this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
       this.nearThird = true
+
+      this.totem.layers.enable(1);
+      // this.startPanningCamera();
+
+      // Toastify({
+      //   text: "Lancez la mélodie du totem en appuyant sur votre téléphone, puis établissez la connexion entre votre conscience et le totem.",
+      //   duration: 10000,
+      //   gravity: "top", // `top` or `bottom`
+      //   position: "center", // `left`, `center` or `right`
+      //   className: "notice",
+      //   stopOnFocus: true, // Prevents dismissing of toast on hover
+      //   onClick: function(){} // Callback after click
+      // }).showToast();
+
+
+      // if (!this.firstTuto && this.name === MODELS.totems[0]) {
+      //   console.log(this.introTuto);
+      //   this.introTuto.showTotemTuto()
+      //   this.firstTuto = true
+      // }
+
+      // That was here before, but I set in the introTuto
       if (this.socket) this.socket.emit('totem approach', this.name)
       this.pattern.trigger('approach')
     } else if (!this.collected && this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
@@ -195,17 +238,156 @@ export default class Totem {
   }
   createTorus() {
     let geometry = new TorusGeometry(1, 0.01, 16, 100);
-    let material = new MeshStandardMaterial({
-      color: new Color('white')
+    let material = new MeshMatcapMaterial({
+      matcap: this.matcap
     })
     let torus = new Mesh(geometry, material);
     torus.material.needsUpdate = true
     this.container.add(torus);
     torus.position.set(this.position.x, this.position.y, this.position.z);
     torus.material.transparent = true;
-    gsap.to(torus.scale, { x: 10, y: 10, z: 10, duration: 5 }).then(() => {
-      gsap.to(torus.material, { opacity: 0, duration: 2 })
+
+    let scaleFactor = 1;
+    let opacityFactor = 1;
+
+    gsap.to(torus.scale, {
+      x: 10,
+      y: 10,
+      z: 10,
+      duration: 5
+    }).then(() => {
+      gsap.to(torus.material, {
+        opacity: 0,
+        duration: 2
+      })
     })
+    // La scale grandi, puis l'opacité diminue
+    this.time.on('tick', () => {
+      if (torus.scale.x < 10) {
+        torus.lookAt(this.player.player.mesh.position);
+
+        scaleFactor += 0.1
+        torus.scale.set(scaleFactor, scaleFactor, scaleFactor);
+      } else {
+        // Merge with remove Torus
+        opacityFactor -= 0.1
+        torus.material.opacity = opacityFactor
+      }
+    })
+  }
+
+  // On fait baisser l'opacité d'un torus puis on le fait disparaitre
+  removeTorus() {
+    let opacitiesFactor = 1;
+    this.time.on('tick', () => {
+      opacitiesFactor -= 0.5
+      this.torusList.forEach(torus => {
+        torus.material.opacity = opacitiesFactor
+        if (opacitiesFactor < 0) {
+          opacitiesFactor = 1;
+          this.torusList.pop();
+          this.container.remove(torus);
+          return;
+        } else return;
+      });
+    });
+  }
+
+  // Create an obstacle for the strength totem, which goes on the player way, and change a boolean that will inverse it's commands.
+  // An event is also send to the mobile to change a bit the joystick appearence 
+  obstacleTotemForce() {
+    this.obstacleEmitted = true;
+
+    const textureImg = 'https://png.pngtree.com/thumb_back/fw800/background/20190601/pngtree-black-and-white-shiny-seamless-marble-texture-image-image_118098.jpg'
+
+    const textureLoader = new TextureLoader()
+    textureLoader.crossOrigin = "Anonymous"
+    const textureTorus = textureLoader.load(textureImg)
+    let geometry = new TorusGeometry(1, 0.1, 16, 100, Math.PI / 2);
+    let material = new MeshBasicMaterial({
+      color: 0xFFFFFF,
+      reflectivity: 1,
+      map: textureTorus
+    });
+    let chocWave = new Mesh(geometry, material);
+
+    //Rotation semble ne pas marcher ?
+    chocWave.rotateX(Math.PI * 0.5);
+    chocWave.position.set(this.position.x, this.position.y + 0.5, this.position.z);
+    //chocWave.rotation.order = 'ZXY';
+    this.container.add(chocWave);
+
+    //chocWave.lookAt(this.player.player.mesh.position);
+    //chocWave.material.needsUpdate = true
+
+    /*this.gui.add(chocWave.rotation, 'x').min(0).max(90).step(0.1).name('Rotation X')
+    this.gui.add(chocWave.rotation, 'y').min(0).max(80).step(0.1).name('Rotation Y')
+    this.gui.add(chocWave.rotation, 'z').min(0).max(70).step(0.1).name('Rotation Z')*/
+
+    let scaleFactor = 1
+
+    this.time.on('tick', () => {
+      if (chocWave.scale.x < 20) {
+        scaleFactor += 0.1
+        chocWave.scale.set(scaleFactor, scaleFactor, scaleFactor);
+      } else {
+        this.container.remove(chocWave);
+        return;
+      }
+
+      // Plutôt que de checked la position, très chiant avec un mesh qui scale up (Box3 marche que pour les mesh static), 
+      // on met un timeout de 500ms le temps que le mesh arrive dans la gueule du joueur
+      if (!this.commandsReversed) {
+        this.io_client.emit("strength")
+        console.log('strength')
+        this.commandsReversed = true;
+        setTimeout(() => {
+          this.commandsReversed = false;
+        }, 10000)
+      }
+      return;
+    })
+
+  }
+
+  // Allow to do a good placement of the player when the world is loaded
+  checkStaticPosition() {
+    if (this.player.player.mesh.position.x !== 0) {
+      this.isStatic = false
+    }
+  }
+
+  // Called to start the "record" of the pattern currently played
+  startRecordTiming() {
+    console.log('startRecord')
+    this.startTime = performance.mark('start');
+  };
+
+  endRecordTiming() {
+    // Emit the array when 2 secondes without earing note
+  }
+
+  // A smooth displacement of the camera when the player is close to a totem
+  startPanningCamera() {
+    gsap.to(this.camera.position, {
+      x: 1,
+      y: 2,
+      z: 5,
+      ease: "power3.out",
+      duration: 5
+    }, )
+    //this.player.player.mesh.lookAt(this.position);
+  }
+
+  // Same thing but reversed, when the player is far of it
+  endPanningCamera() {
+    gsap.to(this.camera.position, {
+      x: 0,
+      y: 0,
+      z: 2,
+      ease: "power3.out",
+      duration: 5
+    }, )
   }
 
   handleSocket() {
@@ -222,12 +404,87 @@ export default class Totem {
       }
     })
     this.socket.on('totem success', (totem) => {
-      if(totem === this.name) {
-        console.log('SUCCESS')
-      this.collected = true;
-      this.near=false;
-      this.socket.emit('totem leave', totem)
+      if (totem === self.name) {
+        console.log('app', this.totem)
+        console.log('mobile', totem);
+        this.collected = true;
+        this.near = false;
+        // On modifie quelques propriétés du mesh lorsqu'il est collecté
+        this.totem.posTarget = new Vector3();
+        this.totem.scale.set(0.1, 0.1, 0.1);
+        this.totem.material.opacity = 0;
+        this.player.container.totemContainer.collected.push(this.totem);
+        if (this.player.container.totemContainer.collected.length >= 2) {
+          //this.launchEnd();
+        }
+
+        this.socket.emit('totem leave', this.totem)
       }
     })
   }
+
+  launchEnd() {
+    console.log(this.camera.far);
+    this.time.on('tick', () => {
+      this.camera.lookAt(new Vector3(0, 0, 0))
+      this.camera.near = 0;
+      this.camera.far = 500;
+      this.camera.updateProjectionMatrix();
+      gsap.to(this.camera.position, {
+          x: 0,
+          y: 200,
+          z: 0,
+          ease: "power3.out",
+          duration: 10
+        }, )
+        .then(() => {
+          //this.params.time.stop();
+          this.outro.showOutro();
+        })
+    });
+  }
+  //   this.io_client.on("musictime begin", (timing, lines) => {
+  //     //Lorsque l'interaction se lance, on vérifie quel totem vient d'être activé, et on lance les torus à sa position
+  //     if (this.isActivated) {
+  //       this.timing = timing;
+  //       this.lines = lines;
+  //     }
+  //   });
+
+  //   // Si on se trompe, on remove les torus et on relance les torus (create torus plutôt que watchTotem ?)
+  //   this.io_client.on("wrong", () => {
+  //     if (this.isActivated) {
+  //       //this.nearTotem = false;
+  //       this.removeTorus()
+  //       //this.watchTotem()
+  //       //this.createTorus();
+  //       this.isActivated = false;
+  //     }
+  //   });
+
+  //   // Si on a réussi la manche, on passe à la suivante en créant de nouveaux torus
+  //   this.io_client.on("correct", () => {
+  //     if (this.isActivated) {
+  //       //this.removeTorus();
+  //       //this.createTorus();
+  //     }
+  //   });
+
+  //   // Lorsque l'on a gagné, on enlève du tableau des totems le totem courant, on remet la caméra en place, puis on réactive le watch totem
+  //   this.io_client.on("winned", () => {
+  //     //this.nearTotem = false;
+  //     //this.watchTotem();
+  //     this.endPanningCamera();
+  //     // C'était pas mal avant la refacto, maintenant le meilleur moyen de virer un totem de la liste lorsqu'il est gagné, c'est le désinstancier
+  //     if (this.isActivated) {
+
+  //       this.position = new Vector3(150, 150, 150);
+  //       this.desactivatedTotem = true;
+  //     }
+  //     /*const indexToRemove = (totem) => totem.name === this.activatedTotem;
+  //     const totemToRemove = this.totemList.findIndex(indexToRemove);
+  //     this.totemList.splice(totemToRemove, 1)*/
+  //   });
+  // }
+
 }

@@ -39,7 +39,7 @@ export default class Positional extends EventEmitter {
         // apply AudioBuffer from template loaded assets
         this.positional.setBuffer(this.sound)
         // set radius around PositionalAudio where sounds starts to fade
-        this.positional.setRefDistance(this.distance + 1)
+        this.positional.setRefDistance(this.distance + 4)
         this.positional.setDistanceModel('exponential')
         // set speed at which the volume is reduced or augmented based on distance
         this.positional.setRolloffFactor(80)
@@ -50,12 +50,14 @@ export default class Positional extends EventEmitter {
         emmiter.add(this.positional)
         this.container.add(emmiter)
         this.analyser = new AudioAnalyser(this.positional, 32)
+        this.play();
     }
     play() {
         this.positional.play()
-        this.positional.source.onended = () => {
-            this.trigger('ended')
-        }
+        console.log(this.positional.isPlaying)
+        // this.positional.source.onended = () => {
+        //     this.trigger('ended')
+        // }
     }
     watch() {
         if (this.near && this.analyser) {
