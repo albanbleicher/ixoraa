@@ -152,8 +152,7 @@ export default class World {
       scene: this.scene,
       bloomLayer: this.bloomLayer,
       sky: this.ciel,
-      debug: this.debug,
-      socket: this.socket
+      debug: this.debug
     })
     this.time.on('tick', () => {
       this.effects.render()

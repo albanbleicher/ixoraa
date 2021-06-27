@@ -12,9 +12,6 @@ import Totem from './Totem'
 import { MODELS } from './utils'
 import Vegetation from './Vegetation'
 import { getMesh } from '@js/Tools/Functions.js'
-// import IntroTuto from './IntroTuto'
-import gsap from 'gsap'
-import Outro from './Outro'
 
 export default class Planet {
   constructor(params) {
@@ -22,12 +19,9 @@ export default class Planet {
     this.time = params.time
     this.assets = params.assets
     this.debug = params.debug
-    this.camera = params.camera
+    this.camera = params.camera.camera
     this.player = params.player
     this.listener = params.listener
-    this.waveemit = params.waveemit
-    this.effects = params.effects
-    this.gui = null
     this.mesh = null
 
     this.socket = params.socket
@@ -36,10 +30,6 @@ export default class Planet {
     // Set up
     this.container = new Object3D()
     this.container.name = 'Planet'
-
-    this.outro = new Outro({
-      params: this.params,
-    });
 
     this.init()
     this.createVegetation()
@@ -86,8 +76,6 @@ export default class Planet {
         name: totemMesh.name,
         listener: this.listener,
         totem: totemMesh,
-        effects: this.effects
-        // introTuto: this.introTuto
       })
       this.container.add(totem.container)
     })
