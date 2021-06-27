@@ -36,7 +36,7 @@ export default class Pattern extends EventEmitter {
             time: this.time,
             loop: true
         })
-        // drumsPositional.play()
+        drumsPositional.play()
         const firstChord = new Positional({
             sound: this.patterns[0].chord,
             listener: this.listener,
@@ -47,7 +47,7 @@ export default class Pattern extends EventEmitter {
 
 
         })
-        // firstChord.play()
+        firstChord.play()
 
 
         this.container.add(drumsPositional.container)
