@@ -1,4 +1,4 @@
-import { AxesHelper, Object3D, Layers, AudioListener } from 'three'
+import { Object3D, Layers, AudioListener } from 'three'
 
 import AmbientLightSource from './AmbientLight'
 import PointLightSource from './PointLight'
@@ -36,7 +36,6 @@ export default class World {
     this.bloomLayer = new Layers()
 
     if (this.debug) {
-      this.container.add(new AxesHelper(150))
       this.debugFolder = this.debug.addFolder('World')
     }
 
@@ -67,16 +66,12 @@ export default class World {
 
   }
   setLoader() {
-    this.loadDiv = document.querySelector('.loading')
-    this.loadModels = this.loadDiv.querySelector('.load')
-    this.progress = this.loadDiv.querySelector('.progress')
-
     if (this.assets.total === 0) {
       this.init()
     } else {
       this.assets.on('ressourcesReady', () => {
         this.init() 
-        // const removables = document.querySelectorAll('.access, .loading, .title, .play')
+        if(!this.socket) gsap.to('canvas', {opacity:1, duration:1})
       })
     }
   }

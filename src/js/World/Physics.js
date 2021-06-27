@@ -1,9 +1,5 @@
 import { Clock } from "three";
 import { Octree } from "three/examples/jsm/math/Octree";
-
-import EventEmitter from '../Tools/EventEmitter'
-
-
 export default class Physics {
     constructor(params) {
         this.debug = params.debug // boolean
@@ -45,9 +41,11 @@ export default class Physics {
         })
     }
     init() {
-        this.world.fromGraphNode(this.planet.physics)
+        console.log('octree',this.world)
+        console.log('phy',this.planet.physics)
 
-        
+        this.world.fromGraphNode(this.planet.physics)
+        console.log('ok after octree')
         window.addEventListener('keydown', (e) => this.moveKeyboard(e))
         window.addEventListener('keyup', (e) => this.stillKeyboard(e))
 
@@ -93,9 +91,6 @@ export default class Physics {
         this.player.collider.translate(deltaPosition);
 
         this.playerCollitions();
-
-        // A little floating animation on the main character
-        // this.player.mesh.position.copy(this.player.collider.end);
         this.player.mesh.position.set(
             this.player.collider.end.x,
             this.player.collider.end.y/* + 0.25 + Math.sin(this.time.elapsed * 0.0015) * 0.25 */,

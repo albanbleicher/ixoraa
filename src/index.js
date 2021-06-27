@@ -26,7 +26,11 @@ anim.addEventListener('complete', () => gsap.to(play, { opacity: 1 }))
 let socket = false;
 
 if (!window.location.hash.includes('#nosocket')) {
-  socket = io("https://ixoraa-api.herokuapp.com");
+  // socket = io("https://ixoraa-api.herokuapp.com");
+  socket = io("ws://localhost:3000");
+  socket.onAny((eventName, ...args) => {
+    console.log(eventName, ...args)
+  });
   console.log('[Socket] Enabled.');
   socket.emit("room create");
   document.addEventListener('DOMContentLoaded', () => {
@@ -42,6 +46,7 @@ if (!window.location.hash.includes('#nosocket')) {
       gsap.to(home, { opacity: 0, duration:1 }).then(() => {
         home.remove()
         gsap.to(access, { opacity: 1 });
+        gsap.from('.notice', {opacity:0, y:50, duration:1})
       });
       socket.once('room is_synced', () => {
         const canvas = document.querySelector('#_canvas');
@@ -94,6 +99,7 @@ if (!window.location.hash.includes('#nosocket')) {
           setTimeout(() => {
             gsap.to(loading, {opacity:0, duration:2}).then(()=> {
               loading.remove()
+              socket.emit('user loaded')
               gsap.to(canvas, {opacity:1, duration:1})
             })
           },37000)
@@ -115,7 +121,7 @@ if (!window.location.hash.includes('#nosocket')) {
 }
 else {
   console.log('[Socket] Disabled.');
-  const removables = document.querySelectorAll('.landing, .access')
+  const removables = document.querySelectorAll('.home, .access, .loading')
   removables.forEach(element => {
     element.remove()
 

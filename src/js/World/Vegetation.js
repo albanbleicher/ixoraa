@@ -23,6 +23,7 @@ export default class Vegetation {
         const dummy = new Object3D() // container for our vegetation 
         const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute() // browse mesh surface to generate samples later
         this.mesh = new InstancedMesh(this.model.geometry, this.material, this.count); // same as a mesh, but add a count. One instance, x count
+        this.mesh.castShadow=true
         const _position = new Vector3()
         const _normal = new Vector3();
         if(this.isBloom) {

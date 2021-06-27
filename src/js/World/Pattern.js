@@ -69,24 +69,5 @@ export default class Pattern extends EventEmitter {
             console.log(this)
             this.trigger('ended_sync')
         })
-
-        // // When the pattern is finished, send array of timings to the server
-        // firstMelody.on('ended', async () => {
-        //     const waves = performance.getEntriesByName('measure')
-        //     let cleanArray = []
-        //     console.log('[Pattern] Melody finished playing')
-        //     console.log('[Pattern] Recoreded ' + waves.length + ' waves.')
-        //     let promises = []
-        //     waves.forEach((wave, i) => {
-        //         console.log('Wave #' + i + ' played at ' + wave.duration + ' ms (' + wave.duration.toPrecision(2) / 1000 + ' s)')
-        //         console.log(wave.duration)
-        //         this.trigger('wave', [wave.duration])
-        //     })
-        //     setTimeout(() => {
-        //         this.trigger('ended')
-        //     }, 1000)
-
-        // })
-
     }
 }
