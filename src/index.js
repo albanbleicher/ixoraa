@@ -28,9 +28,11 @@ anim.addEventListener('complete', () => gsap.to([play, headphones], { opacity: 1
 
 let socket = false;
 console.log(window.location)
-  if(window.location.origin.includes('albchr.dev'))
-socket = io("https://ixoraa-api.herokuapp.com");
-else socket = io("ws://localhost:3000");
+if (!window.location.hash.includes('#nosocket')) {
+
+ if (window.location.origin.includes('albchr.dev')) 
+ socket = io("https://ixoraa-api.herokuapp.com");
+ else socket = io("ws://localhost:3000");
 
   console.log('[Socket] Enabled.');
   socket.emit("room create");
