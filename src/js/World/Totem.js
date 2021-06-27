@@ -415,6 +415,7 @@ export default class Totem {
         this.totem.material.opacity = 0;
         this.player.container.totemContainer.collected.push(this.totem);
         if (this.player.container.totemContainer.collected.length >= 2) {
+          console.log('launchend')
           //this.launchEnd();
         }
 

@@ -23,6 +23,7 @@ const headphones = document.querySelector('.headphones')
 
 
 
+
 anim.setSpeed(10);
 anim.addEventListener('complete', () => gsap.to([play, headphones], { opacity: 1 }))
 
@@ -100,18 +101,27 @@ if (!window.location.hash.includes('#nosocket')) {
             gsap.to(audio, {volume:0, duration:2})
           },35000)
           setTimeout(() => {
-            //gsap.to(loading, {opacity:0, duration:2}).then(()=> {
+            gsap.to(loading, {opacity:0, duration:2}).then(()=> {
               loading.remove()
               socket.emit('user loaded')
               gsap.to(canvas, {opacity:1, duration:1})
             })
           },37000)
+          
+          
+
         });
+    
+
       })
+
       gsap.to(landing, { opacity: 0 }).then(() => {
         gsap.to(landing, { display: 'none' })
       })
     })
+
+
+  })
 }
 else {
   console.log('[Socket] Disabled.');
