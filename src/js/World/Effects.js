@@ -55,9 +55,9 @@ import { Color } from 'three/build/three.module';
       const renderScene = new RenderPass(this.params.scene, this.params.camera)
       this.bloomPass = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
       // bloom params
-      this.bloomPass.threshold =0;
-      this.bloomPass.strength = 0.5;
-      this.bloomPass.radius = 0.2;
+      this.bloomPass.threshold =0.4;
+      this.bloomPass.strength = 0.4;
+      this.bloomPass.radius = 0.1;
       this.bloom = new EffectComposer(this.params.renderer, this.renderTarget);
       this.bloom.renderToScreen = false;
       this.bloom.addPass(renderScene);
@@ -125,7 +125,7 @@ import { Color } from 'three/build/three.module';
         this.params.scene.fog.color = new Color('black')
       this.params.scene.traverse(darkenNonBloomed);
   
-      // this.bloom.render();
+      this.bloom.render();
       // black the fog for rendering
       this.params.scene.fog.color = this.tempFogColor
         //

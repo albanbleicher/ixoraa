@@ -23,7 +23,7 @@ export default class PointLightSource {
     }
   }
   createPointLight() {
-    this.light = new DirectionalLight(this.params.color, 0.3)
+    this.light = new DirectionalLight(this.params.color, 0.2)
     this.light.shadow.bias = 0.00035
     this.light.shadow.mapSize.width=4096
     this.light.shadow.mapSize.height=4096

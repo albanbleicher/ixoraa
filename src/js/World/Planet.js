@@ -36,7 +36,6 @@ export default class Planet {
     this.setMaterials()
     this.setBloomingItems()
     if (params.debug) this.setDebug()
-    // this.showTuto()
     this.setTotems()
 
   }
@@ -84,7 +83,7 @@ export default class Planet {
 
   setMaterials() {
     this.ground.material = new MeshStandardMaterial({
-      color: '#19d990',
+      color: '#08ffa5',
     })
 
     const monolithes = getMesh({ parent: this.mesh, name: MODELS.planet.monolithes, strict: true })
@@ -99,8 +98,8 @@ export default class Planet {
 
     const arbre = getMesh({parent:this.mesh, name:MODELS.planet.bigTree, strict:true })
     arbre.material = new MeshStandardMaterial({
-      color: new Color('#fce5ab'),
-      emissive: new Color('#fce5ab')
+      color: new Color('#000000'),
+      emissive: new Color('#ff7818')
     })
 
 
@@ -114,7 +113,6 @@ export default class Planet {
     this.mesh.traverse(obj => {
       if (obj.name.includes('energie')) spirits.push(obj)
     })
-
 
     spirits.forEach(spirit => {
       const material = new MeshStandardMaterial({
@@ -131,33 +129,51 @@ export default class Planet {
   //Instanciate the grass / grassMaterial with some parameters, like DoubleSide, number of them
   createVegetation() {
     const grassMaterial = new MeshStandardMaterial({
-      color: '#0fffdb',
+      color: '#3d4a44',
+      emissive: new Color('#00f5f5'),
       side: DoubleSide,
       stencilWrite: true,
     })
     this.grass = new Vegetation({
       surface: this.ground,
       model: this.assets.models.grass.scene.children[0],
-      count: 10000,
+      count: 5000,
       scaleFactor: 1,
       material: grassMaterial,
-      container: this.container
+      container: this.container,
+      attribute:'color',
+      isBloom:true
+    })
+    this.highGgrass = new Vegetation({
+      surface: this.ground,
+      model: this.assets.models.highGrass.scene.children[0],
+      count:5000,
+      scaleFactor: 1,
+      material: grassMaterial,
+      container: this.container,
+      attribute:'color_1',
+      isBloom:true
     })
     const foliageMaterial = new MeshStandardMaterial({
       color: 'red',
       emissive: 'red',
+      emissiveIntensity:'5'
     })
     this.foliage = new Vegetation({
       surface: this.ground,
       model: this.assets.models.foliage.scene.children[0],
-      count: 600,
+      count: 5000,
       scaleFactor: 1,
       material: foliageMaterial,
       container: this.container,
+      attribute:'color_2',
+      isBloom:true
     })
   }
   setDebug() {
     let self = this;
+    const bigTree = getMesh({ parent: this.mesh, name: MODELS.planet.bigTree, strict: true })
+
     const monolithes = getMesh({parent:this.mesh, name:MODELS.planet.monolithes, strict:true})
     const folderGround = this.debug.__folders.World.addFolder('Ground')
     const folderMonolithes = this.debug.__folders.World.addFolder('Monolithes')
@@ -195,21 +211,12 @@ export default class Planet {
     folderMonolithes.add(monolithes.material, 'roughness').min(0).max(1).step(0.01).name('Roughness')
 
     folderGround.add(this.ground.material, 'wireframe').name('Afficher le wireframe')
+    folderGround.addColor(new ColorGUIHelper(bigTree.material, 'color'), 'value').name('Couleur du abre')
+    folderGround.addColor(new ColorGUIHelper(bigTree.material, 'emissive'), 'value').name('Couleur du arbre')
     folderGround.addColor(new ColorGUIHelper(this.ground.material, 'color'), 'value').name('Couleur du sol')
-    folderGrass.addColor(new ColorGUIHelper(this.grass.mesh.material, 'color'), 'value').name('Couleur de l\'herbe')
-    folderGrass.add(this.grass, 'count').min(0).max(10000).step(1).name('Quantité').onChange((count) => {
-      const material = self.grass.mesh.material
-      self.grass.destroy()
+    folderGrass.addColor(new ColorGUIHelper(this.foliage.mesh.material, 'color'), 'value').name('Couleur de l\'foliage')
+    folderGrass.addColor(new ColorGUIHelper(this.foliage.mesh.material, 'emissive'), 'value').name('emissive de l\'foliage')
+    folderGrass.add(this.foliage.mesh.material, 'emissiveIntensity')
 
-      self.grass = new Vegetation({
-        surface: self.force,
-        model: self.assets.models.grass.scene.children[0],
-        count: count,
-        scaleFactor: 1,
-        material: material,
-        container: self.container
-      })
-    })
-   
   }
 }
