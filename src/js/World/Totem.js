@@ -24,26 +24,22 @@ export default class Totem {
     this.assets = options.assets
     this.position = options.position
     this.player = options.player
-    this.camera = options.camera
     this.name = options.name
     this.socket = options.socket
     this.listener = options.listener
     this.totem = options.totem
-    this.introTuto = options.introTuto
     this.steps = {
       first: 5, // play drums
       second: 3.5, // play chord
       third: 2 // play melody
     }
     this.near = false
-    this.firstTuto = null;
     this.pattern = null
     this.collected = false
     // Set up
     this.container = new Object3D()
     this.container.name = 'Totem ' + options.name
 
-    this.totemDebugger = null
     if (options.socket) this.handleSocket()
     setTimeout(() => {
       this.init()
@@ -60,14 +56,15 @@ export default class Totem {
 
     // For each totem, we instanciate some screen narration, and a song, composed of drums, chord, and melody, which are played sequencially
     // when the player come closer to it
-    console.log(this.name);
+    let pattern, screen = null;
+    console.log(this.name)
     switch (this.name) {
       case MODELS.totems[0]: // sagesse
-        this.screen = new TotemScreen({
+        screen = new TotemScreen({
           name: 'Hommage à la sagesse',
           description: 'Par sa patience et son adaptabilité au fil du temps, la nature \'impose comme un temple de savoir.'
         })
-        this.pattern = new Pattern({
+        pattern = new Pattern({
           drums: this.assets.sounds.totems.wisdom.drums,
           patterns: [{
               chord: this.assets.sounds.totems.wisdom.firstChord,
@@ -91,15 +88,13 @@ export default class Totem {
           time: this.time,
           totemName: this.name
         })
-        this.container.add(this.pattern.container)
-
         break;
       case MODELS.totems[1]: // force
-        this.screen = new TotemScreen({
+        screen = new TotemScreen({
           name: 'Éloge de la force',
           description: 'La nature est puissante, forte. Elle exprime toute son énergie à travers différents phénomènes.'
         })
-        this.pattern = new Pattern({
+        pattern = new Pattern({
           drums: this.assets.sounds.totems.strength.drums,
           patterns: [{
               chord: this.assets.sounds.totems.strength.firstChord,
@@ -124,10 +119,9 @@ export default class Totem {
           totemName: this.name
 
         })
-        this.container.add(this.pattern.container)
         break;
       case MODELS.totems[2]: // espoir
-        this.pattern = new Pattern({
+        pattern = new Pattern({
           drums: this.assets.sounds.totems.hope.drums,
           patterns: [{
               chord: this.assets.sounds.totems.hope.firstChord,
@@ -152,14 +146,13 @@ export default class Totem {
           totemName: this.name
 
         })
-        this.container.add(this.pattern.container)
-        this.screen = new TotemScreen({
+        screen = new TotemScreen({
           name: 'Mélodie de l\'espoir',
           description: 'Symbole maternel primaire, la nature incarne la lueur de nos rêves.'
         })
         break;
       case MODELS.totems[3]: // beauté
-        this.pattern = new Pattern({
+        pattern = new Pattern({
           drums: this.assets.sounds.totems.beauty.drums,
           patterns: [{
               chord: this.assets.sounds.totems.beauty.firstChord,
@@ -184,22 +177,17 @@ export default class Totem {
           totemName: this.name
 
         })
-        this.container.add(this.pattern.container)
-        this.screen = new TotemScreen({
+        screen = new TotemScreen({
           name: 'Ode à la beauté',
           description: 'Observez l\'élégance organique de notre environnement.'
         })
         break;
     }
-    if (this.debug) {
-      this.totemDebugger = document.createElement('span')
-      this.totemDebugger.classList.add('debugger')
-      this.totemDebugger.setAttribute('id', this.name)
-      document.querySelector('.app').append(this.totemDebugger)
-    }
+    this.pattern = pattern
+    this.screen = screen
+
     this.pattern.on('wave', (wave) => {
       this.createTorus()
-      console.log('pattern emmited wave @ ', wave)
       if (this.socket) this.socket.emit('totem wave', wave)
     })
     this.pattern.on('ended', () => {
@@ -211,14 +199,10 @@ export default class Totem {
     })
   }
   watch() {
-    if (this.debug) this.totemDebugger.innerText = 'totem: ' + this.name + ' | position: x' + this.position.x.toPrecision(2) + ' y:' + this.position.y.toPrecision(2) + ' z:' + this.position.z.toPrecision(2) + '| distance from player: ' + this.position.distanceTo(this.player.position).toPrecision(4)
     if (!this.collected && this.player.position.distanceTo(this.position) <= this.steps.first && !this.near) {
       this.near = true;
-
       if (this.screen) this.screen.show()
-      console.log('[Totem] Approaching ' + this.name);
-    }
-    if (!this.collected && this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
+    } else if (!this.collected && this.player.position.distanceTo(this.position) < this.steps.third && !this.nearThird) {
       this.nearThird = true
 
       this.totem.layers.enable(1);
@@ -243,32 +227,23 @@ export default class Totem {
 
       // That was here before, but I set in the introTuto
       if (this.socket) this.socket.emit('totem approach', this.name)
-
       this.pattern.trigger('approach')
-    }
-    if (!this.collected && this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
+    } else if (!this.collected && this.player.position.distanceTo(this.position) > this.steps.first && this.near) {
       this.near = false;
       this.pattern.trigger('leave')
-      this.endPanningCamera();
       if (this.socket) this.socket.emit('totem leave', this.name)
       if (this.screen) this.screen.hide()
-
-      console.log('[Totem] Leaving ' + this.name);
-
     }
+    else return
   }
-  // Create a wave, based on the note of the melody played
   createTorus() {
     let geometry = new TorusGeometry(1, 0.01, 16, 100);
     let material = new MeshMatcapMaterial({
       matcap: this.matcap
     })
-
     let torus = new Mesh(geometry, material);
     torus.material.needsUpdate = true
-
     this.container.add(torus);
-
     torus.position.set(this.position.x, this.position.y, this.position.z);
     torus.material.transparent = true;
 

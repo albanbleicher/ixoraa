@@ -56,26 +56,25 @@ export default class Effects {
         format: RGBAFormat,
         encoding: sRGBEncoding,
       }
-    )
-    // create render scene for performances and accuracy of bloom effect
-    console.log(this.params.camera)
-    const renderScene = new RenderPass(this.params.scene, this.params.camera.currentCamera)
-    this.bloomPass = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-    // bloom params
-    this.bloomPass.threshold = 0;
-    this.bloomPass.strength = 0.5;
-    this.bloomPass.radius = 0.2;
-    this.bloom = new EffectComposer(this.params.renderer, this.renderTarget);
-    this.bloom.renderToScreen = false;
-    this.bloom.addPass(renderScene);
-    this.bloom.addPass(this.bloomPass);
-    // final pass renders the scene + the bloom "texture" with shaders
-    const finalPass = new ShaderPass(
-      new ShaderMaterial({
-        uniforms: {
-          baseTexture: {
-            value: null
-          },
+  )
+      // create render scene for performances and accuracy of bloom effect
+      const renderScene = new RenderPass(this.params.scene, this.params.camera)
+      this.bloomPass = new UnrealBloomPass(new Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+      // bloom params
+      this.bloomPass.threshold =0.4;
+      this.bloomPass.strength = 0.4;
+      this.bloomPass.radius = 0.1;
+      this.bloom = new EffectComposer(this.params.renderer, this.renderTarget);
+      this.bloom.renderToScreen = false;
+      this.bloom.addPass(renderScene);
+      this.bloom.addPass(this.bloomPass);
+      // final pass renders the scene + the bloom "texture" with shaders
+      const finalPass = new ShaderPass(
+        new ShaderMaterial({
+          uniforms: {
+            baseTexture: {
+              value: null
+            },
           bloomTexture: {
             value: this.bloom.renderTarget2.texture
           }
@@ -111,35 +110,33 @@ export default class Effects {
     folder.add(this.bloomPass, 'radius').min(0).max(5).step(0.1).listen()
 
   }
-  render() {
-    // called each frame
-    let self = this
-
-    function darkenNonBloomed(obj) {
-      // set all non bloom mesh to black for layering and selective bloom
-      if (obj.isMesh && self.params.bloomLayer.test(obj.layers) === false) {
-        self.materials[obj.uuid] = obj.material;
-        obj.material = self.darkMaterial;
-      }
-    }
-
-    function restoreMaterial(obj) {
-      // restore after rendering bloom 
-      if (self.materials[obj.uuid]) {
-        obj.material = self.materials[obj.uuid];
-        delete self.materials[obj.uuid];
-      }
-    }
-    this.params.scene.background = new Color('black')
-    this.params.scene.fog.color = new Color('black')
-    this.params.scene.traverse(darkenNonBloomed);
-
-    // this.bloom.render();
-    // black the fog for rendering
-    this.params.scene.fog.color = this.tempFogColor
-    //
-    this.params.scene.background = this.params.sky.skyTexture
-    this.params.scene.traverse(restoreMaterial)
+    render() {
+      // called each frame
+      let self = this
+      function darkenNonBloomed(obj) {
+        // set all non bloom mesh to black for layering and selective bloom
+          if (obj.isMesh && self.params.bloomLayer.test(obj.layers) === false) {
+            self.materials[obj.uuid] = obj.material;
+            obj.material = self.darkMaterial;
+          }
+        }
+        function restoreMaterial(obj) {
+          // restore after rendering bloom 
+          if (self.materials[obj.uuid]) {
+            obj.material =self.materials[obj.uuid];
+            delete self.materials[obj.uuid];
+          }
+        }
+        this.params.scene.background = new Color('black')
+        this.params.scene.fog.color = new Color('black')
+      this.params.scene.traverse(darkenNonBloomed);
+  
+      this.bloom.render();
+      // black the fog for rendering
+      this.params.scene.fog.color = this.tempFogColor
+        //
+        this.params.scene.background = this.params.sky.skyTexture
+      this.params.scene.traverse(restoreMaterial)
 
     this.final.render()
 

@@ -43,7 +43,7 @@ export default class World {
     this.setLoader()
   }
   init() {
-    this.camera.currentCamera.add(this.listener)
+    this.camera.camera.add(this.listener)
     this.bloomLayer.set(this.BLOOM_SCENE)
     if (this.debug) {
       const color = {
@@ -88,7 +88,7 @@ export default class World {
       time: this.time,
       player: this.player.player,
       planet: this.planet,
-      camera: this.camera.currentCamera,
+      camera: this.camera.camera,
       socket: this.socket
     })
   }
@@ -124,24 +124,6 @@ export default class World {
     })
     this.container.add(this.ciel.container)
   }
-  setEffects() {
-    this.effects = new Effects({
-      BLOOM_SCENE: this.BLOOM_SCENE,
-      camera: this.camera,
-      renderer: this.renderer,
-      scene: this.scene,
-      bloomLayer: this.bloomLayer,
-      sky: this.ciel,
-      debug: this.debug,
-      player: this.player,
-      time: this.time
-    })
-    this.time.on('tick', () => {
-      this.effects.render()
-
-    })
-  }
-
   setPlanet() {
     this.planet = new Planet({
       time: this.time,
@@ -152,8 +134,7 @@ export default class World {
       player: this.player,
       listener: this.listener,
       waveemit: this.waveemit,
-      socket: this.socket,
-      effects: this.effects
+      socket: this.socket
     })
     this.container.add(this.planet.container)
   }
@@ -166,5 +147,22 @@ export default class World {
       assets: this.assets
     })
     this.container.add(this.player.container)
+  }
+
+  setEffects() {
+    this.effects = new Effects({
+      BLOOM_SCENE: this.BLOOM_SCENE,
+      camera: this.camera.camera,
+      renderer: this.renderer,
+      scene: this.scene,
+      bloomLayer: this.bloomLayer,
+      sky: this.ciel,
+      debug: this.debug,
+      socket: this.socket
+    })
+    this.time.on('tick', () => {
+      this.effects.render()
+
+    })
   }
 }

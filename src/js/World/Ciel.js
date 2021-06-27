@@ -29,7 +29,8 @@ export default class Ciel {
     cubeMap.images[3] = t.ny.image
     cubeMap.images[4] = t.pz.image
     cubeMap.images[5] = t.nz.image
-
+    console.log(cubeMap)
+    cubeMap.encoding=3001
     cubeMap.needsUpdate = true
     this.skyTexture = cubeMap
   }

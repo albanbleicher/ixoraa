@@ -10,6 +10,7 @@ export default class Vegetation {
         this.count = params.count // how many ?
         this.scaleFactor = params.scaleFactor // scale factor of model
         this.isBloom = params.isBloom // does the vegetation blooms? 
+        this.attribute = params.attribute
         this.material = params.material ? params.material : params.model.material // specific material or model's material
         this.generate()
     }
@@ -21,13 +22,13 @@ export default class Vegetation {
         const groundGeometry = this.surface.geometry.toNonIndexed() // for later, because the MeshSurfaceSampler requires non indexed geometry (geometry that returns every vertices)
         const groundMesh = new Mesh(groundGeometry, new MeshNormalMaterial())
         const dummy = new Object3D() // container for our vegetation 
-        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute() // browse mesh surface to generate samples later
+        console.log(groundGeometry)
+        const sampler = new MeshSurfaceSampler(groundMesh).setWeightAttribute(this.attribute) // browse mesh surface to generate samples later
         this.mesh = new InstancedMesh(this.model.geometry, this.material, this.count); // same as a mesh, but add a count. One instance, x count
+        this.mesh.castShadow=true
         const _position = new Vector3()
         const _normal = new Vector3();
-        if(this.isBloom) {
-            this.mesh.layers.enable(1) // add to bloom layer
-        }
+        if(this.isBloom)    this.mesh.layers.enable(1) // add to bloom layer
         sampler.build()
         for (let i = 0; i < this.count; i++) {
           sampler.sample(_position, _normal); // get random sample coordinates to position our model

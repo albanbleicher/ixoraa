@@ -1,14 +1,6 @@
-import {
-  Object3D,
-  PerspectiveCamera,
-  Vector3
-} from 'three'
-import {
-  PointerLockControls
-} from 'three/examples/jsm/controls/PointerLockControls.js'
-import {
-  OrbitControls
-} from 'three/examples/jsm/controls/OrbitControls'
+import { Object3D, PerspectiveCamera, Vector3 } from 'three'
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 export default class Camera {
   constructor(options) {
@@ -21,20 +13,14 @@ export default class Camera {
     this.container = new Object3D()
     this.container.name = 'Camera'
 
-    this.initialCamera;
-    this.finalCamera;
-    this.currentCamera = null;
-
-
-    this.setInitialCamera()
-    this.setFinalCamera()
-    //this.setOrbitControls()
+    this.setCamera()
+    this.setOrbitControls()
     this.setPosition()
 
   }
-  setInitialCamera() {
+  setCamera() {
     // Create camera
-    this.initialCamera = new PerspectiveCamera(
+    this.camera = new PerspectiveCamera(
       75,
       this.sizes.viewport.width / this.sizes.viewport.height,
       0.1,
@@ -46,33 +32,12 @@ export default class Camera {
     // this.container.add(this.controls.getObject())
     // Change camera aspect on resize
     this.sizes.on('resize', () => {
-      this.initialCamera.aspect =
+      this.camera.aspect =
         this.sizes.viewport.width / this.sizes.viewport.height
       // Call this method because of the above change
-      this.initialCamera.updateProjectionMatrix()
+      this.camera.updateProjectionMatrix()
 
     })
-    this.initialCamera.name = 'initialCamera'
-    this.currentCamera = this.initialCamera;
-  }
-
-  setFinalCamera() {
-    // Create camera
-    this.finalCamera = new PerspectiveCamera(
-      75,
-      this.sizes.viewport.width / this.sizes.viewport.height,
-      0.1,
-      80
-    )
-    // Change camera aspect on resize
-    this.sizes.on('resize', () => {
-      this.finalCamera.aspect =
-        this.sizes.viewport.width / this.sizes.viewport.height
-      // Call this method because of the above change
-      this.finalCamera.updateProjectionMatrix()
-
-    })
-    this.finalCamera.name = 'finalCamera'
   }
   setPosition() {
     // Set camera position
@@ -82,7 +47,7 @@ export default class Camera {
   }
   setOrbitControls() {
     this.orbitControls = new OrbitControls(
-      this.currentCamera,
+      this.camera,
       this.renderer.domElement
     )
     this.orbitControls.enabled = false

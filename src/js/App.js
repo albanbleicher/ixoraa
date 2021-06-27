@@ -1,4 +1,4 @@
-import { Scene, sRGBEncoding, WebGLRenderer, LinearFilter, RGBAFormat } from 'three'
+import { Scene, sRGBEncoding, WebGLRenderer, LinearFilter, RGBAFormat, PCFShadowMap } from 'three'
 import * as dat from 'dat.gui'
 import Sizes from '@tools/Sizes'
 import Time from '@tools/Time'
@@ -6,6 +6,7 @@ import Assets from '@tools/Loader'
 import Camera from './Camera'
 import World from '@world/index'
 import io from 'socket.io-client'
+import { PCFSoftShadowMap } from 'three/build/three.module'
 export default class App {
   constructor(options) {
     console.log('init app');
@@ -29,10 +30,14 @@ export default class App {
     this.renderer = new WebGLRenderer({
       canvas: this.canvas,
       antialias: true,
-      powerPreference: 'high-performance',     
-      shadowMap:{enabled:true}
+      powerPreference: 'high-performance',
+      shadowMap:{
+        type:PCFShadowMap,
+      },
+      physicallyCorrectLights:true,
+      shadowMapSoft:true
     })
-    this.renderer.gammaFactor = 2.2
+    this.renderer.shadowMap.enabled=true
     // Set renderer pixel ratio & sizes
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(this.sizes.viewport.width, this.sizes.viewport.height)
@@ -43,24 +48,6 @@ export default class App {
         this.sizes.viewport.height
       )
     })
-    // Set RequestAnimationFrame with 60fps
-    this.time.on('tick', () => {
-      // When tab is not visible (tab is not active or window is minimized), browser stops requesting animation frames. Thus, this does not work
-      // if the window is only in the background without focus (for example, if you select another window without minimizing the browser one), 
-      // which might cause some performance or batteries issues when testing on multiple browsers
-      if (!(this.renderOnBlur?.activated && !document.hasFocus() ) ) {
-        // this.renderer.render(this.scene, this.camera.camera)
-      }
-    })
-
-    if (this.debug) {
-      this.renderOnBlur = { activated: true }
-      const folder = this.debug.addFolder('Renderer')
-      folder.open()
-      folder
-        .add(this.renderOnBlur, 'activated')
-        .name('Render on window blur')
-    }
   }
   setCamera() {
     // Create camera instance
