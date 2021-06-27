@@ -15,6 +15,7 @@ import {
 } from './utils'
 import Pattern from './Pattern'
 import TotemScreen from './TotemScreen'
+import { MeshMatcapMaterial } from 'three/build/three.module'
 
 export default class Totem {
   constructor(options) {
@@ -48,6 +49,11 @@ export default class Totem {
       this.init()
       this.time.on('tick', this.watch.bind(this))
     }, 300)
+
+    var loader = new TextureLoader();
+    loader.setCrossOrigin('');
+    this.matcap = loader.load('https://makio135.com/matcaps/64/EAEAEA_B6B6B6_CCCCCC_C4C4C4-64px.png');
+
 
   }
   init() {
@@ -247,8 +253,8 @@ export default class Totem {
   // Create a wave, based on the note of the melody played
   createTorus() {
     let geometry = new TorusGeometry(1, 0.01, 16, 100);
-    let material = new MeshStandardMaterial({
-      color: new Color('white')
+    let material = new MeshMatcapMaterial({
+      matcap: this.matcap
     })
 
     let torus = new Mesh(geometry, material);
