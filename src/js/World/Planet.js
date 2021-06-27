@@ -22,10 +22,11 @@ export default class Planet {
     this.time = params.time
     this.assets = params.assets
     this.debug = params.debug
-    this.camera = params.camera.camera
+    this.camera = params.camera
     this.player = params.player
     this.listener = params.listener
     this.waveemit = params.waveemit
+    this.effects = params.effects
     this.gui = null
     this.mesh = null
 
@@ -99,6 +100,7 @@ export default class Planet {
         name: totemMesh.name,
         listener: this.listener,
         totem: totemMesh,
+        effects: this.effects
         // introTuto: this.introTuto
       })
       this.container.add(totem.container)

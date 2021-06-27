@@ -60,6 +60,7 @@ export default class Totem {
 
     // For each totem, we instanciate some screen narration, and a song, composed of drums, chord, and melody, which are played sequencially
     // when the player come closer to it
+    console.log(this.name);
     switch (this.name) {
       case MODELS.totems[0]: // sagesse
         this.screen = new TotemScreen({
@@ -87,7 +88,8 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time: this.time
+          time: this.time,
+          totemName: this.name
         })
         this.container.add(this.pattern.container)
 
@@ -118,7 +120,9 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time: this.time
+          time: this.time,
+          totemName: this.name
+
         })
         this.container.add(this.pattern.container)
         break;
@@ -144,7 +148,8 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time: this.time
+          time: this.time,
+          totemName: this.name
 
         })
         this.container.add(this.pattern.container)
@@ -175,7 +180,9 @@ export default class Totem {
           near: this.near,
           position: this.position,
           listener: this.listener,
-          time: this.time
+          time: this.time,
+          totemName: this.name
+
         })
         this.container.add(this.pattern.container)
         this.screen = new TotemScreen({

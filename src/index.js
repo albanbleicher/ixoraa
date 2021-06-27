@@ -30,7 +30,7 @@ anim.addEventListener('complete', () => gsap.to([play, headphones], { opacity: 1
 let socket = false;
 
 if (!window.location.hash.includes('#nosocket')) {
-  socket = io("https://ixoraa-api.herokuapp.com");
+  socket = io("ws://localhost:3000");
   console.log('[Socket] Enabled.');
   socket.emit("room create");
   document.addEventListener('DOMContentLoaded', () => {
@@ -56,7 +56,7 @@ if (!window.location.hash.includes('#nosocket')) {
         })
         gsap.to(access, { opacity: 0, duration:1 }).then(() => {
           access.remove()
-          gsap.to(loading, { opacity: 1 });
+          /*gsap.to(loading, { opacity: 1 });
           gsap.to(audio, { volume: 1, duration:4 });
           audio.play()
           setTimeout(() => {
@@ -95,13 +95,15 @@ if (!window.location.hash.includes('#nosocket')) {
           setTimeout(() => {
             gsap.to('.sixth', {opacity:0, duration:1})
             gsap.to(audio, {volume:0, duration:2})
-          },35000)
+          },35000)*/
           setTimeout(() => {
-            gsap.to(loading, {opacity:0, duration:2}).then(()=> {
+            //gsap.to(loading, {opacity:0, duration:2}).then(()=> {
               loading.remove()
+              socket.emit("user loaded");
+
               gsap.to(canvas, {opacity:1, duration:1})
-            })
-          },37000)
+            //})
+          },1000)
           
           
 
