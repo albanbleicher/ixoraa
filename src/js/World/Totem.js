@@ -86,7 +86,8 @@ export default class Totem {
           position: this.position,
           listener: this.listener,
           time: this.time,
-          totemName: this.name
+          totemName: this.name,
+          melody:['C4', 'A3', 'D5', 'E6', 'G2']
         })
         break;
       case MODELS.totems[1]: // force
@@ -116,7 +117,8 @@ export default class Totem {
           position: this.position,
           listener: this.listener,
           time: this.time,
-          totemName: this.name
+          totemName: this.name,
+          melody:['B3', 'B4', 'A4', 'F#4', 'D4']
 
         })
         break;
@@ -143,7 +145,8 @@ export default class Totem {
           position: this.position,
           listener: this.listener,
           time: this.time,
-          totemName: this.name
+          totemName: this.name,
+          melody:['B3', 'B4', 'A4', 'F#4', 'D4']
 
         })
         screen = new TotemScreen({
@@ -174,7 +177,8 @@ export default class Totem {
           position: this.position,
           listener: this.listener,
           time: this.time,
-          totemName: this.name
+          totemName: this.name,
+          melody: ['C4', 'E4', 'E5', 'E4', 'G4']
 
         })
         screen = new TotemScreen({
@@ -195,6 +199,7 @@ export default class Totem {
 
     })
     this.pattern.on('ended_sync', () => {
+      console.log('ended sync');
       if (this.socket) this.socket.emit('totem end sync')
     })
   }
@@ -404,6 +409,7 @@ export default class Totem {
       }
     })
     this.socket.on('totem success', (totem) => {
+      console.log('ok totem success')
       if (totem === self.name) {
         console.log('app', this.totem)
         console.log('mobile', totem);

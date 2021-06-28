@@ -15,14 +15,11 @@ const anim = lottie.loadAnimation({
 const play = document.querySelector('button')
 const home = document.querySelector('.home')
 const loading = document.querySelector('.loading')
-// const audio = new Audio('./loading.mp3')
+const audio = new Audio('./loading.mp3')
 const landing = document.querySelector('.landing')
 const access = document.querySelector('.access')
 const code = document.querySelector('.code')
 const headphones = document.querySelector('.headphones')
-
-
-
 
 anim.setSpeed(10);
 anim.addEventListener('complete', () => gsap.to([play, headphones], { opacity: 1 }))
@@ -39,9 +36,9 @@ if (!window.location.hash.includes('#nosocket')) {
   document.addEventListener('DOMContentLoaded', () => {
 
     play.addEventListener('click', () => {
-      // audio.play()
-      // audio.pause()
-      // audio.volume = 0
+      audio.play()
+      audio.pause()
+      audio.volume = 0
       socket.emit("room create");
       socket.once("room code", (id) => {
         code.innerText = id;
@@ -61,7 +58,7 @@ if (!window.location.hash.includes('#nosocket')) {
         gsap.to(access, { opacity: 0, duration:1 }).then(() => {
           access.remove()
           gsap.to(loading, { opacity: 1 });
-          // gsap.to(audio, { volume: 1, duration:4 });
+          gsap.to(audio, { volume: 1, duration:4 });
           // audio.play()
           // setTimeout(() => {
           //   gsap.to('.first', {opacity:1, duration:1.5})
@@ -106,7 +103,7 @@ if (!window.location.hash.includes('#nosocket')) {
               socket.emit('user loaded')
               gsap.to(canvas, {opacity:1, duration:1})
             })
-          },37000)
+          },7000)
           
           
 

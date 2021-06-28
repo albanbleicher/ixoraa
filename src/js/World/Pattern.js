@@ -20,6 +20,7 @@ export default class Pattern extends EventEmitter {
         this.position = params.position
         this.steps = params.steps
         this.totemName = params.totemName
+        this.melody = params.melody
         this.container = new Object3D()
         this.container.name = 'Totem Pattern'
         this.create()
@@ -74,7 +75,7 @@ export default class Pattern extends EventEmitter {
         //     })
         // }
         const firstMelody = new Melody({
-            notes:['C4','A3','D5', 'E6', 'G2']
+            notes:this.melody
         }) 
 
         this.on('begin_listen', () => {

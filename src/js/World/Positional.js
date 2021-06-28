@@ -29,7 +29,7 @@ export default class Positional extends EventEmitter {
         const geometry = new SphereGeometry(this.distance, 10, 10)
 
         const emmiter = new Mesh(geometry, material)
-        // emmiter.visible = false
+        emmiter.visible = false
         // move this object according to passed position
         emmiter.position.copy(this.position)
         // init PositionalAudio

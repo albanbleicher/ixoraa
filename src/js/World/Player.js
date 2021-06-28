@@ -75,7 +75,7 @@ export default class Player {
                 this.container.totemContainer.collected[i].rotation.set(0, -t, 0);
                 this.container.totemContainer.collected[i].rotation.set(0, t, 0);
 
-                if (i == 0)
+                //if (i == 0)
                 this.container.totemContainer.collected[i].position.lerp(this.container.totemContainer.collected[i].posTarget, 0.2)
             }
 
