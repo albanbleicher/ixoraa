@@ -57,6 +57,7 @@ class Handler {
             console.log('okkk?');
             totems.beginSync(this.io, totem)})
         socket.on(TOTEMS.END_SYNC, (totem) => totems.endSync(this.io, totem))
+        socket.on(TOTEMS.SUCCESS, (totem) => totems.success(this.io, totem))
 
 
         socket.on(ROOMS_EVENTS.CREATE, () => self.rooms.create(), console.log('hmmm'))

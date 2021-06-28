@@ -19,9 +19,11 @@ exports.default = {
         socket.emit(TOTEMS.BEGIN_SYNC, totem)
     },
     endSync(socket, totem) {
+        console.log('ended sync')
         socket.emit(TOTEMS.END_SYNC, totem)
     },
     success(socket, totem) {
+        console.log('success', totem)
         socket.emit(TOTEM.SUCCESS, totem)
     }
 }
