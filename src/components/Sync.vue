@@ -42,11 +42,13 @@ export default {
         })
         this.socket.on('totem end listen', (wave) => window.navigator.vibrate(200))
         this.socket.on('totem end sync', (wave) => {
+            console.log('OK END SYNC')
            if(this.score===4) {
                setTimeout(() => {
                 this.showTap=false;
             this.endSync=true
             setTimeout(() => {
+                console.log(this.currentTotem)
             this.socket.emit('totem success', this.currentTotem)
             this.endSync=false
             this.hasBegun=false
