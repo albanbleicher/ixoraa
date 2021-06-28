@@ -28,8 +28,8 @@ let socket = false;
 console.log(window.location)
 if (!window.location.hash.includes('#nosocket')) {
 
- if (window.location.origin.includes('albchr.dev')) socket = io("https://ixoraa-api.herokuapp.com");
- else socket = io("ws://localhost:3000");
+  if (window.location.origin.includes('albchr.dev')) socket = io("https://ixoraa-api.herokuapp.com");
+  else socket = io("ws://localhost:3000");
 
   console.log('[Socket] Enabled.');
   socket.emit("room create");
@@ -43,11 +43,11 @@ if (!window.location.hash.includes('#nosocket')) {
       socket.once("room code", (id) => {
         code.innerText = id;
       });
-      gsap.to([home, headphones], { opacity: 0, duration:1 }).then(() => {
+      gsap.to([home, headphones], { opacity: 0, duration: 1 }).then(() => {
 
         home.remove()
         gsap.to(access, { opacity: 1 });
-        gsap.from('.notice', {opacity:0, y:50, duration:1})
+        gsap.from('.notice', { opacity: 0, y: 50, duration: 1 })
       });
       socket.once('room is_synced', () => {
         const canvas = document.querySelector('#_canvas');
@@ -55,60 +55,60 @@ if (!window.location.hash.includes('#nosocket')) {
           canvas,
           socket
         })
-        gsap.to(access, { opacity: 0, duration:1 }).then(() => {
+        gsap.to(access, { opacity: 0, duration: 1 }).then(() => {
           access.remove()
           gsap.to(loading, { opacity: 1 });
-          gsap.to(audio, { volume: 1, duration:4 });
-          // audio.play()
-          // setTimeout(() => {
-          //   gsap.to('.first', {opacity:1, duration:1.5})
-          // },15000)
-          // setTimeout(() => {
-          //   gsap.to('.first', {opacity:0, duration:1})
-          // },17000)
-          // setTimeout(() => {
-          //   gsap.to('.second', {opacity:1, duration:1.5})
-          // },17500)
-          // setTimeout(() => {
-          //   gsap.to('.second', {opacity:0, duration:1})
-          // },20500)
-          // setTimeout(() => {
-          //   gsap.to('.third', {opacity:1, duration:1.5})
-          // },20500)
-          // setTimeout(() => {
-          //   gsap.to('.third', {opacity:0, duration:1})
-          // },23000)
-          // setTimeout(() => {
-          //   gsap.to('.fourth', {opacity:1, duration:1.5})
-          // },24000)
-          // setTimeout(() => {
-          //   gsap.to('.fourth', {opacity:0, duration:1.5})
-          // },25000)
-          // setTimeout(() => {
-          //   gsap.to('.fifth', {opacity:1, duration:1.5})
-          // },26000)
-          // setTimeout(() => {
-          //   gsap.to('.fifth', {opacity:0, duration:1.5})
-          // },27000)
-          // setTimeout(() => {
-          //   gsap.to('.sixth', {opacity:1, duration:1.5})
-          // },28000)
-          // setTimeout(() => {
-          //   gsap.to('.sixth', {opacity:0, duration:1})
-          //   // gsap.to(audio, {volume:0, duration:2})
-          // },35000)
+          gsap.to(audio, { volume: 1, duration: 4 });
+          audio.play()
           setTimeout(() => {
-            gsap.to(loading, {opacity:0, duration:2}).then(()=> {
+            gsap.to('.first', { opacity: 1, duration: 1.5 })
+          }, 15000)
+          setTimeout(() => {
+            gsap.to('.first', { opacity: 0, duration: 1 })
+          }, 17000)
+          setTimeout(() => {
+            gsap.to('.second', { opacity: 1, duration: 1.5 })
+          }, 17500)
+          setTimeout(() => {
+            gsap.to('.second', { opacity: 0, duration: 1 })
+          }, 20500)
+          setTimeout(() => {
+            gsap.to('.third', { opacity: 1, duration: 1.5 })
+          }, 20500)
+          setTimeout(() => {
+            gsap.to('.third', { opacity: 0, duration: 1 })
+          }, 23000)
+          setTimeout(() => {
+            gsap.to('.fourth', { opacity: 1, duration: 1.5 })
+          }, 24000)
+          setTimeout(() => {
+            gsap.to('.fourth', { opacity: 0, duration: 1.5 })
+          }, 25000)
+          setTimeout(() => {
+            gsap.to('.fifth', { opacity: 1, duration: 1.5 })
+          }, 26000)
+          setTimeout(() => {
+            gsap.to('.fifth', { opacity: 0, duration: 1.5 })
+          }, 27000)
+          setTimeout(() => {
+            gsap.to('.sixth', { opacity: 1, duration: 1.5 })
+          }, 28000)
+          setTimeout(() => {
+            gsap.to('.sixth', { opacity: 0, duration: 1 })
+            // gsap.to(audio, {volume:0, duration:2})
+          }, 35000)
+          setTimeout(() => {
+            gsap.to(loading, { opacity: 0, duration: 2 }).then(() => {
               loading.remove()
               socket.emit('user loaded')
-              gsap.to(canvas, {opacity:1, duration:1})
+              gsap.to(canvas, { opacity: 1, duration: 1 })
             })
-          },7000)
-          
-          
+          }, 37000)
+
+
 
         });
-    
+
 
       })
 

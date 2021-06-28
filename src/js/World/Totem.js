@@ -67,19 +67,19 @@ export default class Totem {
         this.pattern = new Pattern({
           drums: this.assets.sounds.totems.wisdom.drums,
           patterns: [{
-              chord: this.assets.sounds.totems.wisdom.firstChord,
-              melody: {
-                asset: this.assets.sounds.totems.wisdom.firstMelody,
-                waveFrequency: 130,
-              },
+            chord: this.assets.sounds.totems.wisdom.firstChord,
+            melody: {
+              asset: this.assets.sounds.totems.wisdom.firstMelody,
+              waveFrequency: 130,
             },
-            {
-              chord: this.assets.sounds.totems.wisdom.secondChord,
-              melody: {
-                asset: this.assets.sounds.totems.wisdom.secondMelody,
-                waveFrequency: 130,
-              },
-            }
+          },
+          {
+            chord: this.assets.sounds.totems.wisdom.secondChord,
+            melody: {
+              asset: this.assets.sounds.totems.wisdom.secondMelody,
+              waveFrequency: 130,
+            },
+          }
           ],
           steps: this.steps,
           near: this.near,
@@ -87,7 +87,7 @@ export default class Totem {
           listener: this.listener,
           time: this.time,
           totemName: this.name,
-          melody:['C4', 'A3', 'D5', 'E6', 'G2']
+          melody: ['C4', 'A3', 'D5', 'E6', 'G2']
         })
         break;
       case MODELS.totems[1]: // force
@@ -98,19 +98,19 @@ export default class Totem {
         this.pattern = new Pattern({
           drums: this.assets.sounds.totems.strength.drums,
           patterns: [{
-              chord: this.assets.sounds.totems.strength.firstChord,
-              melody: {
-                asset: this.assets.sounds.totems.strength.firstMelody,
-                waveFrequency: 130,
-              },
+            chord: this.assets.sounds.totems.strength.firstChord,
+            melody: {
+              asset: this.assets.sounds.totems.strength.firstMelody,
+              waveFrequency: 130,
             },
-            {
-              chord: this.assets.sounds.totems.strength.secondChord,
-              melody: {
-                asset: this.assets.sounds.totems.strength.secondMelody,
-                waveFrequency: 130,
-              },
-            }
+          },
+          {
+            chord: this.assets.sounds.totems.strength.secondChord,
+            melody: {
+              asset: this.assets.sounds.totems.strength.secondMelody,
+              waveFrequency: 130,
+            },
+          }
           ],
           steps: this.steps,
           near: this.near,
@@ -118,7 +118,7 @@ export default class Totem {
           listener: this.listener,
           time: this.time,
           totemName: this.name,
-          melody:['B3', 'B4', 'A4', 'F#4', 'D4']
+          melody: ['B3', 'B4', 'A4', 'F#4', 'D4']
 
         })
         break;
@@ -126,19 +126,19 @@ export default class Totem {
         this.pattern = new Pattern({
           drums: this.assets.sounds.totems.hope.drums,
           patterns: [{
-              chord: this.assets.sounds.totems.hope.firstChord,
-              melody: {
-                asset: this.assets.sounds.totems.hope.firstMelody,
-                waveFrequency: 130,
-              },
+            chord: this.assets.sounds.totems.hope.firstChord,
+            melody: {
+              asset: this.assets.sounds.totems.hope.firstMelody,
+              waveFrequency: 130,
             },
-            {
-              chord: this.assets.sounds.totems.hope.secondChord,
-              melody: {
-                asset: this.assets.sounds.totems.hope.secondMelody,
-                waveFrequency: 130,
-              },
-            }
+          },
+          {
+            chord: this.assets.sounds.totems.hope.secondChord,
+            melody: {
+              asset: this.assets.sounds.totems.hope.secondMelody,
+              waveFrequency: 130,
+            },
+          }
           ],
           steps: this.steps,
           near: this.near,
@@ -146,7 +146,7 @@ export default class Totem {
           listener: this.listener,
           time: this.time,
           totemName: this.name,
-          melody:['B3', 'B4', 'A4', 'F#4', 'D4']
+          melody: ['B3', 'B4', 'A4', 'F#4', 'D4']
 
         })
         screen = new TotemScreen({
@@ -158,19 +158,19 @@ export default class Totem {
         this.pattern = new Pattern({
           drums: this.assets.sounds.totems.beauty.drums,
           patterns: [{
-              chord: this.assets.sounds.totems.beauty.firstChord,
-              melody: {
-                asset: this.assets.sounds.totems.beauty.firstMelody,
-                waveFrequency: 130,
-              },
+            chord: this.assets.sounds.totems.beauty.firstChord,
+            melody: {
+              asset: this.assets.sounds.totems.beauty.firstMelody,
+              waveFrequency: 130,
             },
-            {
-              chord: this.assets.sounds.totems.beauty.secondChord,
-              melody: {
-                asset: this.assets.sounds.totems.beauty.secondMelody,
-                waveFrequency: 130,
-              },
-            }
+          },
+          {
+            chord: this.assets.sounds.totems.beauty.secondChord,
+            melody: {
+              asset: this.assets.sounds.totems.beauty.secondMelody,
+              waveFrequency: 130,
+            },
+          }
           ],
           steps: this.steps,
           near: this.near,
@@ -380,7 +380,7 @@ export default class Totem {
       z: 5,
       ease: "power3.out",
       duration: 5
-    }, )
+    })
     //this.player.player.mesh.lookAt(this.position);
   }
 
@@ -392,7 +392,7 @@ export default class Totem {
       z: 2,
       ease: "power3.out",
       duration: 5
-    }, )
+    })
   }
 
   handleSocket() {
@@ -438,12 +438,12 @@ export default class Totem {
       this.camera.far = 500;
       this.camera.updateProjectionMatrix();
       gsap.to(this.camera.position, {
-          x: 0,
-          y: 200,
-          z: 0,
-          ease: "power3.out",
-          duration: 10
-        }, )
+        x: 0,
+        y: 200,
+        z: 0,
+        ease: "power3.out",
+        duration: 10
+      })
         .then(() => {
           //this.params.time.stop();
           this.outro.showOutro();
