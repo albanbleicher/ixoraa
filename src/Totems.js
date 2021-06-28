@@ -24,6 +24,6 @@ exports.default = {
     },
     success(socket, totem) {
         console.log('success', totem)
-        socket.emit(TOTEM.SUCCESS, totem)
+        socket.emit(TOTEMS.SUCCESS, totem)
     }
 }
